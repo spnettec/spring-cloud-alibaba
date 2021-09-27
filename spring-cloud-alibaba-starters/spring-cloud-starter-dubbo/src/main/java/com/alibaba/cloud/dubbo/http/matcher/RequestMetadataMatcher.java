@@ -38,11 +38,9 @@ public class RequestMetadataMatcher extends CompositeHttpRequestMatcher {
 				// headers
 				new HttpRequestHeadersMatcher(toNameAndValues(metadata.getHeaders())),
 				// consumes
-				new HttpRequestConsumersMatcher(
-						metadata.getConsumes().toArray(new String[0])),
+				new HttpRequestConsumersMatcher(metadata.getConsumes().toArray(new String[0])),
 				// produces
-				new HttpRequestProducesMatcher(
-						metadata.getProduces().toArray(new String[0])));
+				new HttpRequestProducesMatcher(metadata.getProduces().toArray(new String[0])));
 	}
 
 }

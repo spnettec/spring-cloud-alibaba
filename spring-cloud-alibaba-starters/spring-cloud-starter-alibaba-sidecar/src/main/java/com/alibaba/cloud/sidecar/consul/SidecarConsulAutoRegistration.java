@@ -17,6 +17,7 @@
 package com.alibaba.cloud.sidecar.consul;
 
 import java.util.List;
+import java.util.Objects;
 
 import com.alibaba.cloud.sidecar.SidecarProperties;
 import com.ecwid.consul.v1.agent.model.NewService;
@@ -36,21 +37,18 @@ import org.springframework.core.env.Environment;
 public class SidecarConsulAutoRegistration extends ConsulAutoRegistration {
 
 	public SidecarConsulAutoRegistration(NewService service,
-			AutoServiceRegistrationProperties autoServiceRegistrationProperties,
-			ConsulDiscoveryProperties properties, ApplicationContext context,
-			HeartbeatProperties heartbeatProperties,
+			AutoServiceRegistrationProperties autoServiceRegistrationProperties, ConsulDiscoveryProperties properties,
+			ApplicationContext context, HeartbeatProperties heartbeatProperties,
 			List<ConsulManagementRegistrationCustomizer> managementRegistrationCustomizers) {
-		super(service, autoServiceRegistrationProperties, properties, context,
-				heartbeatProperties, managementRegistrationCustomizers);
+		super(service, autoServiceRegistrationProperties, properties, context, heartbeatProperties,
+				managementRegistrationCustomizers);
 	}
 
 	public static ConsulAutoRegistration registration(
-			AutoServiceRegistrationProperties autoServiceRegistrationProperties,
-			ConsulDiscoveryProperties properties, ApplicationContext context,
-			List<ConsulRegistrationCustomizer> registrationCustomizers,
+			AutoServiceRegistrationProperties autoServiceRegistrationProperties, ConsulDiscoveryProperties properties,
+			ApplicationContext context, List<ConsulRegistrationCustomizer> registrationCustomizers,
 			List<ConsulManagementRegistrationCustomizer> managementRegistrationCustomizers,
-			HeartbeatProperties heartbeatProperties,
-			SidecarProperties sidecarProperties) {
+			HeartbeatProperties heartbeatProperties, SidecarProperties sidecarProperties) {
 
 		NewService service = new NewService();
 		String appName = getAppName(properties, context.getEnvironment());
@@ -59,29 +57,24 @@ public class SidecarConsulAutoRegistration extends ConsulAutoRegistration {
 			service.setAddress(sidecarProperties.getIp());
 		}
 		service.setName(normalizeForDns(appName));
-		service.setTags(createTags(properties));
+		service.setTags(properties.getTags());
 
 		// set health check, use alibaba sidecar self's port rather than polyglot app's
 		// port.
-		service.setPort(
-				Integer.valueOf(context.getEnvironment().getProperty("server.port")));
-		setCheck(service, autoServiceRegistrationProperties, properties, context,
-				heartbeatProperties);
+		service.setPort(Integer.valueOf(Objects.requireNonNull(context.getEnvironment().getProperty("server.port"))));
+		setCheck(service, autoServiceRegistrationProperties, properties, context, heartbeatProperties);
 
 		service.setPort(sidecarProperties.getPort());
 
-		ConsulAutoRegistration registration = new ConsulAutoRegistration(service,
-				autoServiceRegistrationProperties, properties, context,
-				heartbeatProperties, managementRegistrationCustomizers);
+		ConsulAutoRegistration registration = new ConsulAutoRegistration(service, autoServiceRegistrationProperties,
+				properties, context, heartbeatProperties, managementRegistrationCustomizers);
 		customize(registrationCustomizers, registration);
 		return registration;
 	}
 
-	public static String getInstanceId(SidecarProperties sidecarProperties,
-			Environment environment) {
-		return String.format("%s-%s-%s",
-				environment.getProperty("spring.application.name"),
-				sidecarProperties.getIp(), sidecarProperties.getPort());
+	public static String getInstanceId(SidecarProperties sidecarProperties, Environment environment) {
+		return String.format("%s-%s-%s", environment.getProperty("spring.application.name"), sidecarProperties.getIp(),
+				sidecarProperties.getPort());
 	}
 
 }

@@ -31,8 +31,7 @@ public final class DubboCloudConstants {
 	/**
 	 * The property name of Registry type.
 	 */
-	public static final String REGISTRY_TYPE_PROPERTY_NAME = CONFIG_PROPERTY_PREFIX
-			+ ".registry-type";
+	public static final String REGISTRY_TYPE_PROPERTY_NAME = CONFIG_PROPERTY_PREFIX + ".registry-type";
 
 	/**
 	 * The property value of Spring Cloud Registry.

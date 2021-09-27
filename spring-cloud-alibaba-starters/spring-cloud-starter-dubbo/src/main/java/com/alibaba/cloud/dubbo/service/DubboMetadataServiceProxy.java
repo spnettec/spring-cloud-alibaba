@@ -57,10 +57,8 @@ public class DubboMetadataServiceProxy implements BeanClassLoaderAware, Disposab
 
 	private ClassLoader classLoader;
 
-	public DubboMetadataServiceProxy(
-			DubboGenericServiceFactory dubboGenericServiceFactory,
-			DubboMetadataUtils dubboMetadataUtils,
-			ServiceInstanceSelector serviceInstanceSelector,
+	public DubboMetadataServiceProxy(DubboGenericServiceFactory dubboGenericServiceFactory,
+			DubboMetadataUtils dubboMetadataUtils, ServiceInstanceSelector serviceInstanceSelector,
 			DiscoveryClient discoveryClient) {
 		this.dubboGenericServiceFactory = dubboGenericServiceFactory;
 		this.dubboMetadataUtils = dubboMetadataUtils;
@@ -92,12 +90,10 @@ public class DubboMetadataServiceProxy implements BeanClassLoaderAware, Disposab
 
 			if (serviceInstance.isPresent()) {
 
-				List<URL> dubboMetadataServiceURLs = getDubboMetadataServiceURLs(
-						serviceInstance.get());
+				List<URL> dubboMetadataServiceURLs = getDubboMetadataServiceURLs(serviceInstance.get());
 
 				for (URL dubboMetadataServiceURL : dubboMetadataServiceURLs) {
-					DubboMetadataService dubboMetadataService = createProxyIfAbsent(
-							dubboMetadataServiceURL);
+					DubboMetadataService dubboMetadataService = createProxyIfAbsent(dubboMetadataServiceURL);
 					if (dubboMetadataService != null) {
 						return dubboMetadataService;
 					}
@@ -137,8 +133,7 @@ public class DubboMetadataServiceProxy implements BeanClassLoaderAware, Disposab
 	 * @return a {@link DubboMetadataService} proxy
 	 */
 	private DubboMetadataService createProxyIfAbsent(String serviceName, String version) {
-		return dubboMetadataServiceCache.computeIfAbsent(serviceName,
-				name -> createProxy(name, version));
+		return dubboMetadataServiceCache.computeIfAbsent(serviceName, name -> createProxy(name, version));
 	}
 
 	private Optional<ServiceInstance> select(List<ServiceInstance> serviceInstances) {
@@ -156,8 +151,7 @@ public class DubboMetadataServiceProxy implements BeanClassLoaderAware, Disposab
 	 * @return a {@link DubboMetadataService} proxy
 	 */
 	public DubboMetadataService getProxy(String serviceName) {
-		return dubboMetadataServiceCache.getOrDefault(serviceName,
-				getProxy0(serviceName));
+		return dubboMetadataServiceCache.getOrDefault(serviceName, getProxy0(serviceName));
 	}
 
 	private DubboMetadataService getProxy0(String serviceName) {
@@ -184,15 +178,11 @@ public class DubboMetadataServiceProxy implements BeanClassLoaderAware, Disposab
 	protected DubboMetadataService createProxy(String serviceName, String version) {
 
 		if (logger.isInfoEnabled()) {
-			logger.info(
-					"The metadata of Dubbo service[name : {}] is about to be initialized",
-					serviceName);
+			logger.info("The metadata of Dubbo service[name : {}] is about to be initialized", serviceName);
 		}
 
-		return (DubboMetadataService) newProxyInstance(classLoader,
-				new Class[] { DubboMetadataService.class },
-				new DubboMetadataServiceInvocationHandler(serviceName, version,
-						dubboGenericServiceFactory));
+		return (DubboMetadataService) newProxyInstance(classLoader, new Class[] { DubboMetadataService.class },
+				new DubboMetadataServiceInvocationHandler(serviceName, version, dubboGenericServiceFactory));
 	}
 
 }

@@ -31,9 +31,8 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 public class DubboSpringCloudProviderBootstrap {
 
 	public static void main(String[] args) {
-		new SpringApplicationBuilder(DubboSpringCloudProviderBootstrap.class)
-				.properties("spring.profiles.active=nacos").web(WebApplicationType.NONE)
-				.run(args);
+		new SpringApplicationBuilder(DubboSpringCloudProviderBootstrap.class).properties("spring.profiles.active=nacos")
+				.web(WebApplicationType.NONE).run(args);
 	}
 
 }

@@ -38,8 +38,7 @@ public class ReSubscribeManager {
 
 	private final Map<String, ReSubscribeMetadataJob> reConnectJobMap = new ConcurrentHashMap<>();
 
-	private final ScheduledThreadPoolExecutor reConnectPool = new ScheduledThreadPoolExecutor(
-			5);
+	private final ScheduledThreadPoolExecutor reConnectPool = new ScheduledThreadPoolExecutor(5);
 
 	private final DubboCloudRegistry registry;
 
@@ -67,15 +66,12 @@ public class ReSubscribeManager {
 		}
 
 		if (count >= properties.getMaxReSubscribeMetadataTimes()) {
-			logger.error(
-					"reSubscribe failed too many times, serviceName = {}, count = {}",
-					serviceName, count);
+			logger.error("reSubscribe failed too many times, serviceName = {}, count = {}", serviceName, count);
 			return;
 		}
 
 		ReSubscribeMetadataJob job = new ReSubscribeMetadataJob(serviceName, count);
-		reConnectPool.schedule(job, properties.getReSubscribeMetadataIntervial(),
-				TimeUnit.SECONDS);
+		reConnectPool.schedule(job, properties.getReSubscribeMetadataIntervial(), TimeUnit.SECONDS);
 	}
 
 	private final class ReSubscribeMetadataJob implements Runnable {
@@ -91,27 +87,25 @@ public class ReSubscribeManager {
 
 		@Override
 		public void run() {
-			if (!reConnectJobMap.containsKey(serviceName)
-					|| reConnectJobMap.get(serviceName) != this) {
+			if (!reConnectJobMap.containsKey(serviceName) || reConnectJobMap.get(serviceName) != this) {
 				return;
 			}
 			List<ServiceInstance> list = registry.getServiceInstances(serviceName);
-			FakeServiceInstancesChangedEvent event = new FakeServiceInstancesChangedEvent(
-					serviceName, list, errorCounts);
+			FakeServiceInstancesChangedEvent event = new FakeServiceInstancesChangedEvent(serviceName, list,
+					errorCounts);
 			registry.onApplicationEvent(event);
 		}
 
 	}
 
-	private static final class FakeServiceInstancesChangedEvent
-			extends ServiceInstancesChangedEvent {
+	private static final class FakeServiceInstancesChangedEvent extends ServiceInstancesChangedEvent {
 
 		private static final long serialVersionUID = -2832478604601472915L;
 
 		private final int count;
 
-		private FakeServiceInstancesChangedEvent(String serviceName,
-				List<ServiceInstance> serviceInstances, int count) {
+		private FakeServiceInstancesChangedEvent(String serviceName, List<ServiceInstance> serviceInstances,
+				int count) {
 			super(serviceName, serviceInstances);
 			this.count = count;
 		}

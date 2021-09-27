@@ -61,7 +61,7 @@ public class RocketMQComponent4BinderAutoConfiguration {
 		String sk = environment.resolveRequiredPlaceholders(
 				"${spring.cloud.stream.rocketmq.binder.secret-key:${rocketmq.producer.secret-key:}}");
 		String accessChannel = environment.resolveRequiredPlaceholders(
-			"${spring.cloud.stream.rocketmq.binder.access-channel:${rocketmq.access-channel:}}");
+				"${spring.cloud.stream.rocketmq.binder.access-channel:${rocketmq.access-channel:}}");
 		if (!StringUtils.isEmpty(ak) && !StringUtils.isEmpty(sk)) {
 			producer = new DefaultMQProducer(RocketMQBinderConstants.DEFAULT_GROUP,
 					new AclClientRPCHook(new SessionCredentials(ak, sk)));
@@ -82,8 +82,7 @@ public class RocketMQComponent4BinderAutoConfiguration {
 
 	@Bean(destroyMethod = "destroy")
 	@ConditionalOnMissingBean
-	public RocketMQTemplate rocketMQTemplate(DefaultMQProducer mqProducer,
-			ObjectMapper objectMapper) {
+	public RocketMQTemplate rocketMQTemplate(DefaultMQProducer mqProducer, ObjectMapper objectMapper) {
 		RocketMQTemplate rocketMQTemplate = new RocketMQTemplate();
 		rocketMQTemplate.setProducer(mqProducer);
 		rocketMQTemplate.setObjectMapper(objectMapper);
@@ -93,8 +92,7 @@ public class RocketMQComponent4BinderAutoConfiguration {
 	@Bean
 	@ConditionalOnBean(RocketMQTemplate.class)
 	@ConditionalOnMissingBean(TransactionHandlerRegistry.class)
-	public TransactionHandlerRegistry transactionHandlerRegistry(
-			RocketMQTemplate template) {
+	public TransactionHandlerRegistry transactionHandlerRegistry(RocketMQTemplate template) {
 		return new TransactionHandlerRegistry(template);
 	}
 

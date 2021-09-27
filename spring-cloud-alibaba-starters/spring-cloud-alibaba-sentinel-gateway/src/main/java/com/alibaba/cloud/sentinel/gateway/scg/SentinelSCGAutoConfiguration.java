@@ -57,13 +57,12 @@ import static org.springframework.web.reactive.function.BodyInserters.fromValue;
  */
 @Configuration(proxyBeanMethods = false)
 @ConditionalOnClass(GlobalFilter.class)
-@ConditionalOnProperty(prefix = ConfigConstants.GATEWAY_PREFIX, name = "enabled",
-		havingValue = "true", matchIfMissing = true)
+@ConditionalOnProperty(prefix = ConfigConstants.GATEWAY_PREFIX, name = "enabled", havingValue = "true",
+		matchIfMissing = true)
 @EnableConfigurationProperties(SentinelGatewayProperties.class)
 public class SentinelSCGAutoConfiguration {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(SentinelSCGAutoConfiguration.class);
+	private static final Logger logger = LoggerFactory.getLogger(SentinelSCGAutoConfiguration.class);
 
 	private final List<ViewResolver> viewResolvers;
 
@@ -83,46 +82,37 @@ public class SentinelSCGAutoConfiguration {
 		initFallback();
 	}
 
-	public SentinelSCGAutoConfiguration(
-			ObjectProvider<List<ViewResolver>> viewResolversProvider,
+	public SentinelSCGAutoConfiguration(ObjectProvider<List<ViewResolver>> viewResolversProvider,
 			ServerCodecConfigurer serverCodecConfigurer) {
 		this.viewResolvers = viewResolversProvider.getIfAvailable(Collections::emptyList);
 		this.serverCodecConfigurer = serverCodecConfigurer;
 	}
 
 	private void initAppType() {
-		System.setProperty(SentinelConfig.APP_TYPE_PROP_KEY,
-				ConfigConstants.APP_TYPE_SCG_GATEWAY);
+		System.setProperty(SentinelConfig.APP_TYPE_PROP_KEY, ConfigConstants.APP_TYPE_SCG_GATEWAY);
 	}
 
 	private void initFallback() {
 		FallbackProperties fallbackProperties = gatewayProperties.getFallback();
-		if (fallbackProperties == null
-				|| StringUtil.isBlank(fallbackProperties.getMode())) {
+		if (fallbackProperties == null || StringUtil.isBlank(fallbackProperties.getMode())) {
 			return;
 		}
 		if (ConfigConstants.FALLBACK_MSG_RESPONSE.equals(fallbackProperties.getMode())) {
 			if (StringUtil.isNotBlank(fallbackProperties.getResponseBody())) {
-				GatewayCallbackManager.setBlockHandler((exchange, t) -> ServerResponse
-						.status(fallbackProperties.getResponseStatus())
-						.contentType(
-								MediaType.valueOf(fallbackProperties.getContentType()))
-						.body(fromValue(fallbackProperties.getResponseBody())));
-				logger.info(
-						"[Sentinel SpringCloudGateway] using AnonymousBlockRequestHandler, responseStatus: "
-								+ fallbackProperties.getResponseStatus()
-								+ ", responseBody: "
-								+ fallbackProperties.getResponseBody());
+				GatewayCallbackManager
+						.setBlockHandler((exchange, t) -> ServerResponse.status(fallbackProperties.getResponseStatus())
+								.contentType(MediaType.valueOf(fallbackProperties.getContentType()))
+								.body(fromValue(fallbackProperties.getResponseBody())));
+				logger.info("[Sentinel SpringCloudGateway] using AnonymousBlockRequestHandler, responseStatus: "
+						+ fallbackProperties.getResponseStatus() + ", responseBody: "
+						+ fallbackProperties.getResponseBody());
 			}
 		}
 		String redirectUrl = fallbackProperties.getRedirect();
 		if (ConfigConstants.FALLBACK_REDIRECT.equals(fallbackProperties.getMode())
 				&& StringUtil.isNotBlank(redirectUrl)) {
-			GatewayCallbackManager
-					.setBlockHandler(new RedirectBlockRequestHandler(redirectUrl));
-			logger.info(
-					"[Sentinel SpringCloudGateway] using RedirectBlockRequestHandler, redirectUrl: "
-							+ redirectUrl);
+			GatewayCallbackManager.setBlockHandler(new RedirectBlockRequestHandler(redirectUrl));
+			logger.info("[Sentinel SpringCloudGateway] using RedirectBlockRequestHandler, redirectUrl: " + redirectUrl);
 		}
 	}
 
@@ -131,18 +121,15 @@ public class SentinelSCGAutoConfiguration {
 	@ConditionalOnMissingBean
 	public SentinelGatewayBlockExceptionHandler sentinelGatewayBlockExceptionHandler() {
 		// Register the block exception handler for Spring Cloud Gateway.
-		logger.info(
-				"[Sentinel SpringCloudGateway] register SentinelGatewayBlockExceptionHandler");
-		return new SentinelGatewayBlockExceptionHandler(viewResolvers,
-				serverCodecConfigurer);
+		logger.info("[Sentinel SpringCloudGateway] register SentinelGatewayBlockExceptionHandler");
+		return new SentinelGatewayBlockExceptionHandler(viewResolvers, serverCodecConfigurer);
 	}
 
 	@Bean
 	@Order(-1)
 	@ConditionalOnMissingBean
 	public SentinelGatewayFilter sentinelGatewayFilter() {
-		logger.info(
-				"[Sentinel SpringCloudGateway] register SentinelGatewayFilter with order: {}",
+		logger.info("[Sentinel SpringCloudGateway] register SentinelGatewayFilter with order: {}",
 				gatewayProperties.getOrder());
 		return new SentinelGatewayFilter(gatewayProperties.getOrder());
 	}

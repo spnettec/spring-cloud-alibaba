@@ -58,8 +58,7 @@ public class ConsulDataSourceProperties extends AbstractDataSourceProperties {
 			throw new IllegalArgumentException("ConsulDataSource server-host is empty");
 		}
 		if (StringUtils.isEmpty(ruleKey)) {
-			throw new IllegalArgumentException(
-					"ConsulDataSource ruleKey can not be empty");
+			throw new IllegalArgumentException("ConsulDataSource ruleKey can not be empty");
 		}
 	}
 

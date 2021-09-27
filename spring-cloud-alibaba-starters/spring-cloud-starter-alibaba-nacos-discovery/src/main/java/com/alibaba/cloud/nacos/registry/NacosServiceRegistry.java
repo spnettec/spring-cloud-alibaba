@@ -72,18 +72,16 @@ public class NacosServiceRegistry implements ServiceRegistry<Registration> {
 
 		try {
 			namingService.registerInstance(serviceId, group, instance);
-			log.info("nacos registry, {} {} {}:{} register finished", group, serviceId,
-					instance.getIp(), instance.getPort());
+			log.info("nacos registry, {} {} {}:{} register finished", group, serviceId, instance.getIp(),
+					instance.getPort());
 		}
 		catch (Exception e) {
 			if (nacosDiscoveryProperties.isFailFast()) {
-				log.error("nacos registry, {} register failed...{},", serviceId,
-						registration.toString(), e);
+				log.error("nacos registry, {} register failed...{},", serviceId, registration.toString(), e);
 				rethrowRuntimeException(e);
 			}
 			else {
-				log.warn("Failfast is false. {} register failed...{},", serviceId,
-						registration.toString(), e);
+				log.warn("Failfast is false. {} register failed...{},", serviceId, registration.toString(), e);
 			}
 		}
 	}
@@ -103,12 +101,11 @@ public class NacosServiceRegistry implements ServiceRegistry<Registration> {
 		String group = nacosDiscoveryProperties.getGroup();
 
 		try {
-			namingService.deregisterInstance(serviceId, group, registration.getHost(),
-					registration.getPort(), nacosDiscoveryProperties.getClusterName());
+			namingService.deregisterInstance(serviceId, group, registration.getHost(), registration.getPort(),
+					nacosDiscoveryProperties.getClusterName());
 		}
 		catch (Exception e) {
-			log.error("ERR_NACOS_DEREGISTER, de-register failed...{},",
-					registration.toString(), e);
+			log.error("ERR_NACOS_DEREGISTER, de-register failed...{},", registration.toString(), e);
 		}
 
 		log.info("De-registration finished.");
@@ -127,8 +124,7 @@ public class NacosServiceRegistry implements ServiceRegistry<Registration> {
 	@Override
 	public void setStatus(Registration registration, String status) {
 
-		if (!STATUS_UP.equalsIgnoreCase(status)
-				&& !STATUS_DOWN.equalsIgnoreCase(status)) {
+		if (!STATUS_UP.equalsIgnoreCase(status) && !STATUS_DOWN.equalsIgnoreCase(status)) {
 			log.warn("can't support status {},please choose UP or DOWN", status);
 			return;
 		}
@@ -146,8 +142,8 @@ public class NacosServiceRegistry implements ServiceRegistry<Registration> {
 
 		try {
 			Properties nacosProperties = nacosDiscoveryProperties.getNacosProperties();
-			nacosServiceManager.getNamingMaintainService(nacosProperties).updateInstance(
-					serviceId, nacosDiscoveryProperties.getGroup(), instance);
+			nacosServiceManager.getNamingMaintainService(nacosProperties).updateInstance(serviceId,
+					nacosDiscoveryProperties.getGroup(), instance);
 		}
 		catch (Exception e) {
 			throw new RuntimeException("update nacos instance status fail", e);
@@ -161,8 +157,7 @@ public class NacosServiceRegistry implements ServiceRegistry<Registration> {
 		String serviceName = registration.getServiceId();
 		String group = nacosDiscoveryProperties.getGroup();
 		try {
-			List<Instance> instances = namingService().getAllInstances(serviceName,
-					group);
+			List<Instance> instances = namingService().getAllInstances(serviceName, group);
 			for (Instance instance : instances) {
 				if (instance.getIp().equalsIgnoreCase(nacosDiscoveryProperties.getIp())
 						&& instance.getPort() == nacosDiscoveryProperties.getPort()) {
@@ -189,8 +184,7 @@ public class NacosServiceRegistry implements ServiceRegistry<Registration> {
 	}
 
 	private NamingService namingService() {
-		return nacosServiceManager
-				.getNamingService(nacosDiscoveryProperties.getNacosProperties());
+		return nacosServiceManager.getNamingService(nacosDiscoveryProperties.getNacosProperties());
 	}
 
 }

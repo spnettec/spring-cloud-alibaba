@@ -178,8 +178,7 @@ public abstract class HttpUtils {
 	 * @param nameAndValuesMap {@link MultiValueMap} the map of name and values
 	 * @return non-null
 	 */
-	public static Set<String> toNameAndValuesSet(
-			Map<String, List<String>> nameAndValuesMap) {
+	public static Set<String> toNameAndValuesSet(Map<String, List<String>> nameAndValuesMap) {
 		Set<String> nameAndValues = new LinkedHashSet<>();
 		for (Map.Entry<String, List<String>> entry : nameAndValuesMap.entrySet()) {
 			String name = entry.getKey();
@@ -243,8 +242,7 @@ public abstract class HttpUtils {
 		return encodedValue;
 	}
 
-	private static void addParam(MultiValueMap<String, String> paramsMap, String name,
-			String value) {
+	private static void addParam(MultiValueMap<String, String> paramsMap, String name, String value) {
 		String paramValue = trimAllWhitespace(value);
 		if (!StringUtils.hasText(paramValue)) {
 			paramValue = EMPTY_VALUE;

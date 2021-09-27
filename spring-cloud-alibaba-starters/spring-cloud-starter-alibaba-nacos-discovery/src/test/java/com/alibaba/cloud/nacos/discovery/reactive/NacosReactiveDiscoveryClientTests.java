@@ -51,8 +51,7 @@ class NacosReactiveDiscoveryClientTests {
 	@Test
 	void testGetInstances() throws NacosException {
 
-		when(serviceDiscovery.getInstances("reactive-service"))
-				.thenReturn(singletonList(serviceInstance));
+		when(serviceDiscovery.getInstances("reactive-service")).thenReturn(singletonList(serviceInstance));
 
 		Flux<ServiceInstance> instances = this.client.getInstances("reactive-service");
 
@@ -62,13 +61,11 @@ class NacosReactiveDiscoveryClientTests {
 	@Test
 	void testGetServices() throws NacosException {
 
-		when(serviceDiscovery.getServices())
-				.thenReturn(Arrays.asList("reactive-service1", "reactive-service2"));
+		when(serviceDiscovery.getServices()).thenReturn(Arrays.asList("reactive-service1", "reactive-service2"));
 
 		Flux<String> services = this.client.getServices();
 
-		StepVerifier.create(services).expectNext("reactive-service1", "reactive-service2")
-				.expectComplete().verify();
+		StepVerifier.create(services).expectNext("reactive-service1", "reactive-service2").expectComplete().verify();
 	}
 
 }

@@ -53,8 +53,8 @@ public class NacosPropertySource extends MapPropertySource {
 	 */
 	private final boolean isRefreshable;
 
-	NacosPropertySource(String group, String dataId, Map<String, Object> source,
-			Date timestamp, boolean isRefreshable) {
+	NacosPropertySource(String group, String dataId, Map<String, Object> source, Date timestamp,
+			boolean isRefreshable) {
 		super(String.join(NacosConfigProperties.COMMAS, dataId, group), source);
 		this.group = group;
 		this.dataId = dataId;
@@ -62,10 +62,9 @@ public class NacosPropertySource extends MapPropertySource {
 		this.isRefreshable = isRefreshable;
 	}
 
-	NacosPropertySource(List<PropertySource<?>> propertySources, String group,
-			String dataId, Date timestamp, boolean isRefreshable) {
-		this(group, dataId, getSourceMap(group, dataId, propertySources), timestamp,
-				isRefreshable);
+	NacosPropertySource(List<PropertySource<?>> propertySources, String group, String dataId, Date timestamp,
+			boolean isRefreshable) {
+		this(group, dataId, getSourceMap(group, dataId, propertySources), timestamp, isRefreshable);
 	}
 
 	private static Map<String, Object> getSourceMap(String group, String dataId,
@@ -83,9 +82,7 @@ public class NacosPropertySource extends MapPropertySource {
 		// If it is multiple, it will be returned as it is, and the internal elements
 		// cannot be directly retrieved, so the user needs to implement the retrieval
 		// logic by himself
-		return Collections.singletonMap(
-				String.join(NacosConfigProperties.COMMAS, dataId, group),
-				propertySources);
+		return Collections.singletonMap(String.join(NacosConfigProperties.COMMAS, dataId, group), propertySources);
 	}
 
 	public String getGroup() {

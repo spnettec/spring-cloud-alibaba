@@ -43,8 +43,8 @@ public class SubscribedServicesChangedEvent extends ApplicationEvent {
 	 * @param oldSubscribedServices the subscribed services before changed
 	 * @param newSubscribedServices the subscribed services after changed
 	 */
-	public SubscribedServicesChangedEvent(Object source,
-			Set<String> oldSubscribedServices, Set<String> newSubscribedServices) {
+	public SubscribedServicesChangedEvent(Object source, Set<String> oldSubscribedServices,
+			Set<String> newSubscribedServices) {
 		super(source);
 		this.oldSubscribedServices = new LinkedHashSet<>(oldSubscribedServices);
 		this.newSubscribedServices = new LinkedHashSet<>(newSubscribedServices);

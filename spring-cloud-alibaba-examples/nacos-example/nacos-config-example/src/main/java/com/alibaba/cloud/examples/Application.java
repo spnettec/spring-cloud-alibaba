@@ -113,8 +113,8 @@ class UserConfig {
 
 	@Override
 	public String toString() {
-		return "UserConfig{" + "age=" + age + ", name='" + name + '\'' + ", map=" + map
-				+ ", hr='" + hr + '\'' + ", users=" + users + '}';
+		return "UserConfig{" + "age=" + age + ", name='" + name + '\'' + ", map=" + map + ", hr='" + hr + '\''
+				+ ", users=" + users + '}';
 	}
 
 	public static class User {
@@ -166,8 +166,8 @@ class SampleRunner implements ApplicationRunner {
 
 	@Override
 	public void run(ApplicationArguments args) throws Exception {
-		nacosConfigManager.getConfigService().addListener(
-				"nacos-config-custom.properties", "DEFAULT_GROUP", new Listener() {
+		nacosConfigManager.getConfigService().addListener("nacos-config-custom.properties", "DEFAULT_GROUP",
+				new Listener() {
 
 					/**
 					 * Callback with latest config data.
@@ -216,8 +216,8 @@ class SampleController {
 
 	@RequestMapping("/user")
 	public String simple() {
-		return "Hello Nacos Config!" + "Hello " + userName + " " + age + " [UserConfig]: "
-				+ userConfig + "!" + nacosConfigManager.getConfigService();
+		return "Hello Nacos Config!" + "Hello " + userName + " " + age + " [UserConfig]: " + userConfig + "!"
+				+ nacosConfigManager.getConfigService();
 	}
 
 	@RequestMapping("/get/{name}")

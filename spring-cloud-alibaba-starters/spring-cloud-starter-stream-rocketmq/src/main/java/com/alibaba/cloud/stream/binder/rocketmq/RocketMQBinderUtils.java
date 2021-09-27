@@ -42,8 +42,7 @@ public final class RocketMQBinderUtils {
 			result.setNameServer(rocketBinderConfigurationProperties.getNameServer());
 		}
 		else {
-			result.setNameServer(
-					Arrays.asList(rocketMQProperties.getNameServer().split(";")));
+			result.setNameServer(Arrays.asList(rocketMQProperties.getNameServer().split(";")));
 		}
 		if (rocketMQProperties.getProducer() == null
 				|| StringUtils.isEmpty(rocketMQProperties.getProducer().getAccessKey())) {
@@ -59,29 +58,24 @@ public final class RocketMQBinderUtils {
 		else {
 			result.setSecretKey(rocketMQProperties.getProducer().getSecretKey());
 		}
-		if (rocketMQProperties.getProducer() == null || StringUtils
-				.isEmpty(rocketMQProperties.getProducer().getCustomizedTraceTopic())) {
-			result.setCustomizedTraceTopic(
-					rocketBinderConfigurationProperties.getCustomizedTraceTopic());
+		if (rocketMQProperties.getProducer() == null
+				|| StringUtils.isEmpty(rocketMQProperties.getProducer().getCustomizedTraceTopic())) {
+			result.setCustomizedTraceTopic(rocketBinderConfigurationProperties.getCustomizedTraceTopic());
 		}
 		else {
-			result.setCustomizedTraceTopic(
-					rocketMQProperties.getProducer().getCustomizedTraceTopic());
+			result.setCustomizedTraceTopic(rocketMQProperties.getProducer().getCustomizedTraceTopic());
 		}
-		if (rocketMQProperties.getProducer() != null
-				&& rocketMQProperties.getProducer().isEnableMsgTrace()) {
+		if (rocketMQProperties.getProducer() != null && rocketMQProperties.getProducer().isEnableMsgTrace()) {
 			result.setEnableMsgTrace(Boolean.TRUE);
 		}
 		else {
-			result.setEnableMsgTrace(
-					rocketBinderConfigurationProperties.isEnableMsgTrace());
+			result.setEnableMsgTrace(rocketBinderConfigurationProperties.isEnableMsgTrace());
 		}
 		if (StringUtils.isEmpty(rocketMQProperties.getAccessChannel())) {
 			result.setAccessChannel(rocketBinderConfigurationProperties.getAccessChannel());
 		}
 		else {
-			result.setAccessChannel(
-				rocketMQProperties.getAccessChannel());
+			result.setAccessChannel(rocketMQProperties.getAccessChannel());
 		}
 		return result;
 	}

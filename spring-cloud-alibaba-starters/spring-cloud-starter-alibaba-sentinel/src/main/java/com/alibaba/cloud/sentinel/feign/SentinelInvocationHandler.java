@@ -33,7 +33,8 @@ import feign.Feign;
 import feign.InvocationHandlerFactory.MethodHandler;
 import feign.MethodMetadata;
 import feign.Target;
-import feign.hystrix.FallbackFactory;
+
+import org.springframework.cloud.openfeign.FallbackFactory;
 
 import static feign.Util.checkNotNull;
 
@@ -52,8 +53,7 @@ public class SentinelInvocationHandler implements InvocationHandler {
 
 	private Map<Method, Method> fallbackMethodMap;
 
-	SentinelInvocationHandler(Target<?> target, Map<Method, MethodHandler> dispatch,
-			FallbackFactory fallbackFactory) {
+	SentinelInvocationHandler(Target<?> target, Map<Method, MethodHandler> dispatch, FallbackFactory fallbackFactory) {
 		this.target = checkNotNull(target, "target");
 		this.dispatch = checkNotNull(dispatch, "dispatch");
 		this.fallbackFactory = fallbackFactory;
@@ -66,12 +66,10 @@ public class SentinelInvocationHandler implements InvocationHandler {
 	}
 
 	@Override
-	public Object invoke(final Object proxy, final Method method, final Object[] args)
-			throws Throwable {
+	public Object invoke(final Object proxy, final Method method, final Object[] args) throws Throwable {
 		if ("equals".equals(method.getName())) {
 			try {
-				Object otherHandler = args.length > 0 && args[0] != null
-						? Proxy.getInvocationHandler(args[0]) : null;
+				Object otherHandler = args.length > 0 && args[0] != null ? Proxy.getInvocationHandler(args[0]) : null;
 				return equals(otherHandler);
 			}
 			catch (IllegalArgumentException e) {
@@ -91,15 +89,14 @@ public class SentinelInvocationHandler implements InvocationHandler {
 		if (target instanceof Target.HardCodedTarget) {
 			Target.HardCodedTarget hardCodedTarget = (Target.HardCodedTarget) target;
 			MethodMetadata methodMetadata = SentinelContractHolder.METADATA_MAP
-					.get(hardCodedTarget.type().getName()
-							+ Feign.configKey(hardCodedTarget.type(), method));
+					.get(hardCodedTarget.type().getName() + Feign.configKey(hardCodedTarget.type(), method));
 			// resource default is HttpMethod:protocol://url
 			if (methodMetadata == null) {
 				result = methodHandler.invoke(args);
 			}
 			else {
-				String resourceName = methodMetadata.template().method().toUpperCase()
-						+ ":" + hardCodedTarget.url() + methodMetadata.template().path();
+				String resourceName = methodMetadata.template().method().toUpperCase() + ":" + hardCodedTarget.url()
+						+ methodMetadata.template().path();
 				Entry entry = null;
 				try {
 					ContextUtil.enter(resourceName);
@@ -113,8 +110,8 @@ public class SentinelInvocationHandler implements InvocationHandler {
 					}
 					if (fallbackFactory != null) {
 						try {
-							Object fallbackResult = fallbackMethodMap.get(method)
-									.invoke(fallbackFactory.create(ex), args);
+							Object fallbackResult = fallbackMethodMap.get(method).invoke(fallbackFactory.create(ex),
+									args);
 							return fallbackResult;
 						}
 						catch (IllegalAccessException e) {

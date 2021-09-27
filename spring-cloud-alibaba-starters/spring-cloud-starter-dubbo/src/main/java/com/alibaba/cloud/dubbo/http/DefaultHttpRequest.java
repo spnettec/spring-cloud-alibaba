@@ -42,8 +42,8 @@ public class DefaultHttpRequest implements HttpRequest {
 
 	private final HttpHeaders headers = new HttpHeaders();
 
-	public DefaultHttpRequest(String method, String path,
-			Map<String, List<String>> params, Map<String, List<String>> headers) {
+	public DefaultHttpRequest(String method, String path, Map<String, List<String>> params,
+			Map<String, List<String>> headers) {
 		this.method = method == null ? HttpMethod.GET.name() : method.toUpperCase();
 		this.uri = buildURI(path, params);
 		this.headers.putAll(headers);
@@ -54,8 +54,7 @@ public class DefaultHttpRequest implements HttpRequest {
 	}
 
 	private URI buildURI(String path, Map<String, List<String>> params) {
-		UriComponentsBuilder builder = fromPath(path)
-				.queryParams(new LinkedMultiValueMap<>(params));
+		UriComponentsBuilder builder = fromPath(path).queryParams(new LinkedMultiValueMap<>(params));
 		return builder.build().toUri();
 	}
 

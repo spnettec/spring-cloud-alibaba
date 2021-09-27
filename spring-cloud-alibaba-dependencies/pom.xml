@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.springframework.cloud</groupId>
         <artifactId>spring-cloud-dependencies-parent</artifactId>
-        <version>2.3.1.RELEASE</version>
+        <version>3.0.4</version>
         <relativePath/>
     </parent>
 
@@ -19,11 +19,11 @@
 
     <properties>
         <revision>2.2.7-SNAPSHOT</revision>
-        <sentinel.version>1.8.1</sentinel.version>
+        <sentinel.version>1.8.2</sentinel.version>
         <seata.version>1.3.0</seata.version>
-        <nacos.client.version>2.0.3</nacos.client.version>
-        <nacos.config.version>0.8.0</nacos.config.version>
-        <spring.context.support.version>1.0.10</spring.context.support.version>
+        <nacos.client.version>2.0.3.B</nacos.client.version>
+        <nacos.config.version>2.0.3.B</nacos.config.version>
+        <spring.context.support.version>1.0.11</spring.context.support.version>
 
         <!-- Maven Plugin Versions -->
         <maven-source-plugin.version>2.2.1</maven-source-plugin.version>

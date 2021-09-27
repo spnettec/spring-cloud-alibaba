@@ -46,10 +46,8 @@ public class DubboServiceAutoConfiguration {
 	}
 
 	@Configuration(proxyBeanMethods = false)
-	@Import({ DubboGenericServiceExecutionContextFactory.class,
-			RequestParamServiceParameterResolver.class,
-			RequestBodyServiceParameterResolver.class,
-			RequestHeaderServiceParameterResolver.class,
+	@Import({ DubboGenericServiceExecutionContextFactory.class, RequestParamServiceParameterResolver.class,
+			RequestBodyServiceParameterResolver.class, RequestHeaderServiceParameterResolver.class,
 			PathVariableServiceParameterResolver.class })
 	static class ParameterResolversConfiguration {
 

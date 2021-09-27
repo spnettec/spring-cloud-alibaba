@@ -48,9 +48,8 @@ public class DubboDiscoveryEndpoint {
 
 	@ReadOperation(produces = APPLICATION_JSON_VALUE)
 	public Object get() {
-		DubboCloudRegistry registry = (DubboCloudRegistry) SpringCloudRegistryFactory
-				.getRegistries().stream().filter(o -> o instanceof DubboCloudRegistry)
-				.findFirst().orElse(null);
+		DubboCloudRegistry registry = (DubboCloudRegistry) SpringCloudRegistryFactory.getRegistries().stream()
+				.filter(o -> o instanceof DubboCloudRegistry).findFirst().orElse(null);
 
 		if (registry == null) {
 			return Collections.emptyMap();
@@ -65,8 +64,7 @@ public class DubboDiscoveryEndpoint {
 				return;
 			}
 
-			List<Map<String, Object>> pairs = result.computeIfAbsent(url.getServiceKey(),
-					o -> new ArrayList<>());
+			List<Map<String, Object>> pairs = result.computeIfAbsent(url.getServiceKey(), o -> new ArrayList<>());
 
 			Map<String, Object> pair = new HashMap<>();
 			List<String> invokerServices = new ArrayList<>();
@@ -79,8 +77,8 @@ public class DubboDiscoveryEndpoint {
 				if (invokers == null) {
 					continue;
 				}
-				invokerServices.addAll(invokers.stream().map(Invoker::getUrl)
-						.map(URL::toServiceString).collect(Collectors.toList()));
+				invokerServices.addAll(
+						invokers.stream().map(Invoker::getUrl).map(URL::toServiceString).collect(Collectors.toList()));
 			}
 			pair.put("invokers", invokerServices);
 			pair.put("subscribeUrl", url.toMap());

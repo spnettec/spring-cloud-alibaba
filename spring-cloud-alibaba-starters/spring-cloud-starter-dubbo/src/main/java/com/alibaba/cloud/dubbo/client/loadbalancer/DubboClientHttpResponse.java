@@ -41,12 +41,9 @@ class DubboClientHttpResponse implements ClientHttpResponse {
 
 	private final DubboHttpOutputMessage httpOutputMessage;
 
-	DubboClientHttpResponse(DubboHttpOutputMessage httpOutputMessage,
-			GenericException exception) {
-		this.httpStatus = exception != null ? HttpStatus.INTERNAL_SERVER_ERROR
-				: HttpStatus.OK;
-		this.statusText = exception != null ? exception.getExceptionMessage()
-				: httpStatus.getReasonPhrase();
+	DubboClientHttpResponse(DubboHttpOutputMessage httpOutputMessage, GenericException exception) {
+		this.httpStatus = exception != null ? HttpStatus.INTERNAL_SERVER_ERROR : HttpStatus.OK;
+		this.statusText = exception != null ? exception.getExceptionMessage() : httpStatus.getReasonPhrase();
 		this.httpOutputMessage = httpOutputMessage;
 		this.httpHeaders.putAll(httpOutputMessage.getHeaders());
 	}

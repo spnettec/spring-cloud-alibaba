@@ -39,8 +39,8 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration(proxyBeanMethods = false)
 @ConditionalOnClass({ SphU.class })
-@ConditionalOnProperty(name = "spring.cloud.circuitbreaker.sentinel.enabled",
-		havingValue = "true", matchIfMissing = true)
+@ConditionalOnProperty(name = "spring.cloud.circuitbreaker.sentinel.enabled", havingValue = "true",
+		matchIfMissing = true)
 public class SentinelCircuitBreakerAutoConfiguration {
 
 	@Bean

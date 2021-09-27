@@ -51,8 +51,8 @@ public final class NacosDataParserHandler {
 	private static List<PropertySourceLoader> propertySourceLoaders;
 
 	private NacosDataParserHandler() {
-		propertySourceLoaders = SpringFactoriesLoader
-				.loadFactories(PropertySourceLoader.class, getClass().getClassLoader());
+		propertySourceLoaders = SpringFactoriesLoader.loadFactories(PropertySourceLoader.class,
+				getClass().getClassLoader());
 	}
 
 	/**
@@ -63,8 +63,8 @@ public final class NacosDataParserHandler {
 	 * @return result of Map
 	 * @throws IOException thrown if there is a problem parsing config.
 	 */
-	public List<PropertySource<?>> parseNacosData(String configName, String configValue,
-			String extension) throws IOException {
+	public List<PropertySource<?>> parseNacosData(String configName, String configValue, String extension)
+			throws IOException {
 		if (StringUtils.isEmpty(configValue)) {
 			return Collections.emptyList();
 		}
@@ -80,35 +80,29 @@ public final class NacosDataParserHandler {
 				// PropertiesPropertySourceLoader internal is to use the ISO_8859_1,
 				// the Chinese will be garbled, needs to transform into unicode.
 				nacosByteArrayResource = new NacosByteArrayResource(
-						NacosConfigUtils.selectiveConvertUnicode(configValue).getBytes(),
-						configName);
+						NacosConfigUtils.selectiveConvertUnicode(configValue).getBytes(), configName);
 			}
 			else {
-				nacosByteArrayResource = new NacosByteArrayResource(
-						configValue.getBytes(), configName);
+				nacosByteArrayResource = new NacosByteArrayResource(configValue.getBytes(), configName);
 			}
 			nacosByteArrayResource.setFilename(getFileName(configName, extension));
-			List<PropertySource<?>> propertySourceList = propertySourceLoader
-					.load(configName, nacosByteArrayResource);
+			List<PropertySource<?>> propertySourceList = propertySourceLoader.load(configName, nacosByteArrayResource);
 			if (CollectionUtils.isEmpty(propertySourceList)) {
 				return Collections.emptyList();
 			}
-			return propertySourceList.stream().filter(Objects::nonNull)
-					.map(propertySource -> {
-						if (propertySource instanceof EnumerablePropertySource) {
-							String[] propertyNames = ((EnumerablePropertySource) propertySource)
-									.getPropertyNames();
-							if (propertyNames != null && propertyNames.length > 0) {
-								Map<String, Object> map = new LinkedHashMap<>();
-								Arrays.stream(propertyNames).forEach(name -> {
-									map.put(name, propertySource.getProperty(name));
-								});
-								return new OriginTrackedMapPropertySource(
-										propertySource.getName(), map, true);
-							}
-						}
-						return propertySource;
-					}).collect(Collectors.toList());
+			return propertySourceList.stream().filter(Objects::nonNull).map(propertySource -> {
+				if (propertySource instanceof EnumerablePropertySource) {
+					String[] propertyNames = ((EnumerablePropertySource) propertySource).getPropertyNames();
+					if (propertyNames != null && propertyNames.length > 0) {
+						Map<String, Object> map = new LinkedHashMap<>();
+						Arrays.stream(propertyNames).forEach(name -> {
+							map.put(name, propertySource.getProperty(name));
+						});
+						return new OriginTrackedMapPropertySource(propertySource.getName(), map, true);
+					}
+				}
+				return propertySource;
+			}).collect(Collectors.toList());
 		}
 		return Collections.emptyList();
 	}
@@ -121,8 +115,7 @@ public final class NacosDataParserHandler {
 	 */
 	private boolean canLoadFileExtension(PropertySourceLoader loader, String extension) {
 		return Arrays.stream(loader.getFileExtensions())
-				.anyMatch((fileExtension) -> StringUtils.endsWithIgnoreCase(extension,
-						fileExtension));
+				.anyMatch((fileExtension) -> StringUtils.endsWithIgnoreCase(extension, fileExtension));
 	}
 
 	/**

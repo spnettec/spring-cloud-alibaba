@@ -23,8 +23,7 @@ import org.apache.dubbo.config.annotation.DubboReference;
  */
 public class FooServiceConsumer {
 
-	@DubboReference(version = "${foo.service.version}",
-			application = "${dubbo.application.id}",
+	@DubboReference(version = "${foo.service.version}", application = "${dubbo.application.id}",
 			url = "dubbo://localhost:12345?version=1.0.0", timeout = 30000)
 	private FooService fooService;
 

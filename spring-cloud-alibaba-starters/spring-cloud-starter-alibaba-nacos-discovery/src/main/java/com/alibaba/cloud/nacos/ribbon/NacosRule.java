@@ -70,16 +70,14 @@ public class NacosRule extends AbstractLoadBalancerRule {
 			List<Instance> instancesToChoose = instances;
 			if (StringUtils.isNotBlank(clusterName)) {
 				List<Instance> sameClusterInstances = instances.stream()
-						.filter(instance -> Objects.equals(clusterName,
-								instance.getClusterName()))
+						.filter(instance -> Objects.equals(clusterName, instance.getClusterName()))
 						.collect(Collectors.toList());
 				if (!CollectionUtils.isEmpty(sameClusterInstances)) {
 					instancesToChoose = sameClusterInstances;
 				}
 				else {
-					LOGGER.warn(
-							"A cross-cluster call occurs，name = {}, clusterName = {}, instance = {}",
-							name, clusterName, instances);
+					LOGGER.warn("A cross-cluster call occurs，name = {}, clusterName = {}, instance = {}", name,
+							clusterName, instances);
 				}
 			}
 

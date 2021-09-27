@@ -47,13 +47,12 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration(proxyBeanMethods = false)
 @ConditionalOnClass(ZuulServlet.class)
-@ConditionalOnProperty(prefix = ConfigConstants.ZUUL_PREFIX, name = "enabled",
-		havingValue = "true", matchIfMissing = true)
+@ConditionalOnProperty(prefix = ConfigConstants.ZUUL_PREFIX, name = "enabled", havingValue = "true",
+		matchIfMissing = true)
 @EnableConfigurationProperties(SentinelZuulProperties.class)
 public class SentinelZuulAutoConfiguration {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(SentinelZuulAutoConfiguration.class);
+	private static final Logger logger = LoggerFactory.getLogger(SentinelZuulAutoConfiguration.class);
 
 	@Autowired
 	private Optional<RequestOriginParser> requestOriginParserOptional;
@@ -63,39 +62,33 @@ public class SentinelZuulAutoConfiguration {
 
 	@PostConstruct
 	private void init() {
-		requestOriginParserOptional
-				.ifPresent(ZuulGatewayCallbackManager::setOriginParser);
-		System.setProperty(SentinelConfig.APP_TYPE_PROP_KEY,
-				String.valueOf(ConfigConstants.APP_TYPE_ZUUL_GATEWAY));
+		requestOriginParserOptional.ifPresent(ZuulGatewayCallbackManager::setOriginParser);
+		System.setProperty(SentinelConfig.APP_TYPE_PROP_KEY, String.valueOf(ConfigConstants.APP_TYPE_ZUUL_GATEWAY));
 	}
 
 	@Bean
 	@ConditionalOnMissingBean
 	public SentinelZuulPreFilter sentinelZuulPreFilter() {
-		logger.info("[Sentinel Zuul] register SentinelZuulPreFilter {}",
-				zuulProperties.getOrder().getPre());
+		logger.info("[Sentinel Zuul] register SentinelZuulPreFilter {}", zuulProperties.getOrder().getPre());
 		return new SentinelZuulPreFilter(zuulProperties.getOrder().getPre());
 	}
 
 	@Bean
 	@ConditionalOnMissingBean
 	public SentinelZuulPostFilter sentinelZuulPostFilter() {
-		logger.info("[Sentinel Zuul] register SentinelZuulPostFilter {}",
-				zuulProperties.getOrder().getPost());
+		logger.info("[Sentinel Zuul] register SentinelZuulPostFilter {}", zuulProperties.getOrder().getPost());
 		return new SentinelZuulPostFilter(zuulProperties.getOrder().getPost());
 	}
 
 	@Bean
 	@ConditionalOnMissingBean
 	public SentinelZuulErrorFilter sentinelZuulErrorFilter() {
-		logger.info("[Sentinel Zuul] register SentinelZuulErrorFilter {}",
-				zuulProperties.getOrder().getError());
+		logger.info("[Sentinel Zuul] register SentinelZuulErrorFilter {}", zuulProperties.getOrder().getError());
 		return new SentinelZuulErrorFilter(zuulProperties.getOrder().getError());
 	}
 
 	@Bean
-	public FallBackProviderHandler fallBackProviderHandler(
-			DefaultListableBeanFactory beanFactory) {
+	public FallBackProviderHandler fallBackProviderHandler(DefaultListableBeanFactory beanFactory) {
 		return new FallBackProviderHandler(beanFactory);
 	}
 

@@ -48,8 +48,7 @@ import org.springframework.util.StringUtils;
  * @see ParamFlowRule
  * @see ObjectMapper
  */
-public abstract class SentinelConverter<T extends Object>
-		implements Converter<String, Collection<Object>> {
+public abstract class SentinelConverter<T extends Object> implements Converter<String, Collection<Object>> {
 
 	private static final Logger log = LoggerFactory.getLogger(SentinelConverter.class);
 
@@ -67,9 +66,8 @@ public abstract class SentinelConverter<T extends Object>
 		Collection<Object> ruleCollection;
 
 		// hard code
-		if (ruleClass == FlowRule.class || ruleClass == DegradeRule.class
-				|| ruleClass == SystemRule.class || ruleClass == AuthorityRule.class
-				|| ruleClass == ParamFlowRule.class) {
+		if (ruleClass == FlowRule.class || ruleClass == DegradeRule.class || ruleClass == SystemRule.class
+				|| ruleClass == AuthorityRule.class || ruleClass == ParamFlowRule.class) {
 			ruleCollection = new ArrayList<>();
 		}
 		else {
@@ -81,20 +79,17 @@ public abstract class SentinelConverter<T extends Object>
 			return ruleCollection;
 		}
 		try {
-			List sourceArray = objectMapper.readValue(source,
-					new TypeReference<List<HashMap>>() {
-					});
+			List sourceArray = objectMapper.readValue(source, new TypeReference<List<HashMap>>() {
+			});
 
 			for (Object obj : sourceArray) {
 				try {
 					String item = objectMapper.writeValueAsString(obj);
-					Optional.ofNullable(convertRule(item))
-							.ifPresent(convertRule -> ruleCollection.add(convertRule));
+					Optional.ofNullable(convertRule(item)).ifPresent(convertRule -> ruleCollection.add(convertRule));
 				}
 				catch (IOException e) {
 					log.error("sentinel rule convert error: " + e.getMessage(), e);
-					throw new IllegalArgumentException(
-							"sentinel rule convert error: " + e.getMessage(), e);
+					throw new IllegalArgumentException("sentinel rule convert error: " + e.getMessage(), e);
 				}
 			}
 		}

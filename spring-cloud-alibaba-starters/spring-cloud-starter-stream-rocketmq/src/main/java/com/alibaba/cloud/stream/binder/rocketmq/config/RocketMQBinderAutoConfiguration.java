@@ -35,10 +35,8 @@ import org.springframework.context.annotation.Import;
  * @author <a href="mailto:fangjian0423@gmail.com">Jim</a>
  */
 @Configuration(proxyBeanMethods = false)
-@Import({ RocketMQAutoConfiguration.class,
-		RocketMQBinderHealthIndicatorAutoConfiguration.class })
-@EnableConfigurationProperties({ RocketMQBinderConfigurationProperties.class,
-		RocketMQExtendedBindingProperties.class })
+@Import({ RocketMQAutoConfiguration.class, RocketMQBinderHealthIndicatorAutoConfiguration.class })
+@EnableConfigurationProperties({ RocketMQBinderConfigurationProperties.class, RocketMQExtendedBindingProperties.class })
 public class RocketMQBinderAutoConfiguration {
 
 	private final RocketMQExtendedBindingProperties extendedBindingProperties;
@@ -49,8 +47,7 @@ public class RocketMQBinderAutoConfiguration {
 	private RocketMQProperties rocketMQProperties = new RocketMQProperties();
 
 	@Autowired
-	public RocketMQBinderAutoConfiguration(
-			RocketMQExtendedBindingProperties extendedBindingProperties,
+	public RocketMQBinderAutoConfiguration(RocketMQExtendedBindingProperties extendedBindingProperties,
 			RocketMQBinderConfigurationProperties rocketBinderConfigurationProperties) {
 		this.extendedBindingProperties = extendedBindingProperties;
 		this.rocketBinderConfigurationProperties = rocketBinderConfigurationProperties;
@@ -62,12 +59,10 @@ public class RocketMQBinderAutoConfiguration {
 	}
 
 	@Bean
-	public RocketMQMessageChannelBinder rocketMessageChannelBinder(
-			RocketMQTopicProvisioner provisioningProvider,
+	public RocketMQMessageChannelBinder rocketMessageChannelBinder(RocketMQTopicProvisioner provisioningProvider,
 			InstrumentationManager instrumentationManager) {
-		RocketMQMessageChannelBinder binder = new RocketMQMessageChannelBinder(
-				provisioningProvider, extendedBindingProperties,
-				rocketBinderConfigurationProperties, rocketMQProperties,
+		RocketMQMessageChannelBinder binder = new RocketMQMessageChannelBinder(provisioningProvider,
+				extendedBindingProperties, rocketBinderConfigurationProperties, rocketMQProperties,
 				instrumentationManager);
 		binder.setExtendedBindingProperties(extendedBindingProperties);
 		return binder;

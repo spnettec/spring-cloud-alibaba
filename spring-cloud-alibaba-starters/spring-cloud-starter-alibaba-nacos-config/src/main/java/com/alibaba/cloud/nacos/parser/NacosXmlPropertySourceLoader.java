@@ -45,8 +45,7 @@ import org.springframework.util.StringUtils;
  *
  * @author zkz
  */
-public class NacosXmlPropertySourceLoader extends AbstractPropertySourceLoader
-		implements Ordered {
+public class NacosXmlPropertySourceLoader extends AbstractPropertySourceLoader implements Ordered {
 
 	/**
 	 * Get the order value of this object.
@@ -85,19 +84,16 @@ public class NacosXmlPropertySourceLoader extends AbstractPropertySourceLoader
 	 * @throws IOException if the source cannot be loaded
 	 */
 	@Override
-	protected List<PropertySource<?>> doLoad(String name, Resource resource)
-			throws IOException {
+	protected List<PropertySource<?>> doLoad(String name, Resource resource) throws IOException {
 		Map<String, Object> nacosDataMap = parseXml2Map(resource);
-		return Collections.singletonList(
-				new OriginTrackedMapPropertySource(name, nacosDataMap, true));
+		return Collections.singletonList(new OriginTrackedMapPropertySource(name, nacosDataMap, true));
 
 	}
 
 	private Map<String, Object> parseXml2Map(Resource resource) throws IOException {
 		Map<String, Object> map = new LinkedHashMap<>(32);
 		try {
-			DocumentBuilder documentBuilder = DocumentBuilderFactory.newInstance()
-					.newDocumentBuilder();
+			DocumentBuilder documentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 			Document document = documentBuilder.parse(resource.getInputStream());
 			if (null == document) {
 				return null;
@@ -110,8 +106,7 @@ public class NacosXmlPropertySourceLoader extends AbstractPropertySourceLoader
 		return map;
 	}
 
-	private void parseNodeList(NodeList nodeList, Map<String, Object> map,
-			String parentKey) {
+	private void parseNodeList(NodeList nodeList, Map<String, Object> map, String parentKey) {
 		if (nodeList == null || nodeList.getLength() < 1) {
 			return;
 		}
@@ -141,8 +136,7 @@ public class NacosXmlPropertySourceLoader extends AbstractPropertySourceLoader
 		}
 	}
 
-	private void parseNodeAttr(NamedNodeMap nodeMap, Map<String, Object> map,
-			String parentKey) {
+	private void parseNodeAttr(NamedNodeMap nodeMap, Map<String, Object> map, String parentKey) {
 		if (null == nodeMap || nodeMap.getLength() < 1) {
 			return;
 		}
@@ -158,8 +152,7 @@ public class NacosXmlPropertySourceLoader extends AbstractPropertySourceLoader
 				if (StringUtils.isEmpty(node.getNodeValue())) {
 					continue;
 				}
-				map.put(String.join(DOT, parentKey, node.getNodeName()),
-						node.getNodeValue());
+				map.put(String.join(DOT, parentKey, node.getNodeName()), node.getNodeValue());
 			}
 		}
 	}

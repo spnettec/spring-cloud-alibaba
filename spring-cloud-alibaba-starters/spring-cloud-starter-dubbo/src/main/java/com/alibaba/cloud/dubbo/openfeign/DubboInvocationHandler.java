@@ -54,8 +54,7 @@ public class DubboInvocationHandler implements InvocationHandler {
 	}
 
 	@Override
-	public Object invoke(Object proxy, Method feignMethod, Object[] args)
-			throws Throwable {
+	public Object invoke(Object proxy, Method feignMethod, Object[] args) throws Throwable {
 
 		FeignMethodMetadata feignMethodMetadata = feignMethodMetadataMap.get(feignMethod);
 
@@ -64,20 +63,17 @@ public class DubboInvocationHandler implements InvocationHandler {
 		}
 
 		GenericService dubboGenericService = feignMethodMetadata.getDubboGenericService();
-		RestMethodMetadata dubboRestMethodMetadata = feignMethodMetadata
-				.getDubboRestMethodMetadata();
-		RestMethodMetadata feignRestMethodMetadata = feignMethodMetadata
-				.getFeignMethodMetadata();
+		RestMethodMetadata dubboRestMethodMetadata = feignMethodMetadata.getDubboRestMethodMetadata();
+		RestMethodMetadata feignRestMethodMetadata = feignMethodMetadata.getFeignMethodMetadata();
 
-		DubboGenericServiceExecutionContext context = contextFactory
-				.create(dubboRestMethodMetadata, feignRestMethodMetadata, args);
+		DubboGenericServiceExecutionContext context = contextFactory.create(dubboRestMethodMetadata,
+				feignRestMethodMetadata, args);
 
 		String methodName = context.getMethodName();
 		String[] parameterTypes = context.getParameterTypes();
 		Object[] parameters = context.getParameters();
 
-		Object result = dubboGenericService.$invoke(methodName, parameterTypes,
-				parameters);
+		Object result = dubboGenericService.$invoke(methodName, parameterTypes, parameters);
 
 		Class<?> returnType = getReturnType(dubboRestMethodMetadata);
 

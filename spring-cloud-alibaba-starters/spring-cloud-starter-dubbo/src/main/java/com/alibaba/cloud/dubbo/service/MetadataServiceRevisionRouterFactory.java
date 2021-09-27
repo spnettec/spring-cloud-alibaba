@@ -41,14 +41,13 @@ public class MetadataServiceRevisionRouterFactory implements RouterFactory {
 	public Router getRouter(URL url) {
 		return new AbstractRouter() {
 			@Override
-			public <T> List<Invoker<T>> route(List<Invoker<T>> invokers, URL url,
-					Invocation invocation) throws RpcException {
+			public <T> List<Invoker<T>> route(List<Invoker<T>> invokers, URL url, Invocation invocation)
+					throws RpcException {
 				if (CollectionUtils.isEmpty(invokers)) {
 					return invokers;
 				}
 
-				if (!DubboMetadataService.class.getName()
-						.equalsIgnoreCase(url.getServiceInterface())) {
+				if (!DubboMetadataService.class.getName().equalsIgnoreCase(url.getServiceInterface())) {
 					return invokers;
 				}
 
@@ -61,8 +60,7 @@ public class MetadataServiceRevisionRouterFactory implements RouterFactory {
 				List<Invoker<T>> list = new ArrayList<>(invokers.size());
 
 				for (Invoker<T> invoker : invokers) {
-					if (StringUtils.equals(revision,
-							invoker.getUrl().getParameter(SCA_REVSION_KEY))) {
+					if (StringUtils.equals(revision, invoker.getUrl().getParameter(SCA_REVSION_KEY))) {
 						list.add(invoker);
 					}
 				}

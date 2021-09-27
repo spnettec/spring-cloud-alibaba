@@ -84,18 +84,15 @@ public class RedisDataSourceProperties extends AbstractDataSourceProperties {
 	public void preCheck(String dataSourceName) {
 		super.preCheck(dataSourceName);
 		if (StringUtils.isEmpty(ruleKey)) {
-			throw new IllegalArgumentException(
-					"RedisDataSource  ruleKey can not be empty");
+			throw new IllegalArgumentException("RedisDataSource  ruleKey can not be empty");
 		}
 
 		if (StringUtils.isEmpty(channel)) {
-			throw new IllegalArgumentException(
-					"RedisDataSource  channel can not be empty");
+			throw new IllegalArgumentException("RedisDataSource  channel can not be empty");
 		}
 
 		if (StringUtils.isEmpty(masterId)) {
-			throw new IllegalArgumentException(
-					"RedisDataSource  sentinel model，masterId can not be empty");
+			throw new IllegalArgumentException("RedisDataSource  sentinel model，masterId can not be empty");
 		}
 	}
 

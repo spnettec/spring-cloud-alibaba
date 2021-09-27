@@ -39,8 +39,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  */
-public class RequestBodyServiceParameterResolver
-		extends AbstractDubboGenericServiceParameterResolver {
+public class RequestBodyServiceParameterResolver extends AbstractDubboGenericServiceParameterResolver {
 
 	/**
 	 * Default order of RequestBodyServiceParameterResolver.
@@ -59,12 +58,10 @@ public class RequestBodyServiceParameterResolver
 
 	@PostConstruct
 	public void init() {
-		HttpMessageConverters httpMessageConverters = this.httpMessageConverters
-				.getIfAvailable();
+		HttpMessageConverters httpMessageConverters = this.httpMessageConverters.getIfAvailable();
 
 		httpMessageConverterResolver = new HttpMessageConverterResolver(
-				httpMessageConverters == null ? Collections.emptyList()
-						: httpMessageConverters.getConverters(),
+				httpMessageConverters == null ? Collections.emptyList() : httpMessageConverters.getConverters(),
 				getClassLoader());
 	}
 
@@ -87,8 +84,8 @@ public class RequestBodyServiceParameterResolver
 	}
 
 	@Override
-	public Object resolve(RestMethodMetadata restMethodMetadata,
-			MethodParameterMetadata methodParameterMetadata, HttpServerRequest request) {
+	public Object resolve(RestMethodMetadata restMethodMetadata, MethodParameterMetadata methodParameterMetadata,
+			HttpServerRequest request) {
 
 		if (!supportParameter(restMethodMetadata, methodParameterMetadata)) {
 			return null;
@@ -98,8 +95,7 @@ public class RequestBodyServiceParameterResolver
 
 		Class<?> parameterType = resolveClass(methodParameterMetadata.getType());
 
-		HttpMessageConverterHolder holder = httpMessageConverterResolver.resolve(request,
-				parameterType);
+		HttpMessageConverterHolder holder = httpMessageConverterResolver.resolve(request, parameterType);
 
 		if (holder != null) {
 			HttpMessageConverter converter = holder.getConverter();
@@ -107,8 +103,7 @@ public class RequestBodyServiceParameterResolver
 				result = converter.read(parameterType, request);
 			}
 			catch (IOException e) {
-				throw new HttpMessageNotReadableException(
-						"I/O error while reading input message", e);
+				throw new HttpMessageNotReadableException("I/O error while reading input message", e);
 			}
 		}
 
@@ -116,8 +111,7 @@ public class RequestBodyServiceParameterResolver
 	}
 
 	@Override
-	public Object resolve(RestMethodMetadata restMethodMetadata,
-			MethodParameterMetadata methodParameterMetadata,
+	public Object resolve(RestMethodMetadata restMethodMetadata, MethodParameterMetadata methodParameterMetadata,
 			RestMethodMetadata clientRestMethodMetadata, Object[] arguments) {
 
 		if (!supportParameter(restMethodMetadata, methodParameterMetadata)) {

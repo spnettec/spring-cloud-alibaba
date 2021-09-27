@@ -30,8 +30,8 @@ import org.springframework.util.Assert;
  *
  * @author Eric Zhao
  */
-public class ReactiveSentinelCircuitBreakerFactory extends
-		ReactiveCircuitBreakerFactory<SentinelCircuitBreakerConfiguration, SentinelConfigBuilder> {
+public class ReactiveSentinelCircuitBreakerFactory
+		extends ReactiveCircuitBreakerFactory<SentinelCircuitBreakerConfiguration, SentinelConfigBuilder> {
 
 	private Function<String, SentinelConfigBuilder.SentinelCircuitBreakerConfiguration> defaultConfiguration = id -> new SentinelConfigBuilder()
 			.resourceName(id).rules(new ArrayList<>()).build();
@@ -39,10 +39,9 @@ public class ReactiveSentinelCircuitBreakerFactory extends
 	@Override
 	public ReactiveCircuitBreaker create(String id) {
 		Assert.hasText(id, "A CircuitBreaker must have an id.");
-		SentinelConfigBuilder.SentinelCircuitBreakerConfiguration conf = getConfigurations()
-				.computeIfAbsent(id, defaultConfiguration);
-		return new ReactiveSentinelCircuitBreaker(id, conf.getEntryType(),
-				conf.getRules());
+		SentinelConfigBuilder.SentinelCircuitBreakerConfiguration conf = getConfigurations().computeIfAbsent(id,
+				defaultConfiguration);
+		return new ReactiveSentinelCircuitBreaker(id, conf.getEntryType(), conf.getRules());
 	}
 
 	@Override
@@ -51,8 +50,7 @@ public class ReactiveSentinelCircuitBreakerFactory extends
 	}
 
 	@Override
-	public void configureDefault(
-			Function<String, SentinelCircuitBreakerConfiguration> defaultConfiguration) {
+	public void configureDefault(Function<String, SentinelCircuitBreakerConfiguration> defaultConfiguration) {
 		this.defaultConfiguration = defaultConfiguration;
 	}
 

@@ -78,8 +78,7 @@ public class RequestMetadata {
 	 * @param requestMetadata the match object
 	 * @return if not matched, return <code>null</code>
 	 */
-	public static RequestMetadata getBestMatch(
-			NavigableMap<RequestMetadata, RequestMetadata> requestMetadataMap,
+	public static RequestMetadata getBestMatch(NavigableMap<RequestMetadata, RequestMetadata> requestMetadataMap,
 			RequestMetadata requestMetadata) {
 
 		RequestMetadata key = requestMetadata;
@@ -87,16 +86,14 @@ public class RequestMetadata {
 		RequestMetadata result = requestMetadataMap.get(key);
 
 		if (result == null) {
-			SortedMap<RequestMetadata, RequestMetadata> headMap = requestMetadataMap
-					.headMap(key, true);
+			SortedMap<RequestMetadata, RequestMetadata> headMap = requestMetadataMap.headMap(key, true);
 			result = headMap.isEmpty() ? null : requestMetadataMap.get(headMap.lastKey());
 		}
 
 		return result;
 	}
 
-	private static void add(String key, String value,
-			MultiValueMap<String, String> destination) {
+	private static void add(String key, String value, MultiValueMap<String, String> destination) {
 		destination.add(key, value);
 	}
 
@@ -110,8 +107,7 @@ public class RequestMetadata {
 		}
 	}
 
-	private static void mediaTypes(HttpHeaders httpHeaders, String headerName,
-			Collection<String> destination) {
+	private static void mediaTypes(HttpHeaders httpHeaders, String headerName, Collection<String> destination) {
 		List<String> value = httpHeaders.get(headerName);
 		List<MediaType> mediaTypes = parseMediaTypes(value);
 		destination.addAll(toMediaTypeValues(mediaTypes));
@@ -224,8 +220,7 @@ public class RequestMetadata {
 		return this;
 	}
 
-	private <T extends Collection<String>> RequestMetadata headers(
-			Map<String, T> headers) {
+	private <T extends Collection<String>> RequestMetadata headers(Map<String, T> headers) {
 		if (!CollectionUtils.isEmpty(headers)) {
 			HttpHeaders httpHeaders = new HttpHeaders();
 			// Add all headers
@@ -248,8 +243,7 @@ public class RequestMetadata {
 		}
 		RequestMetadata that = (RequestMetadata) o;
 		return Objects.equals(method, that.method) && Objects.equals(path, that.path)
-				&& Objects.equals(consumes, that.consumes)
-				&& Objects.equals(produces, that.produces) &&
+				&& Objects.equals(consumes, that.consumes) && Objects.equals(produces, that.produces) &&
 				// Metadata should not compare the values
 				Objects.equals(getParamNames(), that.getParamNames())
 				&& Objects.equals(getHeaderNames(), that.getHeaderNames());
@@ -259,15 +253,13 @@ public class RequestMetadata {
 	@Override
 	public int hashCode() {
 		// The values of metadata should not use for the hashCode() method
-		return Objects.hash(method, path, consumes, produces, getParamNames(),
-				getHeaderNames());
+		return Objects.hash(method, path, consumes, produces, getParamNames(), getHeaderNames());
 	}
 
 	@Override
 	public String toString() {
-		return "RequestMetadata{" + "method='" + method + '\'' + ", path='" + path + '\''
-				+ ", params=" + params + ", headers=" + headers + ", consumes=" + consumes
-				+ ", produces=" + produces + '}';
+		return "RequestMetadata{" + "method='" + method + '\'' + ", path='" + path + '\'' + ", params=" + params
+				+ ", headers=" + headers + ", consumes=" + consumes + ", produces=" + produces + '}';
 	}
 
 }

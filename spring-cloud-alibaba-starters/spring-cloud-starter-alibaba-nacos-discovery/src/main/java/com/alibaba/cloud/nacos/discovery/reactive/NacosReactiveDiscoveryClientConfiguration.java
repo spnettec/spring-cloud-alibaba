@@ -37,15 +37,13 @@ import org.springframework.context.annotation.Configuration;
 @ConditionalOnDiscoveryEnabled
 @ConditionalOnReactiveDiscoveryEnabled
 @ConditionalOnNacosDiscoveryEnabled
-@AutoConfigureAfter({ NacosDiscoveryAutoConfiguration.class,
-		ReactiveCompositeDiscoveryClientAutoConfiguration.class })
+@AutoConfigureAfter({ NacosDiscoveryAutoConfiguration.class, ReactiveCompositeDiscoveryClientAutoConfiguration.class })
 @AutoConfigureBefore({ ReactiveCommonsClientAutoConfiguration.class })
 public class NacosReactiveDiscoveryClientConfiguration {
 
 	@Bean
 	@ConditionalOnMissingBean
-	public NacosReactiveDiscoveryClient nacosReactiveDiscoveryClient(
-			NacosServiceDiscovery nacosServiceDiscovery) {
+	public NacosReactiveDiscoveryClient nacosReactiveDiscoveryClient(NacosServiceDiscovery nacosServiceDiscovery) {
 		return new NacosReactiveDiscoveryClient(nacosServiceDiscovery);
 	}
 

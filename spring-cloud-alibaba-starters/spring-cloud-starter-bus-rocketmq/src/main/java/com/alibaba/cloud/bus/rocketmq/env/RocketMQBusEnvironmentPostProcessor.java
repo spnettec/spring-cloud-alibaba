@@ -28,7 +28,7 @@ import org.springframework.core.env.MapPropertySource;
 import org.springframework.core.env.MutablePropertySources;
 import org.springframework.core.env.PropertySource;
 
-import static org.springframework.cloud.bus.SpringCloudBusClient.INPUT;
+import static org.springframework.cloud.bus.BusConstants.INPUT;
 
 /**
  * The lowest precedence {@link EnvironmentPostProcessor} configures default RocketMQ Bus
@@ -38,8 +38,7 @@ import static org.springframework.cloud.bus.SpringCloudBusClient.INPUT;
  * @since 0.2.1
  * @see BusEnvironmentPostProcessor
  */
-public class RocketMQBusEnvironmentPostProcessor
-		implements EnvironmentPostProcessor, Ordered {
+public class RocketMQBusEnvironmentPostProcessor implements EnvironmentPostProcessor, Ordered {
 
 	/**
 	 * The name of {@link PropertySource} of {@link SpringApplication#defaultProperties}.
@@ -47,8 +46,7 @@ public class RocketMQBusEnvironmentPostProcessor
 	private static final String PROPERTY_SOURCE_NAME = "defaultProperties";
 
 	@Override
-	public void postProcessEnvironment(ConfigurableEnvironment environment,
-			SpringApplication application) {
+	public void postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application) {
 
 		addDefaultPropertySource(environment);
 
@@ -66,15 +64,13 @@ public class RocketMQBusEnvironmentPostProcessor
 	private void configureDefaultProperties(Map<String, Object> source) {
 		// Required Properties
 		String groupBindingPropertyName = createBindingPropertyName(INPUT, "group");
-		String broadcastingPropertyName = createRocketMQPropertyName(INPUT,
-				"broadcasting");
+		String broadcastingPropertyName = createRocketMQPropertyName(INPUT, "broadcasting");
 		source.put(groupBindingPropertyName, "rocketmq-bus-group");
 		source.put(broadcastingPropertyName, "true");
 	}
 
 	private String createRocketMQPropertyName(String channel, String propertyName) {
-		return "spring.cloud.stream.rocketmq.bindings." + INPUT + ".consumer."
-				+ propertyName;
+		return "spring.cloud.stream.rocketmq.bindings." + INPUT + ".consumer." + propertyName;
 	}
 
 	private String createBindingPropertyName(String channel, String propertyName) {
@@ -87,8 +83,7 @@ public class RocketMQBusEnvironmentPostProcessor
 	 * @param propertySources {@link MutablePropertySources}
 	 * @param map Default RocketMQ Bus Properties
 	 */
-	private void addOrReplace(MutablePropertySources propertySources,
-			Map<String, Object> map) {
+	private void addOrReplace(MutablePropertySources propertySources, Map<String, Object> map) {
 		MapPropertySource target = null;
 		if (propertySources.contains(PROPERTY_SOURCE_NAME)) {
 			PropertySource<?> source = propertySources.get(PROPERTY_SOURCE_NAME);

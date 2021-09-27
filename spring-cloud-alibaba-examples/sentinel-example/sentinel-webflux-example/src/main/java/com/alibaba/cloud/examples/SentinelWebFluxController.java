@@ -59,9 +59,8 @@ public class SentinelWebFluxController {
 	@GetMapping("/cbSlow")
 	public Mono<String> cbSlow() {
 		int delaySecs = 2;
-		return WebClient.builder().baseUrl("http://httpbin.org/").build().get()
-				.uri("/delay/" + delaySecs).retrieve().bodyToMono(String.class)
-				.transform(it -> circuitBreakerFactory.create("slow_mono").run(it, t -> {
+		return WebClient.builder().baseUrl("http://httpbin.org/").build().get().uri("/delay/" + delaySecs).retrieve()
+				.bodyToMono(String.class).transform(it -> circuitBreakerFactory.create("slow_mono").run(it, t -> {
 					t.printStackTrace();
 					return Mono.just("fallback");
 				}));
@@ -70,9 +69,8 @@ public class SentinelWebFluxController {
 	@GetMapping("/cbError")
 	public Mono<String> cbError() {
 		String code = "500";
-		return WebClient.builder().baseUrl("http://httpbin.org/").build().get()
-				.uri("/status/" + code).retrieve().bodyToMono(String.class)
-				.transform(it -> circuitBreakerFactory.create("cbError").run(it, t -> {
+		return WebClient.builder().baseUrl("http://httpbin.org/").build().get().uri("/status/" + code).retrieve()
+				.bodyToMono(String.class).transform(it -> circuitBreakerFactory.create("cbError").run(it, t -> {
 					t.printStackTrace();
 					return Mono.just("fallback");
 				}));

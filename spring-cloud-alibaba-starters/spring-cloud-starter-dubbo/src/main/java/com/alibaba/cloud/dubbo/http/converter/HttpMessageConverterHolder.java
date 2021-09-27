@@ -30,8 +30,7 @@ public class HttpMessageConverterHolder {
 
 	private final HttpMessageConverter<?> converter;
 
-	public HttpMessageConverterHolder(MediaType mediaType,
-			HttpMessageConverter<?> converter) {
+	public HttpMessageConverterHolder(MediaType mediaType, HttpMessageConverter<?> converter) {
 		this.mediaType = mediaType;
 		this.converter = converter;
 	}

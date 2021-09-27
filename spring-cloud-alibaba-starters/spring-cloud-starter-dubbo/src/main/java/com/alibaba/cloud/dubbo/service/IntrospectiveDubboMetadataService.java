@@ -52,8 +52,7 @@ public class IntrospectiveDubboMetadataService implements DubboMetadataService {
 
 	@Override
 	public String getServiceRestMetadata() {
-		Set<ServiceRestMetadata> serviceRestMetadata = getRepository()
-				.getServiceRestMetadata();
+		Set<ServiceRestMetadata> serviceRestMetadata = getRepository().getServiceRestMetadata();
 		String serviceRestMetadataJsonConfig = null;
 		if (!isEmpty(serviceRestMetadata)) {
 			serviceRestMetadataJsonConfig = jsonUtils.toJSON(serviceRestMetadata);
@@ -87,8 +86,7 @@ public class IntrospectiveDubboMetadataService implements DubboMetadataService {
 
 	@Override
 	public String getExportedURLs(String serviceInterface, String group, String version) {
-		List<URL> urls = getRepository().getExportedURLs(serviceInterface, group,
-				version);
+		List<URL> urls = getRepository().getExportedURLs(serviceInterface, group, version);
 		return jsonUtils.toJSON(urls);
 	}
 

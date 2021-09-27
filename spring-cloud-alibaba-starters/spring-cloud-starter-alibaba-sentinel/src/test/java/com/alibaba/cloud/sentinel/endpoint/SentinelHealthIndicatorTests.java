@@ -58,14 +58,12 @@ public class SentinelHealthIndicatorTests {
 	public void setUp() {
 		beanFactory = mock(DefaultListableBeanFactory.class);
 		sentinelProperties = mock(SentinelProperties.class);
-		sentinelHealthIndicator = new SentinelHealthIndicator(beanFactory,
-				sentinelProperties);
+		sentinelHealthIndicator = new SentinelHealthIndicator(beanFactory, sentinelProperties);
 
 		SentinelConfig.setConfig(TransportConfig.CONSOLE_SERVER, "");
 
 		heartbeatSender = mock(HeartbeatSender.class);
-		Field heartbeatSenderField = ReflectionUtils
-				.findField(HeartbeatSenderProvider.class, "heartbeatSender");
+		Field heartbeatSenderField = ReflectionUtils.findField(HeartbeatSenderProvider.class, "heartbeatSender");
 		heartbeatSenderField.setAccessible(true);
 		ReflectionUtils.setField(heartbeatSenderField, null, heartbeatSender);
 	}
@@ -110,8 +108,8 @@ public class SentinelHealthIndicatorTests {
 		Health health = sentinelHealthIndicator.health();
 
 		assertThat(health.getStatus()).isEqualTo(Status.UNKNOWN);
-		assertThat(health.getDetails().get("dashboard")).isEqualTo(new Status(
-				Status.UNKNOWN.getCode(), "localhost:8080 can't be connected"));
+		assertThat(health.getDetails().get("dashboard"))
+				.isEqualTo(new Status(Status.UNKNOWN.getCode(), "localhost:8080 can't be connected"));
 	}
 
 	@Test
@@ -128,18 +126,14 @@ public class SentinelHealthIndicatorTests {
 		FileRefreshableDataSource fileDataSource2 = mock(FileRefreshableDataSource.class);
 		dataSourceMap.put("ds2-sentinel-file-datasource", fileDataSource2);
 
-		when(beanFactory.getBeansOfType(AbstractDataSource.class))
-				.thenReturn(dataSourceMap);
+		when(beanFactory.getBeansOfType(AbstractDataSource.class)).thenReturn(dataSourceMap);
 
 		Health health = sentinelHealthIndicator.health();
 
 		assertThat(health.getStatus()).isEqualTo(Status.UP);
-		Map<String, Status> dataSourceDetailMap = (Map<String, Status>) health
-				.getDetails().get("dataSource");
-		assertThat(dataSourceDetailMap.get("ds1-sentinel-file-datasource"))
-				.isEqualTo(Status.UP);
-		assertThat(dataSourceDetailMap.get("ds2-sentinel-file-datasource"))
-				.isEqualTo(Status.UP);
+		Map<String, Status> dataSourceDetailMap = (Map<String, Status>) health.getDetails().get("dataSource");
+		assertThat(dataSourceDetailMap.get("ds1-sentinel-file-datasource")).isEqualTo(Status.UP);
+		assertThat(dataSourceDetailMap.get("ds2-sentinel-file-datasource")).isEqualTo(Status.UP);
 	}
 
 	@Test
@@ -154,20 +148,16 @@ public class SentinelHealthIndicatorTests {
 		dataSourceMap.put("ds1-sentinel-file-datasource", fileDataSource1);
 
 		FileRefreshableDataSource fileDataSource2 = mock(FileRefreshableDataSource.class);
-		when(fileDataSource2.loadConfig())
-				.thenThrow(new RuntimeException("fileDataSource2 error"));
+		when(fileDataSource2.loadConfig()).thenThrow(new RuntimeException("fileDataSource2 error"));
 		dataSourceMap.put("ds2-sentinel-file-datasource", fileDataSource2);
 
-		when(beanFactory.getBeansOfType(AbstractDataSource.class))
-				.thenReturn(dataSourceMap);
+		when(beanFactory.getBeansOfType(AbstractDataSource.class)).thenReturn(dataSourceMap);
 
 		Health health = sentinelHealthIndicator.health();
 
 		assertThat(health.getStatus()).isEqualTo(Status.UNKNOWN);
-		Map<String, Status> dataSourceDetailMap = (Map<String, Status>) health
-				.getDetails().get("dataSource");
-		assertThat(dataSourceDetailMap.get("ds1-sentinel-file-datasource"))
-				.isEqualTo(Status.UP);
+		Map<String, Status> dataSourceDetailMap = (Map<String, Status>) health.getDetails().get("dataSource");
+		assertThat(dataSourceDetailMap.get("ds1-sentinel-file-datasource")).isEqualTo(Status.UP);
 		assertThat(dataSourceDetailMap.get("ds2-sentinel-file-datasource"))
 				.isEqualTo(new Status(Status.UNKNOWN.getCode(), "fileDataSource2 error"));
 	}

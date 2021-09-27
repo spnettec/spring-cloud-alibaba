@@ -37,8 +37,7 @@ import org.springframework.context.ApplicationEventPublisherAware;
  * @see ServiceInstancePreDeregisteredEvent
  */
 @Aspect
-public class DubboServiceRegistrationEventPublishingAspect
-		implements ApplicationEventPublisherAware {
+public class DubboServiceRegistrationEventPublishingAspect implements ApplicationEventPublisherAware {
 
 	/**
 	 * The pointcut expression for {@link ServiceRegistry#register(Registration)}.
@@ -54,25 +53,21 @@ public class DubboServiceRegistrationEventPublishingAspect
 
 	@Before(value = REGISTER_POINTCUT_EXPRESSION, argNames = "registry, registration")
 	public void beforeRegister(ServiceRegistry registry, Registration registration) {
-		applicationEventPublisher.publishEvent(
-				new ServiceInstancePreRegisteredEvent(registry, registration));
+		applicationEventPublisher.publishEvent(new ServiceInstancePreRegisteredEvent(registry, registration));
 	}
 
 	@Before(value = DEREGISTER_POINTCUT_EXPRESSION, argNames = "registry, registration")
 	public void beforeDeregister(ServiceRegistry registry, Registration registration) {
-		applicationEventPublisher.publishEvent(
-				new ServiceInstancePreDeregisteredEvent(registry, registration));
+		applicationEventPublisher.publishEvent(new ServiceInstancePreDeregisteredEvent(registry, registration));
 	}
 
 	@After(value = REGISTER_POINTCUT_EXPRESSION, argNames = "registry, registration")
 	public void afterRegister(ServiceRegistry registry, Registration registration) {
-		applicationEventPublisher
-				.publishEvent(new ServiceInstanceRegisteredEvent(registration));
+		applicationEventPublisher.publishEvent(new ServiceInstanceRegisteredEvent(registration));
 	}
 
 	@Override
-	public void setApplicationEventPublisher(
-			ApplicationEventPublisher applicationEventPublisher) {
+	public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
 		this.applicationEventPublisher = applicationEventPublisher;
 	}
 

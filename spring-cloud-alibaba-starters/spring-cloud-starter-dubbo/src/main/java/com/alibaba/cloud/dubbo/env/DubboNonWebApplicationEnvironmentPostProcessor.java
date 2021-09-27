@@ -43,8 +43,7 @@ import static org.apache.dubbo.common.constants.CommonConstants.DEFAULT_PROTOCOL
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  */
-public class DubboNonWebApplicationEnvironmentPostProcessor
-		implements EnvironmentPostProcessor, Ordered {
+public class DubboNonWebApplicationEnvironmentPostProcessor implements EnvironmentPostProcessor, Ordered {
 
 	private static final String DOT = ".";
 
@@ -62,8 +61,7 @@ public class DubboNonWebApplicationEnvironmentPostProcessor
 
 	private static final String PROTOCOL_NAME_PROPERTY_NAME_SUFFIX = DOT + "name";
 
-	private static final String PROTOCOL_PORT_PROPERTY_NAME_SUFFIX = DOT
-			+ PORT_PROPERTY_NAME;
+	private static final String PROTOCOL_PORT_PROPERTY_NAME_SUFFIX = DOT + PORT_PROPERTY_NAME;
 
 	private static final String PROTOCOL_PORT_PROPERTY_NAME = PROTOCOL_PROPERTY_NAME_PREFIX
 			+ PROTOCOL_PORT_PROPERTY_NAME_SUFFIX;
@@ -75,23 +73,20 @@ public class DubboNonWebApplicationEnvironmentPostProcessor
 
 	private static final String REST_PROTOCOL = "rest";
 
-	private final Logger logger = LoggerFactory
-			.getLogger(DubboNonWebApplicationEnvironmentPostProcessor.class);
+	private final Logger logger = LoggerFactory.getLogger(DubboNonWebApplicationEnvironmentPostProcessor.class);
 
 	private static boolean isRestProtocol(String protocol) {
 		return REST_PROTOCOL.equalsIgnoreCase(protocol);
 	}
 
 	@Override
-	public void postProcessEnvironment(ConfigurableEnvironment environment,
-			SpringApplication application) {
+	public void postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication application) {
 		WebApplicationType webApplicationType = application.getWebApplicationType();
 
 		if (!WebApplicationType.NONE.equals(webApplicationType)) { // Just works in
 			// Non-Web Application
 			if (logger.isDebugEnabled()) {
-				logger.debug(
-						"Current application is a Web Application, the process will be ignored.");
+				logger.debug("Current application is a Web Application, the process will be ignored.");
 			}
 			return;
 		}
@@ -103,8 +98,7 @@ public class DubboNonWebApplicationEnvironmentPostProcessor
 		}
 	}
 
-	private Map<String, Object> createDefaultProperties(
-			ConfigurableEnvironment environment) {
+	private Map<String, Object> createDefaultProperties(ConfigurableEnvironment environment) {
 		Map<String, Object> defaultProperties = new HashMap<String, Object>();
 		resetServerPort(environment, defaultProperties);
 		return defaultProperties;
@@ -116,8 +110,7 @@ public class DubboNonWebApplicationEnvironmentPostProcessor
 	 * @param environment Spring Environment
 	 * @param defaultProperties defaultProperties
 	 */
-	private void resetServerPort(ConfigurableEnvironment environment,
-			Map<String, Object> defaultProperties) {
+	private void resetServerPort(ConfigurableEnvironment environment, Map<String, Object> defaultProperties) {
 
 		String serverPort = environment.getProperty(SERVER_PORT_PROPERTY_NAME,
 				environment.getProperty(PORT_PROPERTY_NAME));
@@ -137,20 +130,17 @@ public class DubboNonWebApplicationEnvironmentPostProcessor
 
 	private String getRestPortFromProtocolProperty(ConfigurableEnvironment environment) {
 
-		String protocol = environment.getProperty(PROTOCOL_NAME_PROPERTY_NAME,
-				DEFAULT_PROTOCOL);
+		String protocol = environment.getProperty(PROTOCOL_NAME_PROPERTY_NAME, DEFAULT_PROTOCOL);
 
-		return isRestProtocol(protocol)
-				? environment.getProperty(PROTOCOL_PORT_PROPERTY_NAME) : null;
+		return isRestProtocol(protocol) ? environment.getProperty(PROTOCOL_PORT_PROPERTY_NAME) : null;
 	}
 
-	private String getRestPortFromProtocolsProperties(
-			ConfigurableEnvironment environment) {
+	private String getRestPortFromProtocolsProperties(ConfigurableEnvironment environment) {
 
 		String restPort = null;
 
-		Map<String, Object> subProperties = getSubProperties(
-				environment.getPropertySources(), PROTOCOLS_PROPERTY_NAME_PREFIX);
+		Map<String, Object> subProperties = getSubProperties(environment.getPropertySources(),
+				PROTOCOLS_PROPERTY_NAME_PREFIX);
 
 		Properties properties = new Properties();
 
@@ -164,8 +154,7 @@ public class DubboNonWebApplicationEnvironmentPostProcessor
 				if (isRestProtocol(protocol)) {
 					String beanName = resolveBeanName(propertyName);
 					if (StringUtils.hasText(beanName)) {
-						restPort = properties.getProperty(
-								beanName + PROTOCOL_PORT_PROPERTY_NAME_SUFFIX);
+						restPort = properties.getProperty(beanName + PROTOCOL_PORT_PROPERTY_NAME_SUFFIX);
 						break;
 					}
 				}
@@ -195,8 +184,7 @@ public class DubboNonWebApplicationEnvironmentPostProcessor
 	 * @param propertySources {@link MutablePropertySources}
 	 * @param map Default Dubbo Properties
 	 */
-	private void addOrReplace(MutablePropertySources propertySources,
-			Map<String, Object> map) {
+	private void addOrReplace(MutablePropertySources propertySources, Map<String, Object> map) {
 		MapPropertySource target = null;
 		if (propertySources.contains(PROPERTY_SOURCE_NAME)) {
 			PropertySource<?> source = propertySources.get(PROPERTY_SOURCE_NAME);

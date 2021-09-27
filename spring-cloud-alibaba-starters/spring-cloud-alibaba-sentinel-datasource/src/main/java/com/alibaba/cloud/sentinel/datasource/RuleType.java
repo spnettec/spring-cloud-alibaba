@@ -60,13 +60,11 @@ public enum RuleType {
 	/**
 	 * gateway flow.
 	 */
-	GW_FLOW("gw-flow",
-			"com.alibaba.csp.sentinel.adapter.gateway.common.rule.GatewayFlowRule"),
+	GW_FLOW("gw-flow", "com.alibaba.csp.sentinel.adapter.gateway.common.rule.GatewayFlowRule"),
 	/**
 	 * api.
 	 */
-	GW_API_GROUP("gw-api-group",
-			"com.alibaba.csp.sentinel.adapter.gateway.common.api.ApiDefinition");
+	GW_API_GROUP("gw-api-group", "com.alibaba.csp.sentinel.adapter.gateway.common.api.ApiDefinition");
 
 	/**
 	 * alias for {@link AbstractRule}.
@@ -115,13 +113,11 @@ public enum RuleType {
 		if (StringUtils.isEmpty(name)) {
 			return Optional.empty();
 		}
-		return Arrays.stream(RuleType.values())
-				.filter(ruleType -> name.equals(ruleType.getName())).findFirst();
+		return Arrays.stream(RuleType.values()).filter(ruleType -> name.equals(ruleType.getName())).findFirst();
 	}
 
 	public static Optional<RuleType> getByClass(Class clazz) {
-		return Arrays.stream(RuleType.values())
-				.filter(ruleType -> clazz == ruleType.getClazz()).findFirst();
+		return Arrays.stream(RuleType.values()).filter(ruleType -> clazz == ruleType.getClazz()).findFirst();
 	}
 
 }

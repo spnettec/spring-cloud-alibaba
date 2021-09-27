@@ -64,11 +64,9 @@ import static org.springframework.util.StringUtils.hasText;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @author <a href="mailto:chenxilzx1@gmail.com">theonefx</a>
  */
-public class DubboCloudRegistry extends FailbackRegistry
-		implements ApplicationListener<ServiceInstancesChangedEvent> {
+public class DubboCloudRegistry extends FailbackRegistry implements ApplicationListener<ServiceInstancesChangedEvent> {
 
-	protected static final String DUBBO_METADATA_SERVICE_CLASS_NAME = DubboMetadataService.class
-			.getName();
+	protected static final String DUBBO_METADATA_SERVICE_CLASS_NAME = DubboMetadataService.class.getName();
 
 	protected final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -103,10 +101,9 @@ public class DubboCloudRegistry extends FailbackRegistry
 	 */
 	private final Map<String, Map<String, List<ServiceInstance>>> serviceRevisionInstanceMap = new ConcurrentHashMap<>();
 
-	public DubboCloudRegistry(URL url, DiscoveryClient discoveryClient,
-			DubboServiceMetadataRepository repository,
-			DubboMetadataServiceProxy dubboMetadataConfigServiceProxy,
-			JSONUtils jsonUtils, ConfigurableApplicationContext applicationContext) {
+	public DubboCloudRegistry(URL url, DiscoveryClient discoveryClient, DubboServiceMetadataRepository repository,
+			DubboMetadataServiceProxy dubboMetadataConfigServiceProxy, JSONUtils jsonUtils,
+			ConfigurableApplicationContext applicationContext) {
 
 		super(url);
 		this.discoveryClient = discoveryClient;
@@ -125,13 +122,12 @@ public class DubboCloudRegistry extends FailbackRegistry
 			for (String appName : subscribeApps) {
 				List<ServiceInstance> instances = discoveryClient.getInstances(appName);
 
-				Map<String, List<ServiceInstance>> map = serviceRevisionInstanceMap
-						.computeIfAbsent(appName, k -> new HashMap<>());
+				Map<String, List<ServiceInstance>> map = serviceRevisionInstanceMap.computeIfAbsent(appName,
+						k -> new HashMap<>());
 
 				for (ServiceInstance instance : instances) {
 					String revision = RevisionResolver.getRevision(instance);
-					List<ServiceInstance> list = map.computeIfAbsent(revision,
-							k -> new ArrayList<>());
+					List<ServiceInstance> list = map.computeIfAbsent(revision, k -> new ArrayList<>());
 					list.add(instance);
 				}
 
@@ -139,9 +135,8 @@ public class DubboCloudRegistry extends FailbackRegistry
 					logger.debug("APP {} preInited, instance siez is zero!!", appName);
 				}
 				else {
-					map.forEach((revision, list) -> logger.debug(
-							"APP {} revision {} preInited, instance size = {}", appName,
-							revision, list.size()));
+					map.forEach((revision, list) -> logger.debug("APP {} revision {} preInited, instance size = {}",
+							appName, revision, list.size()));
 				}
 			}
 
@@ -168,8 +163,7 @@ public class DubboCloudRegistry extends FailbackRegistry
 
 		if (logger.isDebugEnabled()) {
 			if (!should) {
-				logger.debug("The URL should NOT!! be registered & unregistered [{}] .",
-						url);
+				logger.debug("The URL should NOT!! be registered & unregistered [{}] .", url);
 			}
 			else {
 				logger.debug("The URL should be registered & unregistered [{}] .", url);
@@ -208,15 +202,14 @@ public class DubboCloudRegistry extends FailbackRegistry
 			if (isAdminURL(url)) {
 				// TODO in future
 				if (logger.isWarnEnabled()) {
-					logger.warn(
-							"This feature about admin will be supported in the future.");
+					logger.warn("This feature about admin will be supported in the future.");
 				}
 			}
 			else if (isDubboMetadataServiceURL(url) && containsProviderCategory(url)) {
 				// for DubboMetadataService
 				String appName = getServiceName(url);
-				MetadataServiceSubscribeHandler handler = new MetadataServiceSubscribeHandler(
-						appName, url, listener, this, dubboMetadataUtils);
+				MetadataServiceSubscribeHandler handler = new MetadataServiceSubscribeHandler(appName, url, listener,
+						this, dubboMetadataUtils);
 				if (inited.get()) {
 					handler.init();
 				}
@@ -224,9 +217,8 @@ public class DubboCloudRegistry extends FailbackRegistry
 			}
 			else if (isConsumerServiceURL(url)) {
 				// for general Dubbo Services
-				GenearalServiceSubscribeHandler handler = new GenearalServiceSubscribeHandler(
-						url, listener, this, repository, jsonUtils,
-						dubboMetadataConfigServiceProxy);
+				GenearalServiceSubscribeHandler handler = new GenearalServiceSubscribeHandler(url, listener, this,
+						repository, jsonUtils, dubboMetadataConfigServiceProxy);
 				if (inited.get()) {
 					handler.init();
 				}
@@ -243,8 +235,8 @@ public class DubboCloudRegistry extends FailbackRegistry
 
 		String appName = event.getServiceName();
 
-		List<ServiceInstance> instances = filter(event.getServiceInstances() != null
-				? event.getServiceInstances() : Collections.emptyList());
+		List<ServiceInstance> instances = filter(
+				event.getServiceInstances() != null ? event.getServiceInstances() : Collections.emptyList());
 
 		Set<String> subscribedServiceNames = getServices(null);
 
@@ -256,8 +248,7 @@ public class DubboCloudRegistry extends FailbackRegistry
 			logger.warn("APP {} instance changed, size changed zero!!!", appName);
 		}
 		else {
-			logger.info("APP {} instance changed, size changed to {}", appName,
-					instances.size());
+			logger.info("APP {} instance changed, size changed to {}", appName, instances.size());
 		}
 		// group by revision
 		Map<String, List<ServiceInstance>> newGroup = instances.stream()
@@ -265,8 +256,8 @@ public class DubboCloudRegistry extends FailbackRegistry
 
 		synchronized (this) {
 
-			Map<String, List<ServiceInstance>> oldGroup = serviceRevisionInstanceMap
-					.computeIfAbsent(appName, k -> new HashMap<>());
+			Map<String, List<ServiceInstance>> oldGroup = serviceRevisionInstanceMap.computeIfAbsent(appName,
+					k -> new HashMap<>());
 
 			if (serviceInstanceNotChanged(oldGroup, newGroup)) {
 				logger.debug("APP {} instance changed, but nothing different", appName);
@@ -285,16 +276,13 @@ public class DubboCloudRegistry extends FailbackRegistry
 				reSubscribeManager.onRefreshSuccess(event);
 			}
 			catch (Exception e) {
-				logger.error(String.format(
-						"APP %s instance changed, handler faild, try resubscribe",
-						appName), e);
+				logger.error(String.format("APP %s instance changed, handler faild, try resubscribe", appName), e);
 				reSubscribeManager.onRefreshFail(event);
 			}
 		}
 	}
 
-	private void refreshGeneralServiceInfo(String appName,
-			Map<String, List<ServiceInstance>> oldGroup,
+	private void refreshGeneralServiceInfo(String appName, Map<String, List<ServiceInstance>> oldGroup,
 			Map<String, List<ServiceInstance>> newGroup) {
 
 		Set<URL> urls2refresh = new HashSet<>();
@@ -310,8 +298,7 @@ public class DubboCloudRegistry extends FailbackRegistry
 						urls2refresh.add(url);
 					}
 				});
-				logger.debug("Subscription app {} revision {} has all losted", appName,
-						revision);
+				logger.debug("Subscription app {} revision {} has all losted", appName, revision);
 			}
 		}
 
@@ -322,8 +309,7 @@ public class DubboCloudRegistry extends FailbackRegistry
 			if (!oldGroup.containsKey(revision)) {
 				// this instance list of revision not exists
 				// should acquire urls
-				urlSubscribeHandlerMap.forEach(
-						(url, handler) -> handler.init(appName, revision, instanceList));
+				urlSubscribeHandlerMap.forEach((url, handler) -> handler.init(appName, revision, instanceList));
 			}
 
 			urlSubscribeHandlerMap.forEach((url, handler) -> {
@@ -333,10 +319,8 @@ public class DubboCloudRegistry extends FailbackRegistry
 			});
 
 			if (logger.isDebugEnabled()) {
-				logger.debug("Subscription app {} revision {} changed, instance list {}",
-						appName, revision,
-						instanceList.stream().map(
-								instance -> instance.getHost() + ":" + instance.getPort())
+				logger.debug("Subscription app {} revision {} changed, instance list {}", appName, revision,
+						instanceList.stream().map(instance -> instance.getHost() + ":" + instance.getPort())
 								.collect(Collectors.toList()));
 			}
 		}
@@ -347,15 +331,13 @@ public class DubboCloudRegistry extends FailbackRegistry
 			logger.debug("Subscription app {}, no urls will be refreshed", appName);
 		}
 		else {
-			logger.debug("Subscription app {}, the following url will be refresh:{}",
-					appName, urls2refresh.stream().map(URL::getServiceKey)
-							.collect(Collectors.toList()));
+			logger.debug("Subscription app {}, the following url will be refresh:{}", appName,
+					urls2refresh.stream().map(URL::getServiceKey).collect(Collectors.toList()));
 
 			for (URL url : urls2refresh) {
 				GenearalServiceSubscribeHandler handler = urlSubscribeHandlerMap.get(url);
 				if (handler == null) {
-					logger.warn("Subscription app {}, can't find handler for service {}",
-							appName, url.getServiceKey());
+					logger.warn("Subscription app {}, can't find handler for service {}", appName, url.getServiceKey());
 					continue;
 				}
 				handler.refresh();
@@ -363,10 +345,8 @@ public class DubboCloudRegistry extends FailbackRegistry
 		}
 	}
 
-	private void refreshServiceMetadataInfo(String serviceName,
-			List<ServiceInstance> serviceInstances) {
-		MetadataServiceSubscribeHandler handler = metadataSubscribeHandlerMap
-				.get(serviceName);
+	private void refreshServiceMetadataInfo(String serviceName, List<ServiceInstance> serviceInstances) {
+		MetadataServiceSubscribeHandler handler = metadataSubscribeHandlerMap.get(serviceName);
 
 		if (handler == null) {
 			logger.warn("Subscription app {}, can't find metadata handler", serviceName);
@@ -412,10 +392,8 @@ public class DubboCloudRegistry extends FailbackRegistry
 		return true;
 	}
 
-	private boolean instanceSame(ServiceInstance newInstance,
-			ServiceInstance oldInstance) {
-		if (!StringUtils.equals(newInstance.getInstanceId(),
-				oldInstance.getInstanceId())) {
+	private boolean instanceSame(ServiceInstance newInstance, ServiceInstance oldInstance) {
+		if (!StringUtils.equals(newInstance.getInstanceId(), oldInstance.getInstanceId())) {
 			return false;
 		}
 		if (!StringUtils.equals(newInstance.getHost(), oldInstance.getHost())) {
@@ -439,8 +417,7 @@ public class DubboCloudRegistry extends FailbackRegistry
 	}
 
 	private List<ServiceInstance> filter(Collection<ServiceInstance> serviceInstances) {
-		return serviceInstances.stream().filter(this::isDubboServiceInstance)
-				.collect(Collectors.toList());
+		return serviceInstances.stream().filter(this::isDubboServiceInstance).collect(Collectors.toList());
 	}
 
 	private boolean isDubboServiceInstance(ServiceInstance serviceInstance) {
@@ -510,8 +487,7 @@ public class DubboCloudRegistry extends FailbackRegistry
 		List<ServiceInstance> instances = new ArrayList<>();
 
 		providers.forEach((appName, revisions) -> {
-			Map<String, List<ServiceInstance>> revisionMap = serviceRevisionInstanceMap
-					.get(appName);
+			Map<String, List<ServiceInstance>> revisionMap = serviceRevisionInstanceMap.get(appName);
 			if (revisionMap == null) {
 				return;
 			}

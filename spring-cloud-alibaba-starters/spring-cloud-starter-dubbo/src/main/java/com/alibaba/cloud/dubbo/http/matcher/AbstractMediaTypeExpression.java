@@ -26,8 +26,7 @@ import org.springframework.http.MediaType;
  * @author Rossen Stoyanchev
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  */
-public class AbstractMediaTypeExpression
-		implements MediaTypeExpression, Comparable<AbstractMediaTypeExpression> {
+public class AbstractMediaTypeExpression implements MediaTypeExpression, Comparable<AbstractMediaTypeExpression> {
 
 	private final MediaType mediaType;
 
@@ -61,8 +60,7 @@ public class AbstractMediaTypeExpression
 
 	@Override
 	public int compareTo(AbstractMediaTypeExpression other) {
-		return MediaType.SPECIFICITY_COMPARATOR.compare(this.getMediaType(),
-				other.getMediaType());
+		return MediaType.SPECIFICITY_COMPARATOR.compare(this.getMediaType(), other.getMediaType());
 	}
 
 	@Override
@@ -74,8 +72,7 @@ public class AbstractMediaTypeExpression
 			return false;
 		}
 		AbstractMediaTypeExpression otherExpr = (AbstractMediaTypeExpression) other;
-		return (this.mediaType.equals(otherExpr.mediaType)
-				&& this.negated == otherExpr.negated);
+		return (this.mediaType.equals(otherExpr.mediaType) && this.negated == otherExpr.negated);
 	}
 
 	@Override

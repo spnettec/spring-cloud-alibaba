@@ -51,8 +51,7 @@ public class NacosDiscoveryClientTests {
 	@Test
 	public void testGetInstances() throws Exception {
 
-		when(serviceDiscovery.getInstances("service-1"))
-				.thenReturn(singletonList(serviceInstance));
+		when(serviceDiscovery.getInstances("service-1")).thenReturn(singletonList(serviceInstance));
 
 		List<ServiceInstance> serviceInstances = client.getInstances("service-1");
 

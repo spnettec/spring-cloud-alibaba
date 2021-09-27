@@ -9,7 +9,6 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.alibaba.cloud</groupId>
     <artifactId>spring-cloud-dubbo-sample-api</artifactId>
     <name>Spring Cloud Dubbo Sample API</name>
 
@@ -18,7 +17,6 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>1.7.25</version>
         </dependency>
 
         <!-- Dubbo -->

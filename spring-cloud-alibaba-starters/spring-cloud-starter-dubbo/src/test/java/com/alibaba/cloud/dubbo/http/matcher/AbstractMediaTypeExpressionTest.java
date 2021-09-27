@@ -33,8 +33,7 @@ import org.springframework.http.MediaType;
 public abstract class AbstractMediaTypeExpressionTest<T extends AbstractMediaTypeExpression> {
 
 	protected T createExpression(String expression) {
-		ResolvableType resolvableType = ResolvableType
-				.forType(getClass().getGenericSuperclass());
+		ResolvableType resolvableType = ResolvableType.forType(getClass().getGenericSuperclass());
 		Class<T> firstGenericType = (Class<T>) resolvableType.resolveGeneric(0);
 		Constructor<T> constructor = null;
 		try {
@@ -49,8 +48,7 @@ public abstract class AbstractMediaTypeExpressionTest<T extends AbstractMediaTyp
 	@Test
 	public void testGetMediaTypeAndNegated() {
 		// Normal
-		AbstractMediaTypeExpression expression = createExpression(
-				MediaType.APPLICATION_JSON_VALUE);
+		AbstractMediaTypeExpression expression = createExpression(MediaType.APPLICATION_JSON_VALUE);
 		Assert.assertEquals(MediaType.APPLICATION_JSON, expression.getMediaType());
 		Assert.assertFalse(expression.isNegated());
 

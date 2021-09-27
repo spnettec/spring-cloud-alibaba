@@ -41,8 +41,7 @@ public class DubboTransportedMethodMetadataResolverTest {
 	@Before
 	public void init() {
 		environment = new MockEnvironment();
-		resolver = new DubboTransportedMethodMetadataResolver(environment,
-				new SpringMvcContract());
+		resolver = new DubboTransportedMethodMetadataResolver(environment, new SpringMvcContract());
 	}
 
 	@Test

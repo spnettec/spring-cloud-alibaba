@@ -58,15 +58,12 @@ public class NacosJsonPropertySourceLoader extends AbstractPropertySourceLoader 
 	 * @throws IOException if the source cannot be loaded
 	 */
 	@Override
-	protected List<PropertySource<?>> doLoad(String name, Resource resource)
-			throws IOException {
+	protected List<PropertySource<?>> doLoad(String name, Resource resource) throws IOException {
 		Map<String, Object> result = new LinkedHashMap<>(32);
 		ObjectMapper mapper = new ObjectMapper();
-		Map<String, Object> nacosDataMap = mapper.readValue(resource.getInputStream(),
-				LinkedHashMap.class);
+		Map<String, Object> nacosDataMap = mapper.readValue(resource.getInputStream(), LinkedHashMap.class);
 		flattenedMap(result, nacosDataMap, null);
-		return Collections.singletonList(
-				new OriginTrackedMapPropertySource(name, this.reloadMap(result), true));
+		return Collections.singletonList(new OriginTrackedMapPropertySource(name, this.reloadMap(result), true));
 
 	}
 

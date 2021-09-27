@@ -43,15 +43,13 @@ public abstract class AbstractServiceSubscribeHandler {
 
 	protected final DubboCloudRegistry registry;
 
-	public AbstractServiceSubscribeHandler(URL url, NotifyListener listener,
-			DubboCloudRegistry registry) {
+	public AbstractServiceSubscribeHandler(URL url, NotifyListener listener, DubboCloudRegistry registry) {
 		this.url = url;
 		this.listener = listener;
 		this.registry = registry;
 	}
 
-	protected void notifyAllSubscribedURLs(URL url, List<URL> subscribedURLs,
-			NotifyListener listener) {
+	protected void notifyAllSubscribedURLs(URL url, List<URL> subscribedURLs, NotifyListener listener) {
 
 		if (isEmpty(subscribedURLs)) {
 			// Add the EMPTY_PROTOCOL URL
@@ -73,8 +71,7 @@ public abstract class AbstractServiceSubscribeHandler {
 		// issue : When the last service provider is closed, the client still periodically
 		// connects to the last provider.n
 		// fix https://github.com/alibaba/spring-cloud-alibaba/issues/1259
-		return from(url).setProtocol(EMPTY_PROTOCOL).removeParameter(CATEGORY_KEY)
-				.build();
+		return from(url).setProtocol(EMPTY_PROTOCOL).removeParameter(CATEGORY_KEY).build();
 	}
 
 	private final AtomicBoolean inited = new AtomicBoolean(false);

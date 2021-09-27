@@ -68,8 +68,7 @@ public class MethodParameterMetadata {
 			return false;
 		}
 		MethodParameterMetadata that = (MethodParameterMetadata) o;
-		return index == that.index && Objects.equals(name, that.name)
-				&& Objects.equals(type, that.type);
+		return index == that.index && Objects.equals(name, that.name) && Objects.equals(type, that.type);
 	}
 
 	@Override
@@ -79,8 +78,8 @@ public class MethodParameterMetadata {
 
 	@Override
 	public String toString() {
-		return "MethodParameterMetadata{" + "index=" + index + ", name='" + name + '\''
-				+ ", type='" + type + '\'' + '}';
+		return "MethodParameterMetadata{" + "index=" + index + ", name='" + name + '\'' + ", type='" + type + '\''
+				+ '}';
 	}
 
 }

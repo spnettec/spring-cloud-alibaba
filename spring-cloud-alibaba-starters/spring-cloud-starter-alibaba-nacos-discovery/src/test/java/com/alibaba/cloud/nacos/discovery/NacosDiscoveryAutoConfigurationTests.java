@@ -17,6 +17,7 @@
 package com.alibaba.cloud.nacos.discovery;
 
 import com.alibaba.cloud.nacos.NacosDiscoveryProperties;
+import com.alibaba.cloud.nacos.NacosServiceAutoConfiguration;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.boot.autoconfigure.AutoConfigurations;
@@ -31,8 +32,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class NacosDiscoveryAutoConfigurationTests {
 
 	private ApplicationContextRunner contextRunner = new ApplicationContextRunner()
-			.withConfiguration(AutoConfigurations.of(UtilAutoConfiguration.class,
-					NacosDiscoveryAutoConfiguration.class));
+			.withConfiguration(AutoConfigurations.of(UtilAutoConfiguration.class, NacosDiscoveryAutoConfiguration.class,
+					NacosServiceAutoConfiguration.class));
 
 	@Test
 	public void testDefaultInitialization() {

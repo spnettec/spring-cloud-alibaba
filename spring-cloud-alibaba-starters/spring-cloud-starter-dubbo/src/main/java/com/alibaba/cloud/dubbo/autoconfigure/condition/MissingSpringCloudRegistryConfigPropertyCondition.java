@@ -38,31 +38,25 @@ import static com.alibaba.spring.util.PropertySourcesUtils.getSubProperties;
  * @see SpringCloudRegistry
  * @see Condition
  */
-public class MissingSpringCloudRegistryConfigPropertyCondition
-		extends SpringBootCondition {
+public class MissingSpringCloudRegistryConfigPropertyCondition extends SpringBootCondition {
 
 	@Override
-	public ConditionOutcome getMatchOutcome(ConditionContext context,
-			AnnotatedTypeMetadata metadata) {
-		ConfigurableEnvironment environment = (ConfigurableEnvironment) context
-				.getEnvironment();
+	public ConditionOutcome getMatchOutcome(ConditionContext context, AnnotatedTypeMetadata metadata) {
+		ConfigurableEnvironment environment = (ConfigurableEnvironment) context.getEnvironment();
 
 		String protocol = environment.getProperty("dubbo.registry.protocol");
 
 		if (PROTOCOL.equals(protocol)) {
-			return ConditionOutcome.noMatch(
-					"'spring-cloud' protocol was found from 'dubbo.registry.protocol'");
+			return ConditionOutcome.noMatch("'spring-cloud' protocol was found from 'dubbo.registry.protocol'");
 		}
 
 		String address = environment.getProperty("dubbo.registry.address");
 
 		if (StringUtils.startsWithIgnoreCase(address, PROTOCOL)) {
-			return ConditionOutcome.noMatch(
-					"'spring-cloud' protocol was found from 'dubbo.registry.address'");
+			return ConditionOutcome.noMatch("'spring-cloud' protocol was found from 'dubbo.registry.address'");
 		}
 
-		Map<String, Object> properties = getSubProperties(
-				environment.getPropertySources(), "dubbo.registries.");
+		Map<String, Object> properties = getSubProperties(environment.getPropertySources(), "dubbo.registries.");
 
 		boolean found = properties.entrySet().stream().anyMatch(entry -> {
 			String key = entry.getKey();
@@ -72,9 +66,7 @@ public class MissingSpringCloudRegistryConfigPropertyCondition
 
 		});
 
-		return found
-				? ConditionOutcome.noMatch(
-						"'spring-cloud' protocol was found in 'dubbo.registries.*'")
+		return found ? ConditionOutcome.noMatch("'spring-cloud' protocol was found in 'dubbo.registries.*'")
 				: ConditionOutcome.match();
 	}
 

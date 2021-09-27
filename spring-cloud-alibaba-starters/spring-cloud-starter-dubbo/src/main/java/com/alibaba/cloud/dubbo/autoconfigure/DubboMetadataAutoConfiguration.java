@@ -52,8 +52,8 @@ import org.springframework.context.event.EventListener;
  */
 @Configuration(proxyBeanMethods = false)
 @Import({ DubboServiceMetadataRepository.class, IntrospectiveDubboMetadataService.class,
-		DubboMetadataServiceExporter.class, JSONUtils.class,
-		DubboMetadataServiceProxy.class, DubboMetadataUtils.class })
+		DubboMetadataServiceExporter.class, JSONUtils.class, DubboMetadataServiceProxy.class,
+		DubboMetadataUtils.class })
 public class DubboMetadataAutoConfiguration {
 
 	@Autowired
@@ -78,8 +78,7 @@ public class DubboMetadataAutoConfiguration {
 	}
 
 	@Bean
-	public Supplier<ProtocolConfig> dubboProtocolConfigSupplier(
-			ObjectProvider<Collection<ProtocolConfig>> protocols) {
+	public Supplier<ProtocolConfig> dubboProtocolConfigSupplier(ObjectProvider<Collection<ProtocolConfig>> protocols) {
 		return new DubboProtocolConfigSupplier(protocols);
 	}
 
@@ -101,8 +100,8 @@ public class DubboMetadataAutoConfiguration {
 	}
 
 	private void publishServiceRestMetadata(ServiceBean serviceBean) {
-		dubboServiceMetadataRepository.getIfAvailable().publishServiceRestMetadata(
-				metadataResolver.resolveServiceRestMetadata(serviceBean));
+		dubboServiceMetadataRepository.getIfAvailable()
+				.publishServiceRestMetadata(metadataResolver.resolveServiceRestMetadata(serviceBean));
 	}
 
 	private void unExportDubboMetadataConfigService() {

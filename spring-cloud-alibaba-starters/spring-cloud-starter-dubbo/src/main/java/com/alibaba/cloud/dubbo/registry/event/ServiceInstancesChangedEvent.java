@@ -50,8 +50,7 @@ public class ServiceInstancesChangedEvent extends ApplicationEvent {
 	 * @param serviceInstances all {@link ServiceInstance service instances}
 	 * @throws IllegalArgumentException if source is null.
 	 */
-	public ServiceInstancesChangedEvent(String serviceName,
-			List<ServiceInstance> serviceInstances) {
+	public ServiceInstancesChangedEvent(String serviceName, List<ServiceInstance> serviceInstances) {
 		super(serviceName);
 		this.serviceName = serviceName;
 		this.serviceInstances = unmodifiableList(serviceInstances);

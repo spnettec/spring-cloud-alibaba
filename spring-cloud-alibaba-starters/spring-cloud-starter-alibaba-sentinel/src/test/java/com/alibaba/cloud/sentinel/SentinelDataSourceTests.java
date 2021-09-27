@@ -34,25 +34,25 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @author <a href="mailto:fangjian0423@gmail.com">Jim</a>
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = { SentinelDataSourceTests.TestConfig.class }, properties = {
-		"spring.cloud.sentinel.datasource.ds1.file.file=classpath: flowrule.json",
-		"spring.cloud.sentinel.datasource.ds1.file.data-type=json",
-		"spring.cloud.sentinel.datasource.ds1.file.rule-type=flow",
+@SpringBootTest(classes = { SentinelDataSourceTests.TestConfig.class },
+		properties = { "spring.cloud.sentinel.datasource.ds1.file.file=classpath: flowrule.json",
+				"spring.cloud.sentinel.datasource.ds1.file.data-type=json",
+				"spring.cloud.sentinel.datasource.ds1.file.rule-type=flow",
 
-		"spring.cloud.sentinel.datasource.ds2.file.file=classpath: degraderule.json",
-		"spring.cloud.sentinel.datasource.ds2.file.data-type=json",
-		"spring.cloud.sentinel.datasource.ds2.file.rule-type=degrade",
+				"spring.cloud.sentinel.datasource.ds2.file.file=classpath: degraderule.json",
+				"spring.cloud.sentinel.datasource.ds2.file.data-type=json",
+				"spring.cloud.sentinel.datasource.ds2.file.rule-type=degrade",
 
-		"spring.cloud.sentinel.datasource.ds3.file.file=classpath: authority.json",
-		"spring.cloud.sentinel.datasource.ds3.file.rule-type=authority",
+				"spring.cloud.sentinel.datasource.ds3.file.file=classpath: authority.json",
+				"spring.cloud.sentinel.datasource.ds3.file.rule-type=authority",
 
-		"spring.cloud.sentinel.datasource.ds4.file.file=classpath: system.json",
-		"spring.cloud.sentinel.datasource.ds4.file.rule-type=system",
+				"spring.cloud.sentinel.datasource.ds4.file.file=classpath: system.json",
+				"spring.cloud.sentinel.datasource.ds4.file.rule-type=system",
 
-		"spring.cloud.sentinel.datasource.ds5.file.file=classpath: param-flow.json",
-		"spring.cloud.sentinel.datasource.ds5.file.data-type=custom",
-		"spring.cloud.sentinel.datasource.ds5.file.converter-class=TestConverter",
-		"spring.cloud.sentinel.datasource.ds5.file.rule-type=param-flow" })
+				"spring.cloud.sentinel.datasource.ds5.file.file=classpath: param-flow.json",
+				"spring.cloud.sentinel.datasource.ds5.file.data-type=custom",
+				"spring.cloud.sentinel.datasource.ds5.file.converter-class=TestConverter",
+				"spring.cloud.sentinel.datasource.ds5.file.rule-type=param-flow" })
 public class SentinelDataSourceTests {
 
 	@Autowired
@@ -66,11 +66,9 @@ public class SentinelDataSourceTests {
 	}
 
 	private void checkUrlPattern() {
-		assertThat(sentinelProperties.getFilter().getOrder())
-				.isEqualTo(Integer.MIN_VALUE);
+		assertThat(sentinelProperties.getFilter().getOrder()).isEqualTo(Integer.MIN_VALUE);
 		assertThat(sentinelProperties.getFilter().getUrlPatterns().size()).isEqualTo(1);
-		assertThat(sentinelProperties.getFilter().getUrlPatterns().get(0))
-				.isEqualTo("/**");
+		assertThat(sentinelProperties.getFilter().getUrlPatterns().get(0)).isEqualTo("/**");
 	}
 
 	@Test
@@ -81,16 +79,13 @@ public class SentinelDataSourceTests {
 		assertThat(sentinelProperties.getDatasource().get("ds1").getZk()).isNull();
 		assertThat(sentinelProperties.getDatasource().get("ds1").getFile()).isNotNull();
 
-		assertThat(sentinelProperties.getDatasource().get("ds1").getFile().getDataType())
-				.isEqualTo("json");
-		assertThat(sentinelProperties.getDatasource().get("ds1").getFile().getRuleType())
-				.isEqualTo(RuleType.FLOW);
+		assertThat(sentinelProperties.getDatasource().get("ds1").getFile().getDataType()).isEqualTo("json");
+		assertThat(sentinelProperties.getDatasource().get("ds1").getFile().getRuleType()).isEqualTo(RuleType.FLOW);
 	}
 
 	@Configuration
 	@EnableAutoConfiguration
-	@ImportAutoConfiguration({ SentinelAutoConfiguration.class,
-			SentinelWebAutoConfiguration.class })
+	@ImportAutoConfiguration({ SentinelAutoConfiguration.class, SentinelWebAutoConfiguration.class })
 	public static class TestConfig {
 
 	}

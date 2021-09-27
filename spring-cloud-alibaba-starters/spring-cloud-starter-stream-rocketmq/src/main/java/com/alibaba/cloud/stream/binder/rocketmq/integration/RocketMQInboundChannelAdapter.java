@@ -41,8 +41,7 @@ import org.springframework.util.Assert;
  */
 public class RocketMQInboundChannelAdapter extends MessageProducerSupport {
 
-	private static final Logger log = LoggerFactory
-			.getLogger(RocketMQInboundChannelAdapter.class);
+	private static final Logger log = LoggerFactory.getLogger(RocketMQInboundChannelAdapter.class);
 
 	private RetryTemplate retryTemplate;
 
@@ -54,8 +53,7 @@ public class RocketMQInboundChannelAdapter extends MessageProducerSupport {
 
 	private final InstrumentationManager instrumentationManager;
 
-	public RocketMQInboundChannelAdapter(
-			RocketMQListenerBindingContainer rocketMQListenerContainer,
+	public RocketMQInboundChannelAdapter(RocketMQListenerBindingContainer rocketMQListenerContainer,
 			ExtendedConsumerProperties<RocketMQConsumerProperties> consumerProperties,
 			InstrumentationManager instrumentationManager) {
 		this.rocketMQListenerContainer = rocketMQListenerContainer;
@@ -65,8 +63,7 @@ public class RocketMQInboundChannelAdapter extends MessageProducerSupport {
 
 	@Override
 	protected void onInit() {
-		if (consumerProperties == null
-				|| !consumerProperties.getExtension().getEnabled()) {
+		if (consumerProperties == null || !consumerProperties.getExtension().getEnabled()) {
 			return;
 		}
 		super.onInit();
@@ -90,37 +87,34 @@ public class RocketMQInboundChannelAdapter extends MessageProducerSupport {
 		}
 		catch (Exception e) {
 			log.error("rocketMQListenerContainer init error: " + e.getMessage(), e);
-			throw new IllegalArgumentException(
-					"rocketMQListenerContainer init error: " + e.getMessage(), e);
+			throw new IllegalArgumentException("rocketMQListenerContainer init error: " + e.getMessage(), e);
 		}
 
-		instrumentationManager.addHealthInstrumentation(
-				new Instrumentation(rocketMQListenerContainer.getTopic()
-						+ rocketMQListenerContainer.getConsumerGroup()));
+		instrumentationManager.addHealthInstrumentation(new Instrumentation(
+				rocketMQListenerContainer.getTopic() + rocketMQListenerContainer.getConsumerGroup()));
 	}
 
 	@Override
 	protected void doStart() {
-		if (consumerProperties == null
-				|| !consumerProperties.getExtension().getEnabled()) {
+		if (consumerProperties == null || !consumerProperties.getExtension().getEnabled()) {
 			return;
 		}
 		try {
 			rocketMQListenerContainer.start();
 			instrumentationManager
-					.getHealthInstrumentation(rocketMQListenerContainer.getTopic()
-							+ rocketMQListenerContainer.getConsumerGroup())
+					.getHealthInstrumentation(
+							rocketMQListenerContainer.getTopic() + rocketMQListenerContainer.getConsumerGroup())
 					.markStartedSuccessfully();
 		}
 		catch (Exception e) {
 			instrumentationManager
-					.getHealthInstrumentation(rocketMQListenerContainer.getTopic()
-							+ rocketMQListenerContainer.getConsumerGroup())
+					.getHealthInstrumentation(
+							rocketMQListenerContainer.getTopic() + rocketMQListenerContainer.getConsumerGroup())
 					.markStartFailed(e);
 			log.error("RocketMQTemplate startup failed, Caused by " + e.getMessage());
-			throw new MessagingException(MessageBuilder.withPayload(
-					"RocketMQTemplate startup failed, Caused by " + e.getMessage())
-					.build(), e);
+			throw new MessagingException(
+					MessageBuilder.withPayload("RocketMQTemplate startup failed, Caused by " + e.getMessage()).build(),
+					e);
 		}
 	}
 
@@ -137,8 +131,7 @@ public class RocketMQInboundChannelAdapter extends MessageProducerSupport {
 		this.recoveryCallback = recoveryCallback;
 	}
 
-	protected class BindingRocketMQListener
-			implements RocketMQListener<Message>, RetryListener {
+	protected class BindingRocketMQListener implements RocketMQListener<Message>, RetryListener {
 
 		@Override
 		public void onMessage(Message message) {
@@ -155,19 +148,18 @@ public class RocketMQInboundChannelAdapter extends MessageProducerSupport {
 		}
 
 		@Override
-		public <T, E extends Throwable> boolean open(RetryContext context,
-				RetryCallback<T, E> callback) {
+		public <T, E extends Throwable> boolean open(RetryContext context, RetryCallback<T, E> callback) {
 			return true;
 		}
 
 		@Override
-		public <T, E extends Throwable> void close(RetryContext context,
-				RetryCallback<T, E> callback, Throwable throwable) {
+		public <T, E extends Throwable> void close(RetryContext context, RetryCallback<T, E> callback,
+				Throwable throwable) {
 		}
 
 		@Override
-		public <T, E extends Throwable> void onError(RetryContext context,
-				RetryCallback<T, E> callback, Throwable throwable) {
+		public <T, E extends Throwable> void onError(RetryContext context, RetryCallback<T, E> callback,
+				Throwable throwable) {
 
 		}
 

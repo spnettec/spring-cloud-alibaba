@@ -29,8 +29,7 @@ import org.springframework.cloud.consul.serviceregistry.ConsulServiceRegistry;
  */
 public class SidecarConsulDiscoveryClient implements SidecarDiscoveryClient {
 
-	private static final Logger log = LoggerFactory
-			.getLogger(SidecarConsulDiscoveryClient.class);
+	private static final Logger log = LoggerFactory.getLogger(SidecarConsulDiscoveryClient.class);
 
 	private final ConsulDiscoveryProperties properties;
 
@@ -38,8 +37,8 @@ public class SidecarConsulDiscoveryClient implements SidecarDiscoveryClient {
 
 	private final ConsulAutoRegistration registration;
 
-	public SidecarConsulDiscoveryClient(ConsulDiscoveryProperties properties,
-			ConsulServiceRegistry serviceRegistry, ConsulAutoRegistration registration) {
+	public SidecarConsulDiscoveryClient(ConsulDiscoveryProperties properties, ConsulServiceRegistry serviceRegistry,
+			ConsulAutoRegistration registration) {
 		this.properties = properties;
 		this.serviceRegistry = serviceRegistry;
 		this.registration = registration;

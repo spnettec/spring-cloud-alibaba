@@ -41,8 +41,7 @@ public class NacosDiscoveryAutoConfiguration {
 
 	@Bean
 	@ConditionalOnMissingBean
-	public NacosServiceDiscovery nacosServiceDiscovery(
-			NacosDiscoveryProperties discoveryProperties,
+	public NacosServiceDiscovery nacosServiceDiscovery(NacosDiscoveryProperties discoveryProperties,
 			NacosServiceManager nacosServiceManager) {
 		return new NacosServiceDiscovery(discoveryProperties, nacosServiceManager);
 	}

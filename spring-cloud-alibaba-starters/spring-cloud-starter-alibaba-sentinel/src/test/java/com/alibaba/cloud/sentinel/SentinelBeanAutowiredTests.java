@@ -73,22 +73,19 @@ public class SentinelBeanAutowiredTests {
 	private void checkUrlPattern() {
 		assertThat(sentinelProperties.getFilter().getOrder()).isEqualTo(111);
 		assertThat(sentinelProperties.getFilter().getUrlPatterns().size()).isEqualTo(1);
-		assertThat(sentinelProperties.getFilter().getUrlPatterns().get(0))
-				.isEqualTo("/**");
+		assertThat(sentinelProperties.getFilter().getUrlPatterns().get(0)).isEqualTo("/**");
 	}
 
 	@Test
 	public void testBeanAutowired() {
 		assertThat(sentinelWebMvcConfig.getUrlCleaner()).isEqualTo(urlCleaner);
-		assertThat(sentinelWebMvcConfig.getBlockExceptionHandler())
-				.isEqualTo(blockExceptionHandler);
+		assertThat(sentinelWebMvcConfig.getBlockExceptionHandler()).isEqualTo(blockExceptionHandler);
 		assertThat(sentinelWebMvcConfig.getOriginParser()).isEqualTo(requestOriginParser);
 	}
 
 	@Configuration
 	@EnableAutoConfiguration
-	@ImportAutoConfiguration({ SentinelAutoConfiguration.class,
-			SentinelWebAutoConfiguration.class })
+	@ImportAutoConfiguration({ SentinelAutoConfiguration.class, SentinelWebAutoConfiguration.class })
 	public static class TestConfig {
 
 		@Bean

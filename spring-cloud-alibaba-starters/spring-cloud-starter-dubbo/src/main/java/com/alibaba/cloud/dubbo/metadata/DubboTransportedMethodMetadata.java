@@ -84,8 +84,7 @@ public class DubboTransportedMethodMetadata {
 			return false;
 		}
 		DubboTransportedMethodMetadata that = (DubboTransportedMethodMetadata) o;
-		return Objects.equals(methodMetadata, that.methodMetadata)
-				&& Objects.equals(attributes, that.attributes);
+		return Objects.equals(methodMetadata, that.methodMetadata) && Objects.equals(attributes, that.attributes);
 	}
 
 	@Override

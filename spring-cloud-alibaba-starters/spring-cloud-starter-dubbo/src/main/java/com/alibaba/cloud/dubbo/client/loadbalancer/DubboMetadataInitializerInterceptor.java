@@ -36,14 +36,13 @@ public class DubboMetadataInitializerInterceptor implements ClientHttpRequestInt
 
 	private final DubboServiceMetadataRepository repository;
 
-	public DubboMetadataInitializerInterceptor(
-			DubboServiceMetadataRepository repository) {
+	public DubboMetadataInitializerInterceptor(DubboServiceMetadataRepository repository) {
 		this.repository = repository;
 	}
 
 	@Override
-	public ClientHttpResponse intercept(HttpRequest request, byte[] body,
-			ClientHttpRequestExecution execution) throws IOException {
+	public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution)
+			throws IOException {
 
 		URI originalUri = request.getURI();
 

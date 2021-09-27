@@ -84,8 +84,7 @@ import static org.springframework.util.StringUtils.hasText;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  */
 @Repository
-public class DubboServiceMetadataRepository
-		implements SmartInitializingSingleton, ApplicationEventPublisherAware {
+public class DubboServiceMetadataRepository implements SmartInitializingSingleton, ApplicationEventPublisherAware {
 
 	/**
 	 * The prefix of {@link DubboMetadataService} : "dubbo.metadata-service.".
@@ -180,8 +179,7 @@ public class DubboServiceMetadataRepository
 
 	// =============================================================== //
 
-	private static <K, V> Map<K, V> getMap(Map<String, Map<K, V>> repository,
-			String key) {
+	private static <K, V> Map<K, V> getMap(Map<String, Map<K, V>> repository, String key) {
 		return getOrDefault(repository, key, newHashMap());
 	}
 
@@ -228,8 +226,7 @@ public class DubboServiceMetadataRepository
 		this.subscribedServices = newSubscribedServices;
 
 		// dispatch SubscribedServicesChangedEvent
-		dispatchEvent(new SubscribedServicesChangedEvent(this, oldSubscribedServices,
-				newSubscribedServices));
+		dispatchEvent(new SubscribedServicesChangedEvent(this, oldSubscribedServices, newSubscribedServices));
 
 		return newSubscribedServices.stream();
 	}
@@ -310,8 +307,7 @@ public class DubboServiceMetadataRepository
 		else {
 			List<String> descs = new ArrayList<>(allExportedURLs.size());
 			for (Map.Entry<String, List<URL>> entry : allExportedURLs.entrySet()) {
-				entry.getValue().stream().map(ServiceInfo::new)
-						.map(ServiceInfo::toDescString).forEach(descs::add);
+				entry.getValue().stream().map(ServiceInfo::new).map(ServiceInfo::toDescString).forEach(descs::add);
 			}
 
 			descs.sort(String::compareTo);
@@ -321,13 +317,11 @@ public class DubboServiceMetadataRepository
 	}
 
 	private void removeDubboMetadataServiceURLs(List<URL> dubboMetadataServiceURLs) {
-		dubboMetadataServiceURLs.stream().map(URL::getServiceKey).distinct()
-				.forEach(allExportedURLs::remove);
+		dubboMetadataServiceURLs.stream().map(URL::getServiceKey).distinct().forEach(allExportedURLs::remove);
 		// dubboMetadataServiceURLs.forEach(this::unexportURL);
 	}
 
-	private void addDubboMetadataServiceURLsMetadata(Map<String, String> metadata,
-			List<URL> dubboMetadataServiceURLs) {
+	private void addDubboMetadataServiceURLsMetadata(Map<String, String> metadata, List<URL> dubboMetadataServiceURLs) {
 		String dubboMetadataServiceURLsJSON = jsonUtils.toJSON(dubboMetadataServiceURLs);
 		metadata.put(METADATA_SERVICE_URLS_PROPERTY_NAME, dubboMetadataServiceURLsJSON);
 	}
@@ -346,8 +340,7 @@ public class DubboServiceMetadataRepository
 	 * Publish the {@link Set} of {@link ServiceRestMetadata}.
 	 * @param serviceRestMetadataSet the {@link Set} of {@link ServiceRestMetadata}
 	 */
-	public void publishServiceRestMetadata(
-			Set<ServiceRestMetadata> serviceRestMetadataSet) {
+	public void publishServiceRestMetadata(Set<ServiceRestMetadata> serviceRestMetadataSet) {
 		for (ServiceRestMetadata serviceRestMetadata : serviceRestMetadataSet) {
 			if (!isEmpty(serviceRestMetadata.getMeta())) {
 				this.serviceRestMetadata.add(serviceRestMetadata);
@@ -412,8 +405,7 @@ public class DubboServiceMetadataRepository
 		return allExportedURLs.keySet();
 	}
 
-	public Integer getDubboProtocolPort(ServiceInstance serviceInstance,
-			String protocol) {
+	public Integer getDubboProtocolPort(ServiceInstance serviceInstance, String protocol) {
 		return dubboMetadataUtils.getDubboProtocolPort(serviceInstance, protocol);
 	}
 
@@ -421,8 +413,7 @@ public class DubboServiceMetadataRepository
 		return dubboMetadataUtils.getDubboProtocolPropertyName(protocol);
 	}
 
-	public List<URL> getExportedURLs(String serviceInterface, String group,
-			String version) {
+	public List<URL> getExportedURLs(String serviceInterface, String group, String version) {
 		if (group != null) {
 			List<URL> urls = new LinkedList<>();
 			if (CommonConstants.ANY_VALUE.equals(group)) {
@@ -437,8 +428,7 @@ public class DubboServiceMetadataRepository
 			else {
 				String[] groups = group.split(CommonConstants.COMMA_SEPARATOR);
 				for (String expectKey : groups) {
-					String serviceKey = URL.buildKey(serviceInterface, expectKey,
-							version);
+					String serviceKey = URL.buildKey(serviceInterface, expectKey, version);
 					List<URL> urlList = allExportedURLs.get(serviceKey);
 					if (urlList != null) {
 						urls.addAll(urlList);
@@ -461,15 +451,12 @@ public class DubboServiceMetadataRepository
 
 		if (dubboRestServiceMetadataRepository.containsKey(serviceName)) {
 			if (logger.isDebugEnabled()) {
-				logger.debug(
-						"The metadata of Dubbo service[name : {}] has been initialized",
-						serviceName);
+				logger.debug("The metadata of Dubbo service[name : {}] has been initialized", serviceName);
 			}
 			return;
 		}
 
-		Set<ServiceRestMetadata> serviceRestMetadataSet = getServiceRestMetadataSet(
-				serviceName);
+		Set<ServiceRestMetadata> serviceRestMetadataSet = getServiceRestMetadataSet(serviceName);
 
 		if (isEmpty(serviceRestMetadataSet)) {
 			if (logger.isWarnEnabled()) {
@@ -480,24 +467,21 @@ public class DubboServiceMetadataRepository
 			return;
 		}
 
-		Map<RequestMetadataMatcher, DubboRestServiceMetadata> metadataMap = getMetadataMap(
-				serviceName);
+		Map<RequestMetadataMatcher, DubboRestServiceMetadata> metadataMap = getMetadataMap(serviceName);
 
 		for (ServiceRestMetadata serviceRestMetadata : serviceRestMetadataSet) {
 
 			serviceRestMetadata.getMeta().forEach(restMethodMetadata -> {
 				RequestMetadata requestMetadata = restMethodMetadata.getRequest();
-				RequestMetadataMatcher matcher = new RequestMetadataMatcher(
-						requestMetadata);
-				DubboRestServiceMetadata metadata = new DubboRestServiceMetadata(
-						serviceRestMetadata, restMethodMetadata);
+				RequestMetadataMatcher matcher = new RequestMetadataMatcher(requestMetadata);
+				DubboRestServiceMetadata metadata = new DubboRestServiceMetadata(serviceRestMetadata,
+						restMethodMetadata);
 				metadataMap.put(matcher, metadata);
 			});
 		}
 
 		if (logger.isInfoEnabled()) {
-			logger.info(
-					"The REST metadata in the dubbo services has been loaded in the Spring application[name : {}]",
+			logger.info("The REST metadata in the dubbo services has been loaded in the Spring application[name : {}]",
 					serviceName);
 		}
 	}
@@ -509,8 +493,7 @@ public class DubboServiceMetadataRepository
 	 * @param requestMetadata {@link RequestMetadata} to be matched
 	 * @return {@link DubboRestServiceMetadata} if matched, or <code>null</code>
 	 */
-	public DubboRestServiceMetadata get(String serviceName,
-			RequestMetadata requestMetadata) {
+	public DubboRestServiceMetadata get(String serviceName, RequestMetadata requestMetadata) {
 		return match(dubboRestServiceMetadataRepository, serviceName, requestMetadata);
 	}
 
@@ -526,8 +509,8 @@ public class DubboServiceMetadataRepository
 		return unmodifiableSet(doGetSubscribedServices());
 	}
 
-	private <T> T match(Map<String, Map<RequestMetadataMatcher, T>> repository,
-			String serviceName, RequestMetadata requestMetadata) {
+	private <T> T match(Map<String, Map<RequestMetadataMatcher, T>> repository, String serviceName,
+			RequestMetadata requestMetadata) {
 
 		Map<RequestMetadataMatcher, T> map = repository.get(serviceName);
 
@@ -538,10 +521,8 @@ public class DubboServiceMetadataRepository
 			object = map.get(matcher);
 			if (object == null) { // Can't match exactly
 				// Require to match one by one
-				HttpRequest request = builder().method(requestMetadata.getMethod())
-						.path(requestMetadata.getPath())
-						.params(requestMetadata.getParams())
-						.headers(requestMetadata.getHeaders()).build();
+				HttpRequest request = builder().method(requestMetadata.getMethod()).path(requestMetadata.getPath())
+						.params(requestMetadata.getParams()).headers(requestMetadata.getHeaders()).build();
 
 				for (Map.Entry<RequestMetadataMatcher, T> entry : map.entrySet()) {
 					RequestMetadataMatcher possibleMatcher = entry.getKey();
@@ -555,17 +536,15 @@ public class DubboServiceMetadataRepository
 
 		if (object == null) {
 			if (logger.isWarnEnabled()) {
-				logger.warn(
-						"DubboServiceMetadata can't be found in the Spring application [{}] and {}",
-						serviceName, requestMetadata);
+				logger.warn("DubboServiceMetadata can't be found in the Spring application [{}] and {}", serviceName,
+						requestMetadata);
 			}
 		}
 
 		return object;
 	}
 
-	private Map<RequestMetadataMatcher, DubboRestServiceMetadata> getMetadataMap(
-			String serviceName) {
+	private Map<RequestMetadataMatcher, DubboRestServiceMetadata> getMetadataMap(String serviceName) {
 		return getMap(dubboRestServiceMetadataRepository, serviceName);
 	}
 
@@ -577,12 +556,10 @@ public class DubboServiceMetadataRepository
 
 		if (dubboMetadataService != null) {
 			try {
-				String serviceRestMetadataJsonConfig = dubboMetadataService
-						.getServiceRestMetadata();
+				String serviceRestMetadataJsonConfig = dubboMetadataService.getServiceRestMetadata();
 				if (hasText(serviceRestMetadataJsonConfig)) {
-					metadata = objectMapper.readValue(serviceRestMetadataJsonConfig,
-							TypeFactory.defaultInstance().constructCollectionType(
-									LinkedHashSet.class, ServiceRestMetadata.class));
+					metadata = objectMapper.readValue(serviceRestMetadataJsonConfig, TypeFactory.defaultInstance()
+							.constructCollectionType(LinkedHashSet.class, ServiceRestMetadata.class));
 				}
 			}
 			catch (Exception e) {
@@ -599,8 +576,7 @@ public class DubboServiceMetadataRepository
 	}
 
 	@Override
-	public void setApplicationEventPublisher(
-			ApplicationEventPublisher applicationEventPublisher) {
+	public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
 		this.applicationEventPublisher = applicationEventPublisher;
 	}
 
@@ -611,8 +587,8 @@ public class DubboServiceMetadataRepository
 		String version = subscribedURL.getParameter(VERSION_KEY);
 		String protocol = subscribedURL.getParameter(PROTOCOL_KEY);
 		List<ServiceInstance> serviceInstances = discoveryClient.getInstances(group);
-		List<URL> urls = dubboMetadataUtils.getDubboMetadataServiceURLs(serviceInstances,
-				serviceInterface, version, protocol);
+		List<URL> urls = dubboMetadataUtils.getDubboMetadataServiceURLs(serviceInstances, serviceInterface, version,
+				protocol);
 
 		if (logger.isInfoEnabled()) {
 			logger.info(

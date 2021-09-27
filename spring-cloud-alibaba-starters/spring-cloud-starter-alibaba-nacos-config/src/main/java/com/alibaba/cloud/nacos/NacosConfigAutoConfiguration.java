@@ -35,11 +35,9 @@ public class NacosConfigAutoConfiguration {
 
 	@Bean
 	public NacosConfigProperties nacosConfigProperties(ApplicationContext context) {
-		if (context.getParent() != null
-				&& BeanFactoryUtils.beanNamesForTypeIncludingAncestors(
-						context.getParent(), NacosConfigProperties.class).length > 0) {
-			return BeanFactoryUtils.beanOfTypeIncludingAncestors(context.getParent(),
-					NacosConfigProperties.class);
+		if (context.getParent() != null && BeanFactoryUtils.beanNamesForTypeIncludingAncestors(context.getParent(),
+				NacosConfigProperties.class).length > 0) {
+			return BeanFactoryUtils.beanOfTypeIncludingAncestors(context.getParent(), NacosConfigProperties.class);
 		}
 		return new NacosConfigProperties();
 	}
@@ -55,14 +53,12 @@ public class NacosConfigAutoConfiguration {
 	}
 
 	@Bean
-	public NacosConfigManager nacosConfigManager(
-			NacosConfigProperties nacosConfigProperties) {
+	public NacosConfigManager nacosConfigManager(NacosConfigProperties nacosConfigProperties) {
 		return new NacosConfigManager(nacosConfigProperties);
 	}
 
 	@Bean
-	public NacosContextRefresher nacosContextRefresher(
-			NacosConfigManager nacosConfigManager,
+	public NacosContextRefresher nacosContextRefresher(NacosConfigManager nacosConfigManager,
 			NacosRefreshHistory nacosRefreshHistory) {
 		// Consider that it is not necessary to be compatible with the previous
 		// configuration

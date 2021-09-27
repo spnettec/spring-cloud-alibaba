@@ -31,6 +31,7 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cloud.openfeign.EnableFeignClients;
+import org.springframework.cloud.openfeign.FallbackFactory;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -45,8 +46,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
  * @author <a href="mailto:fangjian0423@gmail.com">Jim</a>
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = { SentinelFeignTests.TestConfig.class },
-		properties = { "feign.sentinel.enabled=true" })
+@SpringBootTest(classes = { SentinelFeignTests.TestConfig.class }, properties = { "feign.sentinel.enabled=true" })
 public class SentinelFeignTests {
 
 	@Autowired
@@ -190,8 +190,7 @@ public class SentinelFeignTests {
 
 	}
 
-	public static class CustomFallbackFactory
-			implements feign.hystrix.FallbackFactory<FooService> {
+	public static class CustomFallbackFactory implements FallbackFactory<FooService> {
 
 		private FooService fooService = new FooServiceFallback();
 

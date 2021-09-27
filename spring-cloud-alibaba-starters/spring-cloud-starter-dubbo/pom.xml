@@ -167,7 +167,7 @@
         <dependency>
             <groupId>io.github.openfeign</groupId>
             <artifactId>feign-jaxrs2</artifactId>
-            <version>9.7.0</version>
+            <version>11.5</version>
         </dependency>
 
         <!-- Testing -->

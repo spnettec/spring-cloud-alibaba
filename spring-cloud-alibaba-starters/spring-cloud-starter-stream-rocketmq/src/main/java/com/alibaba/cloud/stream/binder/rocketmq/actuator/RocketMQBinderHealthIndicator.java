@@ -34,21 +34,18 @@ public class RocketMQBinderHealthIndicator extends AbstractHealthIndicator {
 
 	@Override
 	protected void doHealthCheck(Health.Builder builder) throws Exception {
-		if (instrumentationManager.getHealthInstrumentations().stream()
-				.allMatch(Instrumentation::isUp)) {
+		if (instrumentationManager.getHealthInstrumentations().stream().allMatch(Instrumentation::isUp)) {
 			builder.up();
 			return;
 		}
-		if (instrumentationManager.getHealthInstrumentations().stream()
-				.allMatch(Instrumentation::isOutOfService)) {
+		if (instrumentationManager.getHealthInstrumentations().stream().allMatch(Instrumentation::isOutOfService)) {
 			builder.outOfService();
 			return;
 		}
 		builder.down();
 		instrumentationManager.getHealthInstrumentations().stream()
 				.filter(instrumentation -> !instrumentation.isStarted())
-				.forEach(instrumentation1 -> builder
-						.withException(instrumentation1.getStartException()));
+				.forEach(instrumentation1 -> builder.withException(instrumentation1.getStartException()));
 	}
 
 }

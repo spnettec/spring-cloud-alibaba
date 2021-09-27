@@ -34,8 +34,7 @@ class FeignMethodMetadata {
 
 	private final RestMethodMetadata feignMethodMetadata;
 
-	FeignMethodMetadata(GenericService dubboGenericService,
-			RestMethodMetadata dubboRestMethodMetadata,
+	FeignMethodMetadata(GenericService dubboGenericService, RestMethodMetadata dubboRestMethodMetadata,
 			RestMethodMetadata feignMethodMetadata) {
 		this.dubboGenericService = dubboGenericService;
 		this.dubboRestMethodMetadata = dubboRestMethodMetadata;

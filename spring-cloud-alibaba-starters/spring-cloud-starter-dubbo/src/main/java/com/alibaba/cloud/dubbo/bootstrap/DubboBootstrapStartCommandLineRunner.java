@@ -30,21 +30,18 @@ import org.springframework.stereotype.Component;
  */
 
 @Component
-public class DubboBootstrapStartCommandLineRunner
-		implements CommandLineRunner, ApplicationEventPublisherAware {
+public class DubboBootstrapStartCommandLineRunner implements CommandLineRunner, ApplicationEventPublisherAware {
 
 	private ApplicationEventPublisher applicationEventPublisher;
 
 	@Override
-	public void setApplicationEventPublisher(
-			ApplicationEventPublisher applicationEventPublisher) {
+	public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
 		this.applicationEventPublisher = applicationEventPublisher;
 	}
 
 	@Override
 	public void run(String... args) {
-		applicationEventPublisher.publishEvent(
-				new DubboBootstrapStartedEvent(DubboBootstrapWrapper.getInstance()));
+		applicationEventPublisher.publishEvent(new DubboBootstrapStartedEvent(DubboBootstrapWrapper.getInstance()));
 	}
 
 }

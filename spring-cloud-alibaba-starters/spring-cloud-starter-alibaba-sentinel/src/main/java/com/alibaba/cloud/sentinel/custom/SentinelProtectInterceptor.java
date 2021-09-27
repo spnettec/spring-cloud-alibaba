@@ -47,30 +47,26 @@ public class SentinelProtectInterceptor implements ClientHttpRequestInterceptor 
 
 	private final RestTemplate restTemplate;
 
-	public SentinelProtectInterceptor(SentinelRestTemplate sentinelRestTemplate,
-			RestTemplate restTemplate) {
+	public SentinelProtectInterceptor(SentinelRestTemplate sentinelRestTemplate, RestTemplate restTemplate) {
 		this.sentinelRestTemplate = sentinelRestTemplate;
 		this.restTemplate = restTemplate;
 	}
 
 	@Override
-	public ClientHttpResponse intercept(HttpRequest request, byte[] body,
-			ClientHttpRequestExecution execution) throws IOException {
+	public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution)
+			throws IOException {
 		URI uri = request.getURI();
-		String hostResource = request.getMethod().toString() + ":" + uri.getScheme()
-				+ "://" + uri.getHost()
+		String hostResource = request.getMethod().toString() + ":" + uri.getScheme() + "://" + uri.getHost()
 				+ (uri.getPort() == -1 ? "" : ":" + uri.getPort());
 		String hostWithPathResource = hostResource + uri.getPath();
 		boolean entryWithPath = true;
 		if (hostResource.equals(hostWithPathResource)) {
 			entryWithPath = false;
 		}
-		Method urlCleanerMethod = BlockClassRegistry.lookupUrlCleaner(
-				sentinelRestTemplate.urlCleanerClass(),
+		Method urlCleanerMethod = BlockClassRegistry.lookupUrlCleaner(sentinelRestTemplate.urlCleanerClass(),
 				sentinelRestTemplate.urlCleaner());
 		if (urlCleanerMethod != null) {
-			hostWithPathResource = (String) methodInvoke(urlCleanerMethod,
-					hostWithPathResource);
+			hostWithPathResource = (String) methodInvoke(urlCleanerMethod, hostWithPathResource);
 		}
 
 		Entry hostEntry = null;
@@ -83,8 +79,7 @@ public class SentinelProtectInterceptor implements ClientHttpRequestInterceptor 
 			}
 			response = execution.execute(request, body);
 			if (this.restTemplate.getErrorHandler().hasError(response)) {
-				Tracer.trace(
-						new IllegalStateException("RestTemplate ErrorHandler has error"));
+				Tracer.trace(new IllegalStateException("RestTemplate ErrorHandler has error"));
 			}
 			return response;
 		}
@@ -130,8 +125,7 @@ public class SentinelProtectInterceptor implements ClientHttpRequestInterceptor 
 			}
 		}
 		// handle flow
-		Method blockHandler = extractBlockHandlerMethod(
-				sentinelRestTemplate.blockHandler(),
+		Method blockHandler = extractBlockHandlerMethod(sentinelRestTemplate.blockHandler(),
 				sentinelRestTemplate.blockHandlerClass());
 		if (blockHandler != null) {
 			return (ClientHttpResponse) methodInvoke(blockHandler, args);

@@ -28,15 +28,12 @@ import org.springframework.http.MediaType;
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  */
-public class ProduceMediaTypeExpressionTest
-		extends AbstractMediaTypeExpressionTest<ProduceMediaTypeExpression> {
+public class ProduceMediaTypeExpressionTest extends AbstractMediaTypeExpressionTest<ProduceMediaTypeExpression> {
 
 	@Test
 	public void testMatch() {
-		ProduceMediaTypeExpression expression = createExpression(
-				MediaType.APPLICATION_JSON_VALUE);
-		Assert.assertTrue(expression.match(
-				Arrays.asList(MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON)));
+		ProduceMediaTypeExpression expression = createExpression(MediaType.APPLICATION_JSON_VALUE);
+		Assert.assertTrue(expression.match(Arrays.asList(MediaType.APPLICATION_XML, MediaType.APPLICATION_JSON)));
 
 		expression = createExpression(MediaType.APPLICATION_JSON_VALUE);
 		Assert.assertFalse(expression.match(Arrays.asList(MediaType.APPLICATION_XML)));

@@ -53,8 +53,7 @@ import static com.alibaba.cloud.dubbo.autoconfigure.DubboServiceRegistrationAuto
  */
 @Configuration(proxyBeanMethods = false)
 @ConditionalOnNotWebApplication
-@ConditionalOnProperty(value = "spring.cloud.service-registry.auto-registration.enabled",
-		matchIfMissing = true)
+@ConditionalOnProperty(value = "spring.cloud.service-registry.auto-registration.enabled", matchIfMissing = true)
 @AutoConfigureAfter(DubboServiceRegistrationAutoConfiguration.class)
 @Aspect
 public class DubboServiceRegistrationNonWebApplicationAutoConfiguration {
@@ -107,9 +106,8 @@ public class DubboServiceRegistrationNonWebApplicationAutoConfiguration {
 			synchronized (DubboServiceRegistrationNonWebApplicationAutoConfiguration.class) {
 				if (serverPort == null) {
 					for (List<URL> urls : repository.getAllExportedUrls().values()) {
-						urls.stream().filter(
-								url -> REST_PROTOCOL.equalsIgnoreCase(url.getProtocol()))
-								.findFirst().ifPresent(url -> {
+						urls.stream().filter(url -> REST_PROTOCOL.equalsIgnoreCase(url.getProtocol())).findFirst()
+								.ifPresent(url -> {
 									serverPort = url.getPort();
 								});
 
@@ -133,8 +131,7 @@ public class DubboServiceRegistrationNonWebApplicationAutoConfiguration {
 		private ServiceInstanceRegistration registration;
 
 		@EventListener(ServiceInstancePreRegisteredEvent.class)
-		public void onServiceInstancePreRegistered(
-				ServiceInstancePreRegisteredEvent event) {
+		public void onServiceInstancePreRegistered(ServiceInstancePreRegisteredEvent event) {
 			setServerPort();
 			registration.setPort(serverPort);
 		}
@@ -157,8 +154,7 @@ public class DubboServiceRegistrationNonWebApplicationAutoConfiguration {
 		 * @param event {@link ServiceInstancePreRegisteredEvent}
 		 */
 		@EventListener(ServiceInstancePreRegisteredEvent.class)
-		public void onServiceInstancePreRegistered(
-				ServiceInstancePreRegisteredEvent event) {
+		public void onServiceInstancePreRegistered(ServiceInstancePreRegisteredEvent event) {
 			Registration registration = event.getSource();
 			ConsulAutoRegistration consulRegistration = (ConsulAutoRegistration) registration;
 			setPort(consulRegistration);

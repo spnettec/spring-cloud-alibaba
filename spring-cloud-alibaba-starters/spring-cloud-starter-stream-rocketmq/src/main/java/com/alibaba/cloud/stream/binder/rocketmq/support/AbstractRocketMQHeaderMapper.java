@@ -46,12 +46,9 @@ public abstract class AbstractRocketMQHeaderMapper implements RocketMQHeaderMapp
 	}
 
 	protected boolean matches(String headerName) {
-		return !MessageConst.STRING_HASH_SET.contains(headerName)
-				&& !MessageHeaders.ID.equals(headerName)
-				&& !MessageHeaders.TIMESTAMP.equals(headerName)
-				&& !MessageHeaders.CONTENT_TYPE.equals(headerName)
-				&& !MessageHeaders.REPLY_CHANNEL.equals(headerName)
-				&& !MessageHeaders.ERROR_CHANNEL.equals(headerName);
+		return !MessageConst.STRING_HASH_SET.contains(headerName) && !MessageHeaders.ID.equals(headerName)
+				&& !MessageHeaders.TIMESTAMP.equals(headerName) && !MessageHeaders.CONTENT_TYPE.equals(headerName)
+				&& !MessageHeaders.REPLY_CHANNEL.equals(headerName) && !MessageHeaders.ERROR_CHANNEL.equals(headerName);
 	}
 
 	public Charset getCharset() {

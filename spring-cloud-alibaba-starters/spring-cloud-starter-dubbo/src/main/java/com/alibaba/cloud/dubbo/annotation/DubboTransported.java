@@ -57,8 +57,7 @@ import static org.apache.dubbo.common.constants.CommonConstants.DEFAULT_RETRIES;
  * @see LoadBalanced
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ ElementType.TYPE, ElementType.FIELD, ElementType.METHOD,
-		ElementType.PARAMETER })
+@Target({ ElementType.TYPE, ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER })
 @Documented
 public @interface DubboTransported {
 

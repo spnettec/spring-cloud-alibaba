@@ -67,8 +67,8 @@ public class StandardRestService implements RestService {
 	@Override
 	@Path("headers")
 	@GET
-	public String headers(@HeaderParam("h") String header,
-			@HeaderParam("h2") String header2, @QueryParam("v") Integer param) {
+	public String headers(@HeaderParam("h") String header, @HeaderParam("h2") String header2,
+			@QueryParam("v") Integer param) {
 		String result = header + " , " + header2 + " , " + param;
 		log("/headers", result);
 		return result;
@@ -77,8 +77,8 @@ public class StandardRestService implements RestService {
 	@Override
 	@Path("path-variables/{p1}/{p2}")
 	@GET
-	public String pathVariables(@PathParam("p1") String path1,
-			@PathParam("p2") String path2, @QueryParam("v") String param) {
+	public String pathVariables(@PathParam("p1") String path1, @PathParam("p2") String path2,
+			@QueryParam("v") String param) {
 		String result = path1 + " , " + path2 + " , " + param;
 		log("/path-variables", result);
 		return result;
@@ -98,8 +98,7 @@ public class StandardRestService implements RestService {
 	@Path("request/body/map")
 	@POST
 	@Produces(APPLICATION_JSON_VALUE)
-	public User requestBodyMap(Map<String, Object> data,
-			@QueryParam("param") String param) {
+	public User requestBodyMap(Map<String, Object> data, @QueryParam("param") String param) {
 		User user = new User();
 		user.setId(((Integer) data.get("id")).longValue());
 		user.setName((String) data.get("name"));

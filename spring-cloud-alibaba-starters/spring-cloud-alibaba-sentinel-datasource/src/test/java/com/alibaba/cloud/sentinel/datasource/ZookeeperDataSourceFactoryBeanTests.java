@@ -43,8 +43,7 @@ public class ZookeeperDataSourceFactoryBeanTests {
 
 	@Test
 	public void testZKWithoutPathFactoryBean() throws Exception {
-		ZookeeperDataSourceFactoryBean factoryBean = spy(
-				ZookeeperDataSourceFactoryBean.class);
+		ZookeeperDataSourceFactoryBean factoryBean = spy(ZookeeperDataSourceFactoryBean.class);
 
 		Converter converter = mock(XmlConverter.class);
 
@@ -68,8 +67,7 @@ public class ZookeeperDataSourceFactoryBeanTests {
 
 	@Test
 	public void testZKWithPathFactoryBean() throws Exception {
-		ZookeeperDataSourceFactoryBean factoryBean = spy(
-				ZookeeperDataSourceFactoryBean.class);
+		ZookeeperDataSourceFactoryBean factoryBean = spy(ZookeeperDataSourceFactoryBean.class);
 
 		Converter converter = mock(XmlConverter.class);
 

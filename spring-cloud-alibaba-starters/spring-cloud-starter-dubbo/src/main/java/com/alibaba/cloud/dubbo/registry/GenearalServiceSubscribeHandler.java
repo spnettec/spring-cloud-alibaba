@@ -66,9 +66,8 @@ public class GenearalServiceSubscribeHandler extends AbstractServiceSubscribeHan
 
 	private final DubboMetadataServiceProxy dubboMetadataConfigServiceProxy;
 
-	public GenearalServiceSubscribeHandler(URL url, NotifyListener listener,
-			DubboCloudRegistry registry, DubboServiceMetadataRepository repository,
-			JSONUtils jsonUtils,
+	public GenearalServiceSubscribeHandler(URL url, NotifyListener listener, DubboCloudRegistry registry,
+			DubboServiceMetadataRepository repository, JSONUtils jsonUtils,
 			DubboMetadataServiceProxy dubboMetadataConfigServiceProxy) {
 		super(url, listener, registry);
 		this.repository = repository;
@@ -102,17 +101,13 @@ public class GenearalServiceSubscribeHandler extends AbstractServiceSubscribeHan
 	}
 
 	public synchronized void doInit() {
-		logger.debug("Subscription interface {}, GenearalServiceSubscribeHandler init",
-				url.getServiceKey());
-		Map<String, Map<String, List<ServiceInstance>>> map = registry
-				.getServiceRevisionInstanceMap();
-		for (Map.Entry<String, Map<String, List<ServiceInstance>>> entry : map
-				.entrySet()) {
+		logger.debug("Subscription interface {}, GenearalServiceSubscribeHandler init", url.getServiceKey());
+		Map<String, Map<String, List<ServiceInstance>>> map = registry.getServiceRevisionInstanceMap();
+		for (Map.Entry<String, Map<String, List<ServiceInstance>>> entry : map.entrySet()) {
 			String appName = entry.getKey();
 			Map<String, List<ServiceInstance>> revisionMap = entry.getValue();
 
-			for (Map.Entry<String, List<ServiceInstance>> revisionEntity : revisionMap
-					.entrySet()) {
+			for (Map.Entry<String, List<ServiceInstance>> revisionEntity : revisionMap.entrySet()) {
 				String revision = revisionEntity.getKey();
 				List<ServiceInstance> instances = revisionEntity.getValue();
 				init(appName, revision, instances);
@@ -121,8 +116,7 @@ public class GenearalServiceSubscribeHandler extends AbstractServiceSubscribeHan
 		refresh();
 	}
 
-	public void init(String appName, String revision,
-			List<ServiceInstance> instanceList) {
+	public void init(String appName, String revision, List<ServiceInstance> instanceList) {
 		List<URL> urls = getTemplateExportedURLs(url, revision, instanceList);
 		if (urls != null && urls.size() > 0) {
 			addAppNameWithRevision(appName, revision);
@@ -138,8 +132,8 @@ public class GenearalServiceSubscribeHandler extends AbstractServiceSubscribeHan
 	private List<URL> getProviderURLs() {
 		List<ServiceInstance> instances = registry.getServiceInstances(providers);
 
-		logger.debug("Subscription interfece {}, providers {}, total {}",
-				url.getServiceKey(), providers, instances.size());
+		logger.debug("Subscription interfece {}, providers {}, total {}", url.getServiceKey(), providers,
+				instances.size());
 
 		if (instances.size() == 0) {
 			return Collections.emptyList();
@@ -180,18 +174,15 @@ public class GenearalServiceSubscribeHandler extends AbstractServiceSubscribeHan
 
 			URL template = urlTemplateMap.get(getAppRevisionKey(appName, revision));
 
-			Stream.of(template)
-					.map(templateURL -> templateURL.removeParameter(TIMESTAMP_KEY))
-					.map(templateURL -> templateURL.removeParameter(PID_KEY))
-					.map(templateURL -> {
+			Stream.of(template).map(templateURL -> templateURL.removeParameter(TIMESTAMP_KEY))
+					.map(templateURL -> templateURL.removeParameter(PID_KEY)).map(templateURL -> {
 						String protocol = templateURL.getProtocol();
-						Integer port = repository.getDubboProtocolPort(serviceInstance,
-								protocol);
+						Integer port = repository.getDubboProtocolPort(serviceInstance, protocol);
 
 						// reserve tag
 						String tag = null;
-						List<URL> urls = jsonUtils.toURLs(serviceInstance.getMetadata()
-								.get("dubbo.metadata-service.urls"));
+						List<URL> urls = jsonUtils
+								.toURLs(serviceInstance.getMetadata().get("dubbo.metadata-service.urls"));
 						if (urls != null && urls.size() > 0) {
 							Map<String, String> parameters = urls.get(0).getParameters();
 							tag = parameters.get("dubbo.tag");
@@ -207,10 +198,8 @@ public class GenearalServiceSubscribeHandler extends AbstractServiceSubscribeHan
 
 						if (port == null) {
 							if (logger.isWarnEnabled()) {
-								logger.warn(
-										"The protocol[{}] port of Dubbo  service instance[host : {}] "
-												+ "can't be resolved",
-										protocol, host);
+								logger.warn("The protocol[{}] port of Dubbo  service instance[host : {}] "
+										+ "can't be resolved", protocol, host);
 							}
 							return null;
 						}
@@ -239,15 +228,12 @@ public class GenearalServiceSubscribeHandler extends AbstractServiceSubscribeHan
 		List<URL> templateExportedURLs = emptyList();
 
 		if (dubboMetadataService != null) {
-			templateExportedURLs = getExportedURLs(dubboMetadataService, revision,
-					subscribedURL);
+			templateExportedURLs = getExportedURLs(dubboMetadataService, revision, subscribedURL);
 		}
 		else {
 			if (logger.isWarnEnabled()) {
-				logger.warn(
-						"The metadata of Dubbo service[key : {}] still can't be found, it could effect the further "
-								+ "Dubbo service invocation",
-						subscribedURL.getServiceKey());
+				logger.warn("The metadata of Dubbo service[key : {}] still can't be found, it could effect the further "
+						+ "Dubbo service invocation", subscribedURL.getServiceKey());
 			}
 
 		}
@@ -259,22 +245,18 @@ public class GenearalServiceSubscribeHandler extends AbstractServiceSubscribeHan
 		return dubboMetadataConfigServiceProxy.getProxy(serviceInstances);
 	}
 
-	private List<URL> getExportedURLs(DubboMetadataService dubboMetadataService,
-			String revision, URL subscribedURL) {
+	private List<URL> getExportedURLs(DubboMetadataService dubboMetadataService, String revision, URL subscribedURL) {
 		String serviceInterface = subscribedURL.getServiceInterface();
 		String group = subscribedURL.getParameter(GROUP_KEY);
 		String version = subscribedURL.getParameter(VERSION_KEY);
 
 		RpcContext.getContext().setAttachment(SCA_REVSION_KEY, revision);
-		String exportedURLsJSON = dubboMetadataService.getExportedURLs(serviceInterface,
-				group, version);
+		String exportedURLsJSON = dubboMetadataService.getExportedURLs(serviceInterface, group, version);
 
 		// The subscribed protocol may be null
 		String subscribedProtocol = subscribedURL.getParameter(PROTOCOL_KEY);
-		return jsonUtils.toURLs(exportedURLsJSON).stream()
-				.filter(exportedURL -> subscribedProtocol == null
-						|| subscribedProtocol.equalsIgnoreCase(exportedURL.getProtocol()))
-				.collect(Collectors.toList());
+		return jsonUtils.toURLs(exportedURLsJSON).stream().filter(exportedURL -> subscribedProtocol == null
+				|| subscribedProtocol.equalsIgnoreCase(exportedURL.getProtocol())).collect(Collectors.toList());
 	}
 
 }

@@ -56,8 +56,7 @@ public class NacosDiscoveryClient implements DiscoveryClient {
 			return serviceDiscovery.getInstances(serviceId);
 		}
 		catch (Exception e) {
-			throw new RuntimeException(
-					"Can not get hosts from nacos server. serviceId: " + serviceId, e);
+			throw new RuntimeException("Can not get hosts from nacos server. serviceId: " + serviceId, e);
 		}
 	}
 

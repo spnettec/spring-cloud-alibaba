@@ -31,8 +31,7 @@ public class ServiceInstancePreRegisteredEvent extends ApplicationEvent {
 
 	private final ServiceRegistry<Registration> registry;
 
-	public ServiceInstancePreRegisteredEvent(ServiceRegistry<Registration> registry,
-			Registration source) {
+	public ServiceInstancePreRegisteredEvent(ServiceRegistry<Registration> registry, Registration source) {
 		super(source);
 		this.registry = registry;
 	}

@@ -34,8 +34,7 @@ public class RocketMQBinderConfigurationProperties {
 	/**
 	 * The name server list for rocketMQ.
 	 */
-	private List<String> nameServer = Arrays
-			.asList(RocketMQBinderConstants.DEFAULT_NAME_SERVER);
+	private List<String> nameServer = Arrays.asList(RocketMQBinderConstants.DEFAULT_NAME_SERVER);
 
 	/**
 	 * The property of "access-key".

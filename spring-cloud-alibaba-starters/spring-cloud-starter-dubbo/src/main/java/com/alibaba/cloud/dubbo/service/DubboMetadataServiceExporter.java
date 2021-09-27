@@ -82,8 +82,7 @@ public class DubboMetadataServiceExporter {
 			serviceConfig.export();
 
 			if (logger.isInfoEnabled()) {
-				logger.info("The Dubbo service[{}] has been exported.",
-						serviceConfig.toString());
+				logger.info("The Dubbo service[{}] has been exported.", serviceConfig.toString());
 			}
 		}
 
@@ -103,8 +102,7 @@ public class DubboMetadataServiceExporter {
 		serviceConfig.unexport();
 
 		if (logger.isInfoEnabled()) {
-			logger.info("The Dubbo service[{}] has been unexported.",
-					serviceConfig.toString());
+			logger.info("The Dubbo service[{}] has been unexported.", serviceConfig.toString());
 		}
 	}
 

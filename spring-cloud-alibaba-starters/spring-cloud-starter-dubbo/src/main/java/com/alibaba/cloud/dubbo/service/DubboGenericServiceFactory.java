@@ -67,17 +67,15 @@ public class DubboGenericServiceFactory {
 	public GenericService create(DubboRestServiceMetadata dubboServiceMetadata,
 			Map<String, Object> dubboTranslatedAttributes) {
 
-		ReferenceBean<GenericService> referenceBean = build(
-				dubboServiceMetadata.getServiceRestMetadata(), dubboTranslatedAttributes);
+		ReferenceBean<GenericService> referenceBean = build(dubboServiceMetadata.getServiceRestMetadata(),
+				dubboTranslatedAttributes);
 
 		return referenceBean == null ? null : referenceBean.get();
 	}
 
-	public GenericService create(String serviceName, Class<?> serviceClass,
-			String version) {
+	public GenericService create(String serviceName, Class<?> serviceClass, String version) {
 		String interfaceName = serviceClass.getName();
-		ReferenceBean<GenericService> referenceBean = build(interfaceName, version,
-				serviceName, emptyMap());
+		ReferenceBean<GenericService> referenceBean = build(interfaceName, version, serviceName, emptyMap());
 		if (DubboMetadataService.class == serviceClass) {
 			referenceBean.setRouter("-default,revisionRouter");
 		}
@@ -95,8 +93,8 @@ public class DubboGenericServiceFactory {
 		return build(interfaceName, version, group, dubboTranslatedAttributes);
 	}
 
-	private ReferenceBean<GenericService> build(String interfaceName, String version,
-			String group, Map<String, Object> dubboTranslatedAttributes) {
+	private ReferenceBean<GenericService> build(String interfaceName, String version, String group,
+			Map<String, Object> dubboTranslatedAttributes) {
 
 		String key = createKey(interfaceName, version, group, dubboTranslatedAttributes);
 
@@ -114,40 +112,34 @@ public class DubboGenericServiceFactory {
 
 	private String createKey(String interfaceName, String version, String group,
 			Map<String, Object> dubboTranslatedAttributes) {
-		return group + "#"
-				+ Objects.hash(interfaceName, version, group, dubboTranslatedAttributes);
+		return group + "#" + Objects.hash(interfaceName, version, group, dubboTranslatedAttributes);
 	}
 
 	private void bindReferenceBean(ReferenceBean<GenericService> referenceBean,
 			Map<String, Object> dubboTranslatedAttributes) {
 		DataBinder dataBinder = new DataBinder(referenceBean);
 		// Register CustomEditors for special fields
-		dataBinder.registerCustomEditor(String.class, "filter",
-				new StringTrimmerEditor(true));
-		dataBinder.registerCustomEditor(String.class, "listener",
-				new StringTrimmerEditor(true));
-		dataBinder.registerCustomEditor(Map.class, "parameters",
-				new PropertyEditorSupport() {
+		dataBinder.registerCustomEditor(String.class, "filter", new StringTrimmerEditor(true));
+		dataBinder.registerCustomEditor(String.class, "listener", new StringTrimmerEditor(true));
+		dataBinder.registerCustomEditor(Map.class, "parameters", new PropertyEditorSupport() {
 
-					@Override
-					public void setAsText(String text)
-							throws java.lang.IllegalArgumentException {
-						// Trim all whitespace
-						String content = StringUtils.trimAllWhitespace(text);
-						if (!StringUtils.hasText(content)) { // No content , ignore
-																// directly
-							return;
-						}
-						// replace "=" to ","
-						content = StringUtils.replace(content, "=", ",");
-						// replace ":" to ","
-						content = StringUtils.replace(content, ":", ",");
-						// String[] to Map
-						Map<String, String> parameters = CollectionUtils
-								.toStringMap(commaDelimitedListToStringArray(content));
-						setValue(parameters);
-					}
-				});
+			@Override
+			public void setAsText(String text) throws java.lang.IllegalArgumentException {
+				// Trim all whitespace
+				String content = StringUtils.trimAllWhitespace(text);
+				if (!StringUtils.hasText(content)) { // No content , ignore
+														// directly
+					return;
+				}
+				// replace "=" to ","
+				content = StringUtils.replace(content, "=", ",");
+				// replace ":" to ","
+				content = StringUtils.replace(content, ":", ",");
+				// String[] to Map
+				Map<String, String> parameters = CollectionUtils.toStringMap(commaDelimitedListToStringArray(content));
+				setValue(parameters);
+			}
+		});
 
 		// ignore "registries" field and then use RegistryConfig beans
 		dataBinder.setDisallowedFields("registries");

@@ -52,9 +52,8 @@ public class SidecarHealthChecker {
 	@Autowired
 	private ObjectProvider<CustomHealthCheckHandler> customHealthCheckHandlerObjectProvider;
 
-	public SidecarHealthChecker(SidecarDiscoveryClient sidecarDiscoveryClient,
-			HealthIndicator healthIndicator, SidecarProperties sidecarProperties,
-			ConfigurableEnvironment environment) {
+	public SidecarHealthChecker(SidecarDiscoveryClient sidecarDiscoveryClient, HealthIndicator healthIndicator,
+			SidecarProperties sidecarProperties, ConfigurableEnvironment environment) {
 		this.sidecarDiscoveryClient = sidecarDiscoveryClient;
 		this.healthIndicator = healthIndicator;
 		this.sidecarProperties = sidecarProperties;
@@ -69,12 +68,10 @@ public class SidecarHealthChecker {
 
 			Status status = healthIndicator.health().getStatus();
 
-			SidecarInstanceInfo sidecarInstanceInfo = instanceCache(applicationName, ip,
-					port, status);
+			SidecarInstanceInfo sidecarInstanceInfo = instanceCache(applicationName, ip, port, status);
 			if (status.equals(Status.UP)) {
 				if (needRegister(applicationName, sidecarInstanceInfo)) {
-					this.sidecarDiscoveryClient.registerInstance(applicationName, ip,
-							port);
+					this.sidecarDiscoveryClient.registerInstance(applicationName, ip, port);
 					log.info(
 							"Polyglot service changed and Health check success. register the new instance. applicationName = {}, ip = {}, port = {}, status = {}",
 							applicationName, ip, port, status);
@@ -86,14 +83,12 @@ public class SidecarHealthChecker {
 						applicationName, ip, port, status);
 				this.sidecarDiscoveryClient.deregisterInstance(applicationName, ip, port);
 
-				sidecarInstanceCacheMap.put(applicationName,
-						buildCache(ip, port, status));
+				sidecarInstanceCacheMap.put(applicationName, buildCache(ip, port, status));
 			}
 
 			try {
-				customHealthCheckHandlerObjectProvider
-						.ifAvailable(customHealthCheckHandler -> customHealthCheckHandler
-								.handler(applicationName, sidecarInstanceInfo));
+				customHealthCheckHandlerObjectProvider.ifAvailable(customHealthCheckHandler -> customHealthCheckHandler
+						.handler(applicationName, sidecarInstanceInfo));
 			}
 			catch (Exception e) {
 				// ignore
@@ -101,15 +96,13 @@ public class SidecarHealthChecker {
 		}, 0, sidecarProperties.getHealthCheckInterval(), TimeUnit.MILLISECONDS);
 	}
 
-	private SidecarInstanceInfo instanceCache(String applicationName, String ip,
-			Integer port, Status status) {
+	private SidecarInstanceInfo instanceCache(String applicationName, String ip, Integer port, Status status) {
 		SidecarInstanceInfo sidecarInstanceInfo = buildCache(ip, port, status);
 		sidecarInstanceCacheMap.putIfAbsent(applicationName, sidecarInstanceInfo);
 		return sidecarInstanceInfo;
 	}
 
-	private boolean needRegister(String applicationName,
-			SidecarInstanceInfo sidecarInstanceInfo) {
+	private boolean needRegister(String applicationName, SidecarInstanceInfo sidecarInstanceInfo) {
 		SidecarInstanceInfo cacheRecord = sidecarInstanceCacheMap.get(applicationName);
 		if (!Objects.equals(sidecarInstanceInfo, cacheRecord)) {
 			// modify the cache info

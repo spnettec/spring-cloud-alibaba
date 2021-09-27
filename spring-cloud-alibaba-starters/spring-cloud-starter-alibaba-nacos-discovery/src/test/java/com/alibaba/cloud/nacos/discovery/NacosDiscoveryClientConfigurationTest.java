@@ -16,6 +16,7 @@
 
 package com.alibaba.cloud.nacos.discovery;
 
+import com.alibaba.cloud.nacos.NacosServiceAutoConfiguration;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.boot.autoconfigure.AutoConfigurations;
@@ -34,9 +35,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class NacosDiscoveryClientConfigurationTest {
 
 	private ApplicationContextRunner contextRunner = new ApplicationContextRunner()
-			.withConfiguration(AutoConfigurations.of(UtilAutoConfiguration.class,
-					NacosDiscoveryAutoConfiguration.class,
-					NacosDiscoveryClientConfiguration.class, this.getClass()));
+			.withConfiguration(AutoConfigurations.of(UtilAutoConfiguration.class, NacosDiscoveryAutoConfiguration.class,
+					NacosDiscoveryClientConfiguration.class, NacosServiceAutoConfiguration.class, this.getClass()));
 
 	@Bean
 	public TaskScheduler taskScheduler() {
@@ -53,11 +53,10 @@ public class NacosDiscoveryClientConfigurationTest {
 
 	@Test
 	public void testDiscoveryBlockingDisabled() {
-		contextRunner.withPropertyValues("spring.cloud.discovery.blocking.enabled=false")
-				.run(context -> {
-					assertThat(context).doesNotHaveBean(DiscoveryClient.class);
-					assertThat(context).doesNotHaveBean(NacosWatch.class);
-				});
+		contextRunner.withPropertyValues("spring.cloud.discovery.blocking.enabled=false").run(context -> {
+			assertThat(context).doesNotHaveBean(DiscoveryClient.class);
+			assertThat(context).doesNotHaveBean(NacosWatch.class);
+		});
 	}
 
 }

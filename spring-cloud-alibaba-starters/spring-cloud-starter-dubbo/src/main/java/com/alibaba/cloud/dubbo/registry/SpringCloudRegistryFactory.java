@@ -66,41 +66,34 @@ public class SpringCloudRegistryFactory extends AbstractRegistryFactory {
 	public SpringCloudRegistryFactory() {
 	}
 
-	public static void setApplicationContext(
-			ConfigurableApplicationContext applicationContext) {
+	public static void setApplicationContext(ConfigurableApplicationContext applicationContext) {
 		SpringCloudRegistryFactory.applicationContext = applicationContext;
 	}
 
 	protected void init() {
 		this.discoveryClient = applicationContext.getBean(DiscoveryClient.class);
-		this.dubboServiceMetadataRepository = applicationContext
-				.getBean(DubboServiceMetadataRepository.class);
-		this.dubboMetadataConfigServiceProxy = applicationContext
-				.getBean(DubboMetadataServiceProxy.class);
+		this.dubboServiceMetadataRepository = applicationContext.getBean(DubboServiceMetadataRepository.class);
+		this.dubboMetadataConfigServiceProxy = applicationContext.getBean(DubboMetadataServiceProxy.class);
 		this.jsonUtils = applicationContext.getBean(JSONUtils.class);
-		this.dubboGenericServiceFactory = applicationContext
-				.getBean(DubboGenericServiceFactory.class);
+		this.dubboGenericServiceFactory = applicationContext.getBean(DubboGenericServiceFactory.class);
 	}
 
 	@Override
 	public Registry createRegistry(URL url) {
 		init();
 
-		DubboCloudProperties dubboCloudProperties = applicationContext
-				.getBean(DubboCloudProperties.class);
+		DubboCloudProperties dubboCloudProperties = applicationContext.getBean(DubboCloudProperties.class);
 
 		Registry registry;
 
 		switch (dubboCloudProperties.getRegistryType()) {
 		case SPRING_CLOUD_REGISTRY_PROPERTY_VALUE:
-			registry = new SpringCloudRegistry(url, discoveryClient,
-					dubboServiceMetadataRepository, dubboMetadataConfigServiceProxy,
-					jsonUtils, dubboGenericServiceFactory, applicationContext);
+			registry = new SpringCloudRegistry(url, discoveryClient, dubboServiceMetadataRepository,
+					dubboMetadataConfigServiceProxy, jsonUtils, dubboGenericServiceFactory, applicationContext);
 			break;
 		default:
-			registry = new DubboCloudRegistry(url, discoveryClient,
-					dubboServiceMetadataRepository, dubboMetadataConfigServiceProxy,
-					jsonUtils, applicationContext);
+			registry = new DubboCloudRegistry(url, discoveryClient, dubboServiceMetadataRepository,
+					dubboMetadataConfigServiceProxy, jsonUtils, applicationContext);
 			break;
 		}
 

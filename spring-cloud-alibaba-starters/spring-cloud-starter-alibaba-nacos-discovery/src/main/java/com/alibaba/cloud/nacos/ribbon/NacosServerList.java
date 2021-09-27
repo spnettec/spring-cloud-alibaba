@@ -52,14 +52,12 @@ public class NacosServerList extends AbstractServerList<NacosServer> {
 	private List<NacosServer> getServers() {
 		try {
 			String group = discoveryProperties.getGroup();
-			List<Instance> instances = discoveryProperties.namingServiceInstance()
-					.selectInstances(serviceId, group, true);
+			List<Instance> instances = discoveryProperties.namingServiceInstance().selectInstances(serviceId, group,
+					true);
 			return instancesToServerList(instances);
 		}
 		catch (Exception e) {
-			throw new IllegalStateException(
-					"Can not get service instances from nacos, serviceId=" + serviceId,
-					e);
+			throw new IllegalStateException("Can not get service instances from nacos, serviceId=" + serviceId, e);
 		}
 	}
 

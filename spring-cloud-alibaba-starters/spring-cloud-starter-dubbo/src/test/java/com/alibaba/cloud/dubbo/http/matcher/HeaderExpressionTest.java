@@ -28,8 +28,7 @@ import static com.alibaba.cloud.dubbo.http.DefaultHttpRequest.builder;
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  */
-public class HeaderExpressionTest
-		extends AbstractNameValueExpressionTest<HeaderExpression> {
+public class HeaderExpressionTest extends AbstractNameValueExpressionTest<HeaderExpression> {
 
 	@Test
 	public void testIsCaseSensitiveName() {

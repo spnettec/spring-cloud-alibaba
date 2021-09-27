@@ -40,21 +40,18 @@ import org.springframework.context.annotation.Configuration;
 @ConditionalOnDiscoveryEnabled
 @ConditionalOnBlockingDiscoveryEnabled
 @ConditionalOnNacosDiscoveryEnabled
-@AutoConfigureBefore({ SimpleDiscoveryClientAutoConfiguration.class,
-		CommonsClientAutoConfiguration.class })
+@AutoConfigureBefore({ SimpleDiscoveryClientAutoConfiguration.class, CommonsClientAutoConfiguration.class })
 @AutoConfigureAfter(NacosDiscoveryAutoConfiguration.class)
 public class NacosDiscoveryClientConfiguration {
 
 	@Bean
-	public DiscoveryClient nacosDiscoveryClient(
-			NacosServiceDiscovery nacosServiceDiscovery) {
+	public DiscoveryClient nacosDiscoveryClient(NacosServiceDiscovery nacosServiceDiscovery) {
 		return new NacosDiscoveryClient(nacosServiceDiscovery);
 	}
 
 	@Bean
 	@ConditionalOnMissingBean
-	@ConditionalOnProperty(value = "spring.cloud.nacos.discovery.watch.enabled",
-			matchIfMissing = true)
+	@ConditionalOnProperty(value = "spring.cloud.nacos.discovery.watch.enabled", matchIfMissing = true)
 	public NacosWatch nacosWatch(NacosServiceManager nacosServiceManager,
 			NacosDiscoveryProperties nacosDiscoveryProperties) {
 		return new NacosWatch(nacosServiceManager, nacosDiscoveryProperties);

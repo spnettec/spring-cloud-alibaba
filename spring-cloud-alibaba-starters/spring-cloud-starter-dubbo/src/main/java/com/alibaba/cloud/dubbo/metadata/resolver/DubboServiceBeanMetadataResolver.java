@@ -63,8 +63,7 @@ public class DubboServiceBeanMetadataResolver
 	 */
 	private Collection<Contract> contracts;
 
-	public DubboServiceBeanMetadataResolver(
-			ObjectProvider<Contract> contractObjectProvider) {
+	public DubboServiceBeanMetadataResolver(ObjectProvider<Contract> contractObjectProvider) {
 		this.contractObjectProvider = contractObjectProvider;
 	}
 
@@ -129,16 +128,13 @@ public class DubboServiceBeanMetadataResolver
 	@Override
 	public Set<RestMethodMetadata> resolveMethodRestMetadata(Class<?> targetType) {
 		List<Method> feignContractMethods = selectFeignContractMethods(targetType);
-		return contracts.stream()
-				.map(contract -> parseAndValidateMetadata(contract, targetType))
+		return contracts.stream().map(contract -> parseAndValidateMetadata(contract, targetType))
 				.flatMap(v -> v.stream())
-				.map(methodMetadata -> resolveMethodRestMetadata(methodMetadata,
-						targetType, feignContractMethods))
+				.map(methodMetadata -> resolveMethodRestMetadata(methodMetadata, targetType, feignContractMethods))
 				.collect(Collectors.toSet());
 	}
 
-	private List<MethodMetadata> parseAndValidateMetadata(Contract contract,
-			Class<?> targetType) {
+	private List<MethodMetadata> parseAndValidateMetadata(Contract contract, Class<?> targetType) {
 		List<MethodMetadata> methodMetadataList = Collections.emptyList();
 		try {
 			methodMetadataList = contract.parseAndValidateMetadata(targetType);
@@ -160,8 +156,7 @@ public class DubboServiceBeanMetadataResolver
 	private List<Method> selectFeignContractMethods(Class<?> targetType) {
 		List<Method> methods = new LinkedList<>();
 		for (Method method : targetType.getMethods()) {
-			if (method.getDeclaringClass() == Object.class
-					|| (method.getModifiers() & Modifier.STATIC) != 0
+			if (method.getDeclaringClass() == Object.class || (method.getModifiers() & Modifier.STATIC) != 0
 					|| Util.isDefault(method)) {
 				continue;
 			}
@@ -170,19 +165,16 @@ public class DubboServiceBeanMetadataResolver
 		return methods;
 	}
 
-	protected RestMethodMetadata resolveMethodRestMetadata(MethodMetadata methodMetadata,
-			Class<?> targetType, List<Method> feignContractMethods) {
+	protected RestMethodMetadata resolveMethodRestMetadata(MethodMetadata methodMetadata, Class<?> targetType,
+			List<Method> feignContractMethods) {
 		String configKey = methodMetadata.configKey();
-		Method feignContractMethod = getMatchedFeignContractMethod(targetType,
-				feignContractMethods, configKey);
+		Method feignContractMethod = getMatchedFeignContractMethod(targetType, feignContractMethods, configKey);
 		RestMethodMetadata metadata = new RestMethodMetadata(methodMetadata);
-		metadata.setMethod(
-				new com.alibaba.cloud.dubbo.metadata.MethodMetadata(feignContractMethod));
+		metadata.setMethod(new com.alibaba.cloud.dubbo.metadata.MethodMetadata(feignContractMethod));
 		return metadata;
 	}
 
-	private Method getMatchedFeignContractMethod(Class<?> targetType,
-			List<Method> methods, String expectedConfigKey) {
+	private Method getMatchedFeignContractMethod(Class<?> targetType, List<Method> methods, String expectedConfigKey) {
 		Method matchedMethod = null;
 		for (Method method : methods) {
 			String configKey = Feign.configKey(targetType, method);

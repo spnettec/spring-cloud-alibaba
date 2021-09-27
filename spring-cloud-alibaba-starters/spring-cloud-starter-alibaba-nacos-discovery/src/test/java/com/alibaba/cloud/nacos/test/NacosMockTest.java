@@ -30,8 +30,7 @@ public final class NacosMockTest {
 
 	}
 
-	public static Instance serviceInstance(String serviceName, boolean isHealthy,
-			Map<String, String> metadata) {
+	public static Instance serviceInstance(String serviceName, boolean isHealthy, Map<String, String> metadata) {
 		Instance instance = new Instance();
 		instance.setInstanceId(UUID.randomUUID().toString());
 		instance.setServiceName(serviceName);
@@ -40,8 +39,8 @@ public final class NacosMockTest {
 		return instance;
 	}
 
-	public static Instance serviceInstance(String serviceName, boolean isHealthy,
-			String host, int port, Map<String, String> metadata) {
+	public static Instance serviceInstance(String serviceName, boolean isHealthy, String host, int port,
+			Map<String, String> metadata) {
 		Instance instance = new Instance();
 		instance.setIp(host);
 		instance.setPort(port);

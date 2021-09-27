@@ -61,8 +61,8 @@ public class SpringRestService implements RestService {
 
 	@Override
 	@GetMapping("/headers")
-	public String headers(@RequestHeader("h") String header,
-			@RequestHeader("h2") String header2, @RequestParam("v") Integer param) {
+	public String headers(@RequestHeader("h") String header, @RequestHeader("h2") String header2,
+			@RequestParam("v") Integer param) {
 		String result = header + " , " + header2 + " , " + param;
 		log("/headers", result);
 		return result;
@@ -70,8 +70,8 @@ public class SpringRestService implements RestService {
 
 	@Override
 	@GetMapping("/path-variables/{p1}/{p2}")
-	public String pathVariables(@PathVariable("p1") String path1,
-			@PathVariable("p2") String path2, @RequestParam("v") String param) {
+	public String pathVariables(@PathVariable("p1") String path1, @PathVariable("p2") String path2,
+			@RequestParam("v") String param) {
 		String result = path1 + " , " + path2 + " , " + param;
 		log("/path-variables", result);
 		return result;
@@ -84,10 +84,8 @@ public class SpringRestService implements RestService {
 	}
 
 	@Override
-	@PostMapping(value = "/request/body/map",
-			produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public User requestBodyMap(@RequestBody Map<String, Object> data,
-			@RequestParam("param") String param) {
+	@PostMapping(value = "/request/body/map", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	public User requestBodyMap(@RequestBody Map<String, Object> data, @RequestParam("param") String param) {
 		User user = new User();
 		user.setId(((Integer) data.get("id")).longValue());
 		user.setName((String) data.get("name"));
@@ -96,8 +94,7 @@ public class SpringRestService implements RestService {
 		return user;
 	}
 
-	@PostMapping(value = "/request/body/user",
-			consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@PostMapping(value = "/request/body/user", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@Override
 	public Map<String, Object> requestBodyUser(@RequestBody User user) {
 		Map<String, Object> map = new HashMap<>();

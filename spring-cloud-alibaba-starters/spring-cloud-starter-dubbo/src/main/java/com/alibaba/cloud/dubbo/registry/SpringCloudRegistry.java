@@ -41,12 +41,10 @@ public class SpringCloudRegistry extends AbstractSpringCloudRegistry {
 
 	public SpringCloudRegistry(URL url, DiscoveryClient discoveryClient,
 			DubboServiceMetadataRepository dubboServiceMetadataRepository,
-			DubboMetadataServiceProxy dubboMetadataConfigServiceProxy,
-			JSONUtils jsonUtils, DubboGenericServiceFactory dubboGenericServiceFactory,
-			ConfigurableApplicationContext applicationContext) {
-		super(url, discoveryClient, dubboServiceMetadataRepository,
-				dubboMetadataConfigServiceProxy, jsonUtils, dubboGenericServiceFactory,
-				applicationContext);
+			DubboMetadataServiceProxy dubboMetadataConfigServiceProxy, JSONUtils jsonUtils,
+			DubboGenericServiceFactory dubboGenericServiceFactory, ConfigurableApplicationContext applicationContext) {
+		super(url, discoveryClient, dubboServiceMetadataRepository, dubboMetadataConfigServiceProxy, jsonUtils,
+				dubboGenericServiceFactory, applicationContext);
 		this.dubboServiceMetadataRepository = dubboServiceMetadataRepository;
 	}
 

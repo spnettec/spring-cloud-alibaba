@@ -32,17 +32,14 @@ import org.springframework.util.StringUtils;
  * @author xiaojing
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  */
-public class NacosAutoServiceRegistration
-		extends AbstractAutoServiceRegistration<Registration> {
+public class NacosAutoServiceRegistration extends AbstractAutoServiceRegistration<Registration> {
 
-	private static final Logger log = LoggerFactory
-			.getLogger(NacosAutoServiceRegistration.class);
+	private static final Logger log = LoggerFactory.getLogger(NacosAutoServiceRegistration.class);
 
 	private NacosRegistration registration;
 
 	public NacosAutoServiceRegistration(ServiceRegistry<Registration> serviceRegistry,
-			AutoServiceRegistrationProperties autoServiceRegistrationProperties,
-			NacosRegistration registration) {
+			AutoServiceRegistrationProperties autoServiceRegistrationProperties, NacosRegistration registration) {
 		super(serviceRegistry, autoServiceRegistrationProperties);
 		this.registration = registration;
 	}

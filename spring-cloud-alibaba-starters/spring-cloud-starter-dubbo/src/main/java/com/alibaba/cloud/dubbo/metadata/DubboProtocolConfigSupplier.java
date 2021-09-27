@@ -36,8 +36,7 @@ public class DubboProtocolConfigSupplier implements Supplier<ProtocolConfig> {
 
 	private final ObjectProvider<Collection<ProtocolConfig>> protocols;
 
-	public DubboProtocolConfigSupplier(
-			ObjectProvider<Collection<ProtocolConfig>> protocols) {
+	public DubboProtocolConfigSupplier(ObjectProvider<Collection<ProtocolConfig>> protocols) {
 		this.protocols = protocols;
 	}
 

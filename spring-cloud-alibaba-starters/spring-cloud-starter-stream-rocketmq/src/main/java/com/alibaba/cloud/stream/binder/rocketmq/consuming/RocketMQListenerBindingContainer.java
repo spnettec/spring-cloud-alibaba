@@ -69,11 +69,9 @@ import static com.alibaba.cloud.stream.binder.rocketmq.RocketMQBinderConstants.R
  * @author <a href="mailto:jiashuai.xie01@gmail.com">Xiejiashuai</a>
  * @see RocketMQListener
  */
-public class RocketMQListenerBindingContainer
-		implements InitializingBean, RocketMQListenerContainer, SmartLifecycle {
+public class RocketMQListenerBindingContainer implements InitializingBean, RocketMQListenerContainer, SmartLifecycle {
 
-	private final static Logger log = LoggerFactory
-			.getLogger(RocketMQListenerBindingContainer.class);
+	private final static Logger log = LoggerFactory.getLogger(RocketMQListenerBindingContainer.class);
 
 	private long suspendCurrentQueueTimeMillis = 1000;
 
@@ -125,8 +123,8 @@ public class RocketMQListenerBindingContainer
 		this.rocketMQConsumerProperties = rocketMQConsumerProperties;
 		this.rocketBinderConfigurationProperties = rocketBinderConfigurationProperties;
 		this.rocketMQMessageChannelBinder = rocketMQMessageChannelBinder;
-		this.consumeMode = rocketMQConsumerProperties.getExtension().getOrderly()
-				? ConsumeMode.ORDERLY : ConsumeMode.CONCURRENTLY;
+		this.consumeMode = rocketMQConsumerProperties.getExtension().getOrderly() ? ConsumeMode.ORDERLY
+				: ConsumeMode.CONCURRENTLY;
 		if (StringUtils.isEmpty(rocketMQConsumerProperties.getExtension().getSql())) {
 			this.selectorType = SelectorType.TAG;
 			this.selectorExpression = rocketMQConsumerProperties.getExtension().getTags();
@@ -135,8 +133,8 @@ public class RocketMQListenerBindingContainer
 			this.selectorType = SelectorType.SQL92;
 			this.selectorExpression = rocketMQConsumerProperties.getExtension().getSql();
 		}
-		this.messageModel = rocketMQConsumerProperties.getExtension().getBroadcasting()
-				? MessageModel.BROADCASTING : MessageModel.CLUSTERING;
+		this.messageModel = rocketMQConsumerProperties.getExtension().getBroadcasting() ? MessageModel.BROADCASTING
+				: MessageModel.CLUSTERING;
 	}
 
 	@Override
@@ -172,8 +170,7 @@ public class RocketMQListenerBindingContainer
 	@Override
 	public void start() {
 		if (this.isRunning()) {
-			throw new IllegalStateException(
-					"container already running. " + this.toString());
+			throw new IllegalStateException("container already running. " + this.toString());
 		}
 
 		try {
@@ -221,17 +218,14 @@ public class RocketMQListenerBindingContainer
 		String sk = rocketBinderConfigurationProperties.getSecretKey();
 		if (!StringUtils.isEmpty(ak) && !StringUtils.isEmpty(sk)) {
 			RPCHook rpcHook = new AclClientRPCHook(new SessionCredentials(ak, sk));
-			consumer = new DefaultMQPushConsumer(consumerGroup, rpcHook,
-					new AllocateMessageQueueAveragely(),
+			consumer = new DefaultMQPushConsumer(consumerGroup, rpcHook, new AllocateMessageQueueAveragely(),
 					rocketBinderConfigurationProperties.isEnableMsgTrace(),
 					rocketBinderConfigurationProperties.getCustomizedTraceTopic());
-			consumer.setInstanceName(RocketMQUtil.getInstanceName(rpcHook,
-					topic + "|" + UtilAll.getPid()));
+			consumer.setInstanceName(RocketMQUtil.getInstanceName(rpcHook, topic + "|" + UtilAll.getPid()));
 			consumer.setVipChannelEnabled(false);
 		}
 		else {
-			consumer = new DefaultMQPushConsumer(consumerGroup,
-					rocketBinderConfigurationProperties.isEnableMsgTrace(),
+			consumer = new DefaultMQPushConsumer(consumerGroup, rocketBinderConfigurationProperties.isEnableMsgTrace(),
 					rocketBinderConfigurationProperties.getCustomizedTraceTopic());
 		}
 
@@ -245,12 +239,10 @@ public class RocketMQListenerBindingContainer
 
 		switch (messageModel) {
 		case BROADCASTING:
-			consumer.setMessageModel(
-					org.apache.rocketmq.common.protocol.heartbeat.MessageModel.BROADCASTING);
+			consumer.setMessageModel(org.apache.rocketmq.common.protocol.heartbeat.MessageModel.BROADCASTING);
 			break;
 		case CLUSTERING:
-			consumer.setMessageModel(
-					org.apache.rocketmq.common.protocol.heartbeat.MessageModel.CLUSTERING);
+			consumer.setMessageModel(org.apache.rocketmq.common.protocol.heartbeat.MessageModel.CLUSTERING);
 			break;
 		default:
 			throw new IllegalArgumentException("Property 'messageModel' was wrong.");
@@ -279,19 +271,17 @@ public class RocketMQListenerBindingContainer
 		}
 
 		if (rocketMQListener instanceof RocketMQPushConsumerLifecycleListener) {
-			((RocketMQPushConsumerLifecycleListener) rocketMQListener)
-					.prepareStart(consumer);
+			((RocketMQPushConsumerLifecycleListener) rocketMQListener).prepareStart(consumer);
 		}
 
 	}
 
 	@Override
 	public String toString() {
-		return "RocketMQListenerBindingContainer{" + "consumerGroup='" + consumerGroup
-				+ '\'' + ", nameServer='" + nameServer + '\'' + ", topic='" + topic + '\''
-				+ ", consumeMode=" + consumeMode + ", selectorType=" + selectorType
-				+ ", selectorExpression='" + selectorExpression + '\'' + ", messageModel="
-				+ messageModel + '}';
+		return "RocketMQListenerBindingContainer{" + "consumerGroup='" + consumerGroup + '\'' + ", nameServer='"
+				+ nameServer + '\'' + ", topic='" + topic + '\'' + ", consumeMode=" + consumeMode + ", selectorType="
+				+ selectorType + ", selectorExpression='" + selectorExpression + '\'' + ", messageModel=" + messageModel
+				+ '}';
 	}
 
 	public long getSuspendCurrentQueueTimeMillis() {
@@ -404,28 +394,25 @@ public class RocketMQListenerBindingContainer
 
 		// add reconsume-times header to messageExt
 		int reconsumeTimes = messageExt.getReconsumeTimes();
-		messageExt.putUserProperty(ROCKETMQ_RECONSUME_TIMES,
-				String.valueOf(reconsumeTimes));
+		messageExt.putUserProperty(ROCKETMQ_RECONSUME_TIMES, String.valueOf(reconsumeTimes));
 		Message message = RocketMQUtil.convertToSpringMessage(messageExt);
-		return MessageBuilder.fromMessage(message)
-				.copyHeaders(headerMapper.toHeaders(messageExt.getProperties())).build();
+		return MessageBuilder.fromMessage(message).copyHeaders(headerMapper.toHeaders(messageExt.getProperties()))
+				.build();
 	}
 
-	public class DefaultMessageListenerConcurrently
-			implements MessageListenerConcurrently {
+	public class DefaultMessageListenerConcurrently implements MessageListenerConcurrently {
 
 		@SuppressWarnings({ "unchecked", "Duplicates" })
 		@Override
-		public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgs,
-				ConsumeConcurrentlyContext context) {
+		public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgs, ConsumeConcurrentlyContext context) {
 			for (MessageExt messageExt : msgs) {
 				log.debug("received msg: {}", messageExt);
 				try {
 					long now = System.currentTimeMillis();
 					rocketMQListener.onMessage(convertToSpringMessage(messageExt));
 					long costTime = System.currentTimeMillis() - now;
-					log.debug("consume {} message key:[{}] cost: {} ms",
-							messageExt.getMsgId(), messageExt.getKeys(), costTime);
+					log.debug("consume {} message key:[{}] cost: {} ms", messageExt.getMsgId(), messageExt.getKeys(),
+							costTime);
 				}
 				catch (Exception e) {
 					log.warn("consume message failed. messageExt:{}", messageExt, e);
@@ -443,21 +430,19 @@ public class RocketMQListenerBindingContainer
 
 		@SuppressWarnings({ "unchecked", "Duplicates" })
 		@Override
-		public ConsumeOrderlyStatus consumeMessage(List<MessageExt> msgs,
-				ConsumeOrderlyContext context) {
+		public ConsumeOrderlyStatus consumeMessage(List<MessageExt> msgs, ConsumeOrderlyContext context) {
 			for (MessageExt messageExt : msgs) {
 				log.debug("received msg: {}", messageExt);
 				try {
 					long now = System.currentTimeMillis();
 					rocketMQListener.onMessage(convertToSpringMessage(messageExt));
 					long costTime = System.currentTimeMillis() - now;
-					log.info("consume {} message key:[{}] cost: {} ms",
-							messageExt.getMsgId(), messageExt.getKeys(), costTime);
+					log.info("consume {} message key:[{}] cost: {} ms", messageExt.getMsgId(), messageExt.getKeys(),
+							costTime);
 				}
 				catch (Exception e) {
 					log.warn("consume message failed. messageExt:{}", messageExt, e);
-					context.setSuspendCurrentQueueTimeMillis(
-							suspendCurrentQueueTimeMillis);
+					context.setSuspendCurrentQueueTimeMillis(suspendCurrentQueueTimeMillis);
 					return ConsumeOrderlyStatus.SUSPEND_CURRENT_QUEUE_A_MOMENT;
 				}
 			}

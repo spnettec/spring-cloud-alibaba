@@ -25,27 +25,22 @@ import org.springframework.messaging.Message;
 /**
  * @author <a href="mailto:fangjian0423@gmail.com">Jim</a>
  */
-@RocketMQTransactionListener(txProducerGroup = "myTxProducerGroup", corePoolSize = 5,
-		maximumPoolSize = 10)
+@RocketMQTransactionListener(txProducerGroup = "myTxProducerGroup", corePoolSize = 5, maximumPoolSize = 10)
 public class TransactionListenerImpl implements RocketMQLocalTransactionListener {
 
 	@Override
-	public RocketMQLocalTransactionState executeLocalTransaction(Message msg,
-			Object arg) {
+	public RocketMQLocalTransactionState executeLocalTransaction(Message msg, Object arg) {
 		Object num = msg.getHeaders().get("test");
 
 		if ("1".equals(num)) {
-			System.out.println(
-					"executer: " + new String((byte[]) msg.getPayload()) + " unknown");
+			System.out.println("executer: " + new String((byte[]) msg.getPayload()) + " unknown");
 			return RocketMQLocalTransactionState.UNKNOWN;
 		}
 		else if ("2".equals(num)) {
-			System.out.println(
-					"executer: " + new String((byte[]) msg.getPayload()) + " rollback");
+			System.out.println("executer: " + new String((byte[]) msg.getPayload()) + " rollback");
 			return RocketMQLocalTransactionState.ROLLBACK;
 		}
-		System.out.println(
-				"executer: " + new String((byte[]) msg.getPayload()) + " commit");
+		System.out.println("executer: " + new String((byte[]) msg.getPayload()) + " commit");
 		return RocketMQLocalTransactionState.COMMIT;
 	}
 

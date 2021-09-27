@@ -31,8 +31,7 @@ public class DubboGenericServiceExecutionContext {
 
 	private final Object[] parameters;
 
-	public DubboGenericServiceExecutionContext(String methodName, String[] parameterTypes,
-			Object[] parameters) {
+	public DubboGenericServiceExecutionContext(String methodName, String[] parameterTypes, Object[] parameters) {
 		this.methodName = methodName;
 		this.parameterTypes = parameterTypes;
 		this.parameters = parameters;

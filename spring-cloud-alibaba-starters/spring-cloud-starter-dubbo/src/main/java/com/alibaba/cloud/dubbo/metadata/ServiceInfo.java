@@ -81,8 +81,8 @@ public class ServiceInfo implements Serializable {
 	}
 
 	public ServiceInfo(URL url) {
-		this(url.getServiceInterface(), url.getParameter(GROUP_KEY),
-				url.getParameter(VERSION_KEY), url.getProtocol(), url.getPath(), null);
+		this(url.getServiceInterface(), url.getParameter(GROUP_KEY), url.getParameter(VERSION_KEY), url.getProtocol(),
+				url.getPath(), null);
 
 		this.url = url;
 		Map<String, String> params = new TreeMap<>();
@@ -95,8 +95,8 @@ public class ServiceInfo implements Serializable {
 		this.params = params;
 	}
 
-	public ServiceInfo(String name, String group, String version, String protocol,
-			String path, Map<String, String> params) {
+	public ServiceInfo(String name, String group, String version, String protocol, String path,
+			Map<String, String> params) {
 		this.name = name;
 		this.group = group;
 		this.version = version;
@@ -213,8 +213,7 @@ public class ServiceInfo implements Serializable {
 		}
 
 		ServiceInfo serviceInfo = (ServiceInfo) obj;
-		return this.getMatchKey().equals(serviceInfo.getMatchKey())
-				&& this.getParams().equals(serviceInfo.getParams());
+		return this.getMatchKey().equals(serviceInfo.getMatchKey()) && this.getParams().equals(serviceInfo.getParams());
 	}
 
 	@Override
@@ -224,9 +223,8 @@ public class ServiceInfo implements Serializable {
 
 	@Override
 	public String toString() {
-		return "service{" + "name='" + name + "'," + "group='" + group + "',"
-				+ "version='" + version + "'," + "protocol='" + protocol + "',"
-				+ "params=" + params + "," + "consumerParams=" + consumerParams + "}";
+		return "service{" + "name='" + name + "'," + "group='" + group + "'," + "version='" + version + "',"
+				+ "protocol='" + protocol + "'," + "params=" + params + "," + "consumerParams=" + consumerParams + "}";
 	}
 
 }

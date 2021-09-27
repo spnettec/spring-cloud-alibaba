@@ -37,16 +37,14 @@ class DubboMetadataServiceInvocationHandler implements InvocationHandler {
 
 	DubboMetadataServiceInvocationHandler(String serviceName, String version,
 			DubboGenericServiceFactory dubboGenericServiceFactory) {
-		this.genericService = dubboGenericServiceFactory.create(serviceName,
-				DubboMetadataService.class, version);
+		this.genericService = dubboGenericServiceFactory.create(serviceName, DubboMetadataService.class, version);
 	}
 
 	@Override
 	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 		Object returnValue = null;
 		try {
-			returnValue = genericService.$invoke(method.getName(),
-					getParameterTypes(method), args);
+			returnValue = genericService.$invoke(method.getName(), getParameterTypes(method), args);
 		}
 		catch (Throwable e) {
 			if (logger.isErrorEnabled()) {
@@ -58,8 +56,7 @@ class DubboMetadataServiceInvocationHandler implements InvocationHandler {
 
 	private String[] getParameterTypes(Method method) {
 		Class<?>[] parameterTypes = method.getParameterTypes();
-		return Stream.of(parameterTypes).map(Class::getName)
-				.toArray(length -> new String[length]);
+		return Stream.of(parameterTypes).map(Class::getName).toArray(length -> new String[length]);
 	}
 
 }

@@ -63,8 +63,7 @@ public class SentinelProperties {
 	/**
 	 * Configurations about datasource, like 'nacos', 'apollo', 'file', 'zookeeper'.
 	 */
-	private Map<String, DataSourcePropertiesConfiguration> datasource = new TreeMap<>(
-			String.CASE_INSENSITIVE_ORDER);
+	private Map<String, DataSourcePropertiesConfiguration> datasource = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
 	/**
 	 * Transport configuration about dashboard and client.
@@ -232,8 +231,7 @@ public class SentinelProperties {
 		private String blockPage;
 
 		@Deprecated
-		@DeprecatedConfigurationProperty(
-				reason = "replaced to SentinelProperties#blockPage.",
+		@DeprecatedConfigurationProperty(reason = "replaced to SentinelProperties#blockPage.",
 				replacement = SentinelConstants.PROPERTY_PREFIX + ".block-page")
 		public String getBlockPage() {
 			return blockPage;

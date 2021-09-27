@@ -50,8 +50,7 @@ import org.springframework.util.StringUtils;
  */
 public class SentinelDataSourceHandler implements SmartInitializingSingleton {
 
-	private static final Logger log = LoggerFactory
-			.getLogger(SentinelDataSourceHandler.class);
+	private static final Logger log = LoggerFactory.getLogger(SentinelDataSourceHandler.class);
 
 	private List<String> dataTypeList = Arrays.asList("json", "xml");
 
@@ -67,8 +66,8 @@ public class SentinelDataSourceHandler implements SmartInitializingSingleton {
 
 	private final Environment env;
 
-	public SentinelDataSourceHandler(DefaultListableBeanFactory beanFactory,
-			SentinelProperties sentinelProperties, Environment env) {
+	public SentinelDataSourceHandler(DefaultListableBeanFactory beanFactory, SentinelProperties sentinelProperties,
+			Environment env) {
 		this.beanFactory = beanFactory;
 		this.sentinelProperties = sentinelProperties;
 		this.env = env;
@@ -76,47 +75,40 @@ public class SentinelDataSourceHandler implements SmartInitializingSingleton {
 
 	@Override
 	public void afterSingletonsInstantiated() {
-		sentinelProperties.getDatasource()
-				.forEach((dataSourceName, dataSourceProperties) -> {
-					try {
-						List<String> validFields = dataSourceProperties.getValidField();
-						if (validFields.size() != 1) {
-							log.error("[Sentinel Starter] DataSource " + dataSourceName
-									+ " multi datasource active and won't loaded: "
-									+ dataSourceProperties.getValidField());
-							return;
-						}
-						AbstractDataSourceProperties abstractDataSourceProperties = dataSourceProperties
-								.getValidDataSourceProperties();
-						abstractDataSourceProperties.setEnv(env);
-						abstractDataSourceProperties.preCheck(dataSourceName);
-						registerBean(abstractDataSourceProperties, dataSourceName
-								+ "-sentinel-" + validFields.get(0) + "-datasource");
-					}
-					catch (Exception e) {
-						log.error("[Sentinel Starter] DataSource " + dataSourceName
-								+ " build error: " + e.getMessage(), e);
-					}
-				});
+		sentinelProperties.getDatasource().forEach((dataSourceName, dataSourceProperties) -> {
+			try {
+				List<String> validFields = dataSourceProperties.getValidField();
+				if (validFields.size() != 1) {
+					log.error("[Sentinel Starter] DataSource " + dataSourceName
+							+ " multi datasource active and won't loaded: " + dataSourceProperties.getValidField());
+					return;
+				}
+				AbstractDataSourceProperties abstractDataSourceProperties = dataSourceProperties
+						.getValidDataSourceProperties();
+				abstractDataSourceProperties.setEnv(env);
+				abstractDataSourceProperties.preCheck(dataSourceName);
+				registerBean(abstractDataSourceProperties,
+						dataSourceName + "-sentinel-" + validFields.get(0) + "-datasource");
+			}
+			catch (Exception e) {
+				log.error("[Sentinel Starter] DataSource " + dataSourceName + " build error: " + e.getMessage(), e);
+			}
+		});
 	}
 
-	private void registerBean(final AbstractDataSourceProperties dataSourceProperties,
-			String dataSourceName) {
+	private void registerBean(final AbstractDataSourceProperties dataSourceProperties, String dataSourceName) {
 
-		Map<String, Object> propertyMap = Arrays
-				.stream(dataSourceProperties.getClass().getDeclaredFields())
+		Map<String, Object> propertyMap = Arrays.stream(dataSourceProperties.getClass().getDeclaredFields())
 				.collect(HashMap::new, (m, v) -> {
 					try {
 						v.setAccessible(true);
 						m.put(v.getName(), v.get(dataSourceProperties));
 					}
 					catch (IllegalAccessException e) {
-						log.error("[Sentinel Starter] DataSource " + dataSourceName
-								+ " field: " + v.getName() + " invoke error");
-						throw new RuntimeException(
-								"[Sentinel Starter] DataSource " + dataSourceName
-										+ " field: " + v.getName() + " invoke error",
-								e);
+						log.error("[Sentinel Starter] DataSource " + dataSourceName + " field: " + v.getName()
+								+ " invoke error");
+						throw new RuntimeException("[Sentinel Starter] DataSource " + dataSourceName + " field: "
+								+ v.getName() + " invoke error", e);
 					}
 				}, HashMap::putAll);
 		propertyMap.put(CONVERTER_CLASS_FIELD, dataSourceProperties.getConverterClass());
@@ -126,8 +118,7 @@ public class SentinelDataSourceHandler implements SmartInitializingSingleton {
 				.genericBeanDefinition(dataSourceProperties.getFactoryBeanName());
 
 		propertyMap.forEach((propertyName, propertyValue) -> {
-			Field field = ReflectionUtils.findField(dataSourceProperties.getClass(),
-					propertyName);
+			Field field = ReflectionUtils.findField(dataSourceProperties.getClass(), propertyName);
 			if (null == field) {
 				return;
 			}
@@ -135,55 +126,42 @@ public class SentinelDataSourceHandler implements SmartInitializingSingleton {
 				String dataType = StringUtils.trimAllWhitespace(propertyValue.toString());
 				if (CUSTOM_DATA_TYPE.equals(dataType)) {
 					try {
-						if (StringUtils
-								.isEmpty(dataSourceProperties.getConverterClass())) {
-							throw new RuntimeException("[Sentinel Starter] DataSource "
-									+ dataSourceName
-									+ "dataType is custom, please set converter-class "
-									+ "property");
+						if (StringUtils.isEmpty(dataSourceProperties.getConverterClass())) {
+							throw new RuntimeException("[Sentinel Starter] DataSource " + dataSourceName
+									+ "dataType is custom, please set converter-class " + "property");
 						}
 						// construct custom Converter with 'converterClass'
 						// configuration and register
-						String customConvertBeanName = "sentinel-"
-								+ dataSourceProperties.getConverterClass();
+						String customConvertBeanName = "sentinel-" + dataSourceProperties.getConverterClass();
 						if (!this.beanFactory.containsBean(customConvertBeanName)) {
 							this.beanFactory.registerBeanDefinition(customConvertBeanName,
 									BeanDefinitionBuilder
 											.genericBeanDefinition(
-													Class.forName(dataSourceProperties
-															.getConverterClass()))
+													Class.forName(dataSourceProperties.getConverterClass()))
 											.getBeanDefinition());
 						}
 						builder.addPropertyReference("converter", customConvertBeanName);
 					}
 					catch (ClassNotFoundException e) {
-						log.error("[Sentinel Starter] DataSource " + dataSourceName
-								+ " handle "
-								+ dataSourceProperties.getClass().getSimpleName()
-								+ " error, class name: "
+						log.error("[Sentinel Starter] DataSource " + dataSourceName + " handle "
+								+ dataSourceProperties.getClass().getSimpleName() + " error, class name: "
 								+ dataSourceProperties.getConverterClass());
-						throw new RuntimeException("[Sentinel Starter] DataSource "
-								+ dataSourceName + " handle "
-								+ dataSourceProperties.getClass().getSimpleName()
-								+ " error, class name: "
+						throw new RuntimeException("[Sentinel Starter] DataSource " + dataSourceName + " handle "
+								+ dataSourceProperties.getClass().getSimpleName() + " error, class name: "
 								+ dataSourceProperties.getConverterClass(), e);
 					}
 				}
 				else {
-					if (!dataTypeList.contains(
-							StringUtils.trimAllWhitespace(propertyValue.toString()))) {
-						throw new RuntimeException("[Sentinel Starter] DataSource "
-								+ dataSourceName + " dataType: " + propertyValue
-								+ " is not support now. please using these types: "
-								+ dataTypeList.toString());
+					if (!dataTypeList.contains(StringUtils.trimAllWhitespace(propertyValue.toString()))) {
+						throw new RuntimeException(
+								"[Sentinel Starter] DataSource " + dataSourceName + " dataType: " + propertyValue
+										+ " is not support now. please using these types: " + dataTypeList.toString());
 					}
 					// converter type now support xml or json.
 					// The bean name of these converters wrapped by
 					// 'sentinel-{converterType}-{ruleType}-converter'
-					builder.addPropertyReference("converter",
-							"sentinel-" + propertyValue.toString() + "-"
-									+ dataSourceProperties.getRuleType().getName()
-									+ "-converter");
+					builder.addPropertyReference("converter", "sentinel-" + propertyValue.toString() + "-"
+							+ dataSourceProperties.getRuleType().getName() + "-converter");
 				}
 			}
 			else if (CONVERTER_CLASS_FIELD.equals(propertyName)) {
@@ -191,16 +169,13 @@ public class SentinelDataSourceHandler implements SmartInitializingSingleton {
 			}
 			else {
 				// wired properties
-				Optional.ofNullable(propertyValue)
-						.ifPresent(v -> builder.addPropertyValue(propertyName, v));
+				Optional.ofNullable(propertyValue).ifPresent(v -> builder.addPropertyValue(propertyName, v));
 			}
 		});
 
-		this.beanFactory.registerBeanDefinition(dataSourceName,
-				builder.getBeanDefinition());
+		this.beanFactory.registerBeanDefinition(dataSourceName, builder.getBeanDefinition());
 		// init in Spring
-		AbstractDataSource newDataSource = (AbstractDataSource) this.beanFactory
-				.getBean(dataSourceName);
+		AbstractDataSource newDataSource = (AbstractDataSource) this.beanFactory.getBean(dataSourceName);
 
 		// register property in RuleManager
 		dataSourceProperties.postRegister(newDataSource);

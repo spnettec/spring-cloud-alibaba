@@ -68,21 +68,18 @@ public class NacosWatch implements ApplicationEventPublisherAware, SmartLifecycl
 
 	private final ThreadPoolTaskScheduler taskScheduler;
 
-	public NacosWatch(NacosServiceManager nacosServiceManager,
-			NacosDiscoveryProperties properties) {
+	public NacosWatch(NacosServiceManager nacosServiceManager, NacosDiscoveryProperties properties) {
 		this.nacosServiceManager = nacosServiceManager;
 		this.properties = properties;
 		this.taskScheduler = getTaskScheduler();
 	}
 
 	@Deprecated
-	public NacosWatch(NacosServiceManager nacosServiceManager,
-			NacosDiscoveryProperties properties,
+	public NacosWatch(NacosServiceManager nacosServiceManager, NacosDiscoveryProperties properties,
 			ObjectProvider<ThreadPoolTaskScheduler> taskScheduler) {
 		this.nacosServiceManager = nacosServiceManager;
 		this.properties = properties;
-		this.taskScheduler = taskScheduler.stream().findAny()
-				.orElseGet(NacosWatch::getTaskScheduler);
+		this.taskScheduler = taskScheduler.stream().findAny().orElseGet(NacosWatch::getTaskScheduler);
 	}
 
 	private static ThreadPoolTaskScheduler getTaskScheduler() {
@@ -111,24 +108,20 @@ public class NacosWatch implements ApplicationEventPublisherAware, SmartLifecycl
 	@Override
 	public void start() {
 		if (this.running.compareAndSet(false, true)) {
-			EventListener eventListener = listenerMap.computeIfAbsent(buildKey(),
-					event -> new EventListener() {
-						@Override
-						public void onEvent(Event event) {
-							if (event instanceof NamingEvent) {
-								List<Instance> instances = ((NamingEvent) event)
-										.getInstances();
-								Optional<Instance> instanceOptional = selectCurrentInstance(
-										instances);
-								instanceOptional.ifPresent(currentInstance -> {
-									resetIfNeeded(currentInstance);
-								});
-							}
-						}
-					});
+			EventListener eventListener = listenerMap.computeIfAbsent(buildKey(), event -> new EventListener() {
+				@Override
+				public void onEvent(Event event) {
+					if (event instanceof NamingEvent) {
+						List<Instance> instances = ((NamingEvent) event).getInstances();
+						Optional<Instance> instanceOptional = selectCurrentInstance(instances);
+						instanceOptional.ifPresent(currentInstance -> {
+							resetIfNeeded(currentInstance);
+						});
+					}
+				}
+			});
 
-			NamingService namingService = nacosServiceManager
-					.getNamingService(properties.getNacosProperties());
+			NamingService namingService = nacosServiceManager.getNamingService(properties.getNacosProperties());
 			try {
 				namingService.subscribe(properties.getService(), properties.getGroup(),
 						Arrays.asList(properties.getClusterName()), eventListener);
@@ -137,8 +130,8 @@ public class NacosWatch implements ApplicationEventPublisherAware, SmartLifecycl
 				log.error("namingService subscribe failed, properties:{}", properties, e);
 			}
 
-			this.watchFuture = this.taskScheduler.scheduleWithFixedDelay(
-					this::nacosServicesWatch, this.properties.getWatchDelay());
+			this.watchFuture = this.taskScheduler.scheduleWithFixedDelay(this::nacosServicesWatch,
+					this.properties.getWatchDelay());
 		}
 	}
 
@@ -153,9 +146,8 @@ public class NacosWatch implements ApplicationEventPublisherAware, SmartLifecycl
 	}
 
 	private Optional<Instance> selectCurrentInstance(List<Instance> instances) {
-		return instances.stream()
-				.filter(instance -> properties.getIp().equals(instance.getIp())
-						&& properties.getPort() == instance.getPort())
+		return instances.stream().filter(
+				instance -> properties.getIp().equals(instance.getIp()) && properties.getPort() == instance.getPort())
 				.findFirst();
 	}
 
@@ -171,14 +163,12 @@ public class NacosWatch implements ApplicationEventPublisherAware, SmartLifecycl
 
 			EventListener eventListener = listenerMap.get(buildKey());
 			try {
-				NamingService namingService = nacosServiceManager
-						.getNamingService(properties.getNacosProperties());
+				NamingService namingService = nacosServiceManager.getNamingService(properties.getNacosProperties());
 				namingService.unsubscribe(properties.getService(), properties.getGroup(),
 						Arrays.asList(properties.getClusterName()), eventListener);
 			}
 			catch (Exception e) {
-				log.error("namingService unsubscribe failed, properties:{}", properties,
-						e);
+				log.error("namingService unsubscribe failed, properties:{}", properties, e);
 			}
 		}
 	}
@@ -196,8 +186,7 @@ public class NacosWatch implements ApplicationEventPublisherAware, SmartLifecycl
 	public void nacosServicesWatch() {
 
 		// nacos doesn't support watch now , publish an event every 30 seconds.
-		this.publisher.publishEvent(
-				new HeartbeatEvent(this, nacosWatchIndex.getAndIncrement()));
+		this.publisher.publishEvent(new HeartbeatEvent(this, nacosWatchIndex.getAndIncrement()));
 
 	}
 
@@ -205,4 +194,5 @@ public class NacosWatch implements ApplicationEventPublisherAware, SmartLifecycl
 	public void destroy() {
 		this.stop();
 	}
+
 }

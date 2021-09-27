@@ -25,8 +25,7 @@ import org.springframework.context.ApplicationEvent;
  */
 public class NacosDiscoveryInfoChangedEvent extends ApplicationEvent {
 
-	public NacosDiscoveryInfoChangedEvent(
-			NacosDiscoveryProperties nacosDiscoveryProperties) {
+	public NacosDiscoveryInfoChangedEvent(NacosDiscoveryProperties nacosDiscoveryProperties) {
 		super(nacosDiscoveryProperties);
 	}
 

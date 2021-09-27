@@ -38,10 +38,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class NacosRibbonClientConfigurationTests {
 
 	private WebApplicationContextRunner contextRunner = new WebApplicationContextRunner()
-			.withConfiguration(AutoConfigurations.of(NacosRibbonTestConfiguration.class,
-					NacosRibbonClientConfiguration.class,
-					NacosDiscoveryClientConfiguration.class,
-					RibbonNacosAutoConfiguration.class))
+			.withConfiguration(
+					AutoConfigurations.of(NacosRibbonTestConfiguration.class, NacosRibbonClientConfiguration.class,
+							NacosDiscoveryClientConfiguration.class, RibbonNacosAutoConfiguration.class))
 			.withPropertyValues("spring.cloud.nacos.discovery.server-addr=127.0.0.1:8848")
 			.withPropertyValues("spring.cloud.nacos.discovery.port=18080")
 			.withPropertyValues("spring.cloud.nacos.discovery.service=myapp");

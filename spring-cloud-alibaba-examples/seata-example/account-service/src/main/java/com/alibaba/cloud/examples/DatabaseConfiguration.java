@@ -44,8 +44,7 @@ public class DatabaseConfiguration {
 		JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
 
 		jdbcTemplate.update("delete from account_tbl where user_id = 'U100001'");
-		jdbcTemplate.update(
-				"insert into account_tbl(user_id, money) values ('U100001', 10000)");
+		jdbcTemplate.update("insert into account_tbl(user_id, money) values ('U100001', 10000)");
 
 		return jdbcTemplate;
 	}

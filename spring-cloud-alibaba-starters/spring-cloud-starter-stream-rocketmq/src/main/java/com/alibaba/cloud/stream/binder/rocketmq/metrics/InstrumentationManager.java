@@ -33,8 +33,7 @@ public class InstrumentationManager {
 	private final Map<String, Instrumentation> healthInstrumentations = new HashMap<>();
 
 	public Set<Instrumentation> getHealthInstrumentations() {
-		return healthInstrumentations.entrySet().stream().map(Map.Entry::getValue)
-				.collect(Collectors.toSet());
+		return healthInstrumentations.entrySet().stream().map(Map.Entry::getValue).collect(Collectors.toSet());
 	}
 
 	public void addHealthInstrumentation(Instrumentation instrumentation) {

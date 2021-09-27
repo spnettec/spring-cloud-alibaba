@@ -45,17 +45,14 @@ public class SentinelConverterTests {
 	@Test
 	public void testJsonConverter() {
 		JsonConverter jsonConverter = new JsonConverter(objectMapper, FlowRule.class);
-		List<FlowRule> flowRules = (List<FlowRule>) jsonConverter
-				.convert(readFileContent("classpath: flowrule.json"));
+		List<FlowRule> flowRules = (List<FlowRule>) jsonConverter.convert(readFileContent("classpath: flowrule.json"));
 
 		assertThat(flowRules.size()).isEqualTo(1);
 		assertThat(flowRules.get(0).getResource()).isEqualTo("resource");
 		assertThat(flowRules.get(0).getLimitApp()).isEqualTo("default");
 		assertThat(String.valueOf(flowRules.get(0).getCount())).isEqualTo("1.0");
-		assertThat(flowRules.get(0).getControlBehavior())
-				.isEqualTo(RuleConstant.CONTROL_BEHAVIOR_DEFAULT);
-		assertThat(flowRules.get(0).getStrategy())
-				.isEqualTo(RuleConstant.STRATEGY_DIRECT);
+		assertThat(flowRules.get(0).getControlBehavior()).isEqualTo(RuleConstant.CONTROL_BEHAVIOR_DEFAULT);
+		assertThat(flowRules.get(0).getStrategy()).isEqualTo(RuleConstant.STRATEGY_DIRECT);
 		assertThat(flowRules.get(0).getGrade()).isEqualTo(RuleConstant.FLOW_GRADE_QPS);
 	}
 
@@ -81,33 +78,27 @@ public class SentinelConverterTests {
 	@Test
 	public void testXmlConverter() {
 		XmlConverter jsonConverter = new XmlConverter(xmlMapper, FlowRule.class);
-		List<FlowRule> flowRules = (List<FlowRule>) jsonConverter
-				.convert(readFileContent("classpath: flowrule.xml"));
+		List<FlowRule> flowRules = (List<FlowRule>) jsonConverter.convert(readFileContent("classpath: flowrule.xml"));
 
 		assertThat(flowRules.size()).isEqualTo(2);
 		assertThat(flowRules.get(0).getResource()).isEqualTo("resource");
 		assertThat(flowRules.get(0).getLimitApp()).isEqualTo("default");
 		assertThat(String.valueOf(flowRules.get(0).getCount())).isEqualTo("1.0");
-		assertThat(flowRules.get(0).getControlBehavior())
-				.isEqualTo(RuleConstant.CONTROL_BEHAVIOR_DEFAULT);
-		assertThat(flowRules.get(0).getStrategy())
-				.isEqualTo(RuleConstant.STRATEGY_DIRECT);
+		assertThat(flowRules.get(0).getControlBehavior()).isEqualTo(RuleConstant.CONTROL_BEHAVIOR_DEFAULT);
+		assertThat(flowRules.get(0).getStrategy()).isEqualTo(RuleConstant.STRATEGY_DIRECT);
 		assertThat(flowRules.get(0).getGrade()).isEqualTo(RuleConstant.FLOW_GRADE_QPS);
 
 		assertThat(flowRules.get(1).getResource()).isEqualTo("test");
 		assertThat(flowRules.get(1).getLimitApp()).isEqualTo("default");
 		assertThat(String.valueOf(flowRules.get(1).getCount())).isEqualTo("1.0");
-		assertThat(flowRules.get(1).getControlBehavior())
-				.isEqualTo(RuleConstant.CONTROL_BEHAVIOR_DEFAULT);
-		assertThat(flowRules.get(1).getStrategy())
-				.isEqualTo(RuleConstant.STRATEGY_DIRECT);
+		assertThat(flowRules.get(1).getControlBehavior()).isEqualTo(RuleConstant.CONTROL_BEHAVIOR_DEFAULT);
+		assertThat(flowRules.get(1).getStrategy()).isEqualTo(RuleConstant.STRATEGY_DIRECT);
 		assertThat(flowRules.get(1).getGrade()).isEqualTo(RuleConstant.FLOW_GRADE_QPS);
 	}
 
 	private String readFileContent(String file) {
 		try {
-			return FileUtils.readFileToString(
-					ResourceUtils.getFile(StringUtils.trimAllWhitespace(file)));
+			return FileUtils.readFileToString(ResourceUtils.getFile(StringUtils.trimAllWhitespace(file)));
 		}
 		catch (IOException e) {
 			return "";

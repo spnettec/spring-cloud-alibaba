@@ -28,8 +28,7 @@ public class SentinelDubboProviderApp {
 
 	public static void main(String[] args) {
 		SpringApplicationBuilder providerBuilder = new SpringApplicationBuilder();
-		providerBuilder.web(WebApplicationType.NONE)
-				.sources(SentinelDubboProviderApp.class).run(args);
+		providerBuilder.web(WebApplicationType.NONE).sources(SentinelDubboProviderApp.class).run(args);
 	}
 
 }

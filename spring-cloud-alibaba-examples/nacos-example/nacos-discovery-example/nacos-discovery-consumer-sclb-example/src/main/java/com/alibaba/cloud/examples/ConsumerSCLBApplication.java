@@ -23,6 +23,7 @@ import com.alibaba.cloud.examples.ConsumerSCLBApplication.EchoService;
 import com.alibaba.cloud.sentinel.annotation.SentinelRestTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cloud.client.loadbalancer.*;
 import reactor.core.publisher.Mono;
 
 import org.springframework.beans.factory.ObjectProvider;
@@ -32,11 +33,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
-import org.springframework.cloud.client.loadbalancer.LoadBalanced;
-import org.springframework.cloud.client.loadbalancer.reactive.DefaultResponse;
-import org.springframework.cloud.client.loadbalancer.reactive.EmptyResponse;
-import org.springframework.cloud.client.loadbalancer.reactive.Request;
-import org.springframework.cloud.client.loadbalancer.reactive.Response;
 import org.springframework.cloud.loadbalancer.annotation.LoadBalancerClient;
 import org.springframework.cloud.loadbalancer.core.NoopServiceInstanceListSupplier;
 import org.springframework.cloud.loadbalancer.core.ReactorServiceInstanceLoadBalancer;
@@ -78,16 +74,14 @@ public class ConsumerSCLBApplication {
 	}
 
 	@Configuration
-	@LoadBalancerClient(value = "service-provider",
-			configuration = MyLoadBalancerConfiguration.class)
+	@LoadBalancerClient(value = "service-provider", configuration = MyLoadBalancerConfiguration.class)
 	class MySCLBConfiguration {
 
 	}
 
 	static class RandomLoadBalancer implements ReactorServiceInstanceLoadBalancer {
 
-		private static final Logger log = LoggerFactory
-				.getLogger(RandomLoadBalancer.class);
+		private static final Logger log = LoggerFactory.getLogger(RandomLoadBalancer.class);
 
 		private ObjectProvider<ServiceInstanceListSupplier> serviceInstanceListSupplierProvider;
 
@@ -95,8 +89,7 @@ public class ConsumerSCLBApplication {
 
 		private final Random random;
 
-		RandomLoadBalancer(
-				ObjectProvider<ServiceInstanceListSupplier> serviceInstanceListSupplierProvider,
+		RandomLoadBalancer(ObjectProvider<ServiceInstanceListSupplier> serviceInstanceListSupplierProvider,
 				String serviceId) {
 			this.serviceInstanceListSupplierProvider = serviceInstanceListSupplierProvider;
 			this.serviceId = serviceId;
@@ -111,8 +104,7 @@ public class ConsumerSCLBApplication {
 			return supplier.get().next().map(this::getInstanceResponse);
 		}
 
-		private Response<ServiceInstance> getInstanceResponse(
-				List<ServiceInstance> instances) {
+		private Response<ServiceInstance> getInstanceResponse(List<ServiceInstance> instances) {
 			if (instances.isEmpty()) {
 				return new EmptyResponse();
 			}
@@ -159,8 +151,7 @@ public class ConsumerSCLBApplication {
 
 		@GetMapping("/echo-rest/{str}")
 		public String rest(@PathVariable String str) {
-			return restTemplate.getForObject("http://service-provider/echo/" + str,
-					String.class);
+			return restTemplate.getForObject("http://service-provider/echo/" + str, String.class);
 		}
 
 		@GetMapping("/echo-feign/{str}")
@@ -175,14 +166,12 @@ public class ConsumerSCLBApplication {
 
 		@GetMapping("/test")
 		public String test() {
-			return restTemplate1.getForObject("http://service-provider/test",
-					String.class);
+			return restTemplate1.getForObject("http://service-provider/test", String.class);
 		}
 
 		@GetMapping("/sleep")
 		public String sleep() {
-			return restTemplate1.getForObject("http://service-provider/sleep",
-					String.class);
+			return restTemplate1.getForObject("http://service-provider/sleep", String.class);
 		}
 
 		@GetMapping("/notFound-feign")

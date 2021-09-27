@@ -56,8 +56,7 @@ import org.springframework.util.StringUtils;
  */
 public class RocketMQMessageHandler extends AbstractMessageHandler implements Lifecycle {
 
-	private final static Logger log = LoggerFactory
-			.getLogger(RocketMQMessageHandler.class);
+	private final static Logger log = LoggerFactory.getLogger(RocketMQMessageHandler.class);
 
 	private ErrorMessageStrategy errorMessageStrategy = new DefaultErrorMessageStrategy();
 
@@ -83,9 +82,8 @@ public class RocketMQMessageHandler extends AbstractMessageHandler implements Li
 
 	private MessageConverterConfigurer.PartitioningInterceptor partitioningInterceptor;
 
-	public RocketMQMessageHandler(RocketMQTemplate rocketMQTemplate, String destination,
-			String groupName, Boolean transactional,
-			InstrumentationManager instrumentationManager,
+	public RocketMQMessageHandler(RocketMQTemplate rocketMQTemplate, String destination, String groupName,
+			Boolean transactional, InstrumentationManager instrumentationManager,
 			ExtendedProducerProperties<RocketMQProducerProperties> producerProperties,
 			MessageConverterConfigurer.PartitioningInterceptor partitioningInterceptor) {
 		this.rocketMQTemplate = rocketMQTemplate;
@@ -100,20 +98,16 @@ public class RocketMQMessageHandler extends AbstractMessageHandler implements Li
 	@Override
 	public void start() {
 		if (!transactional) {
-			instrumentationManager
-					.addHealthInstrumentation(new Instrumentation(destination));
+			instrumentationManager.addHealthInstrumentation(new Instrumentation(destination));
 			try {
 				rocketMQTemplate.afterPropertiesSet();
-				instrumentationManager.getHealthInstrumentation(destination)
-						.markStartedSuccessfully();
+				instrumentationManager.getHealthInstrumentation(destination).markStartedSuccessfully();
 			}
 			catch (Exception e) {
-				instrumentationManager.getHealthInstrumentation(destination)
-						.markStartFailed(e);
+				instrumentationManager.getHealthInstrumentation(destination).markStartFailed(e);
 				log.error("RocketMQTemplate startup failed, Caused by " + e.getMessage());
-				throw new MessagingException(MessageBuilder.withPayload(
-						"RocketMQTemplate startup failed, Caused by " + e.getMessage())
-						.build(), e);
+				throw new MessagingException(MessageBuilder
+						.withPayload("RocketMQTemplate startup failed, Caused by " + e.getMessage()).build(), e);
 			}
 		}
 		if (producerProperties.isPartitioned()) {
@@ -121,17 +115,14 @@ public class RocketMQMessageHandler extends AbstractMessageHandler implements Li
 				List<MessageQueue> messageQueues = rocketMQTemplate.getProducer()
 						.fetchPublishMessageQueues(destination);
 				if (producerProperties.getPartitionCount() != messageQueues.size()) {
-					logger.info(String.format(
-							"The partition count of topic '%s' will change from '%s' to '%s'",
-							destination, producerProperties.getPartitionCount(),
-							messageQueues.size()));
+					log.info(String.format("The partition count of topic '%s' will change from '%s' to '%s'",
+							destination, producerProperties.getPartitionCount(), messageQueues.size()));
 					producerProperties.setPartitionCount(messageQueues.size());
-					partitioningInterceptor
-							.setPartitionCount(producerProperties.getPartitionCount());
+					partitioningInterceptor.setPartitionCount(producerProperties.getPartitionCount());
 				}
 			}
 			catch (MQClientException e) {
-				logger.error("fetch publish message queues fail", e);
+				log.error("fetch publish message queues fail", e);
 			}
 		}
 		running = true;
@@ -151,35 +142,29 @@ public class RocketMQMessageHandler extends AbstractMessageHandler implements Li
 	}
 
 	@Override
-	protected void handleMessageInternal(
-			org.springframework.messaging.Message<?> message) {
+	protected void handleMessageInternal(org.springframework.messaging.Message<?> message) {
 		try {
 			// issue 737 fix
-			Map<String, String> jsonHeaders = headerMapper
-					.fromHeaders(message.getHeaders());
-			message = org.springframework.messaging.support.MessageBuilder
-					.fromMessage(message).copyHeaders(jsonHeaders).build();
+			Map<String, String> jsonHeaders = headerMapper.fromHeaders(message.getHeaders());
+			message = org.springframework.messaging.support.MessageBuilder.fromMessage(message).copyHeaders(jsonHeaders)
+					.build();
 
 			final StringBuilder topicWithTags = new StringBuilder(destination);
-			String tags = Optional
-					.ofNullable(message.getHeaders().get(RocketMQHeaders.TAGS)).orElse("")
-					.toString();
+			String tags = Optional.ofNullable(message.getHeaders().get(RocketMQHeaders.TAGS)).orElse("").toString();
 			if (!StringUtils.isEmpty(tags)) {
 				topicWithTags.append(":").append(tags);
 			}
 
 			SendResult sendRes = null;
 			if (transactional) {
-				sendRes = rocketMQTemplate.sendMessageInTransaction(groupName,
-						topicWithTags.toString(), message, message.getHeaders()
-								.get(RocketMQBinderConstants.ROCKET_TRANSACTIONAL_ARG));
+				sendRes = rocketMQTemplate.sendMessageInTransaction(groupName, topicWithTags.toString(), message,
+						message.getHeaders().get(RocketMQBinderConstants.ROCKET_TRANSACTIONAL_ARG));
 				log.debug("transactional send to topic " + topicWithTags + " " + sendRes);
 			}
 			else {
 				int delayLevel = 0;
 				try {
-					Object delayLevelObj = message.getHeaders()
-							.getOrDefault(MessageConst.PROPERTY_DELAY_TIME_LEVEL, 0);
+					Object delayLevelObj = message.getHeaders().getOrDefault(MessageConst.PROPERTY_DELAY_TIME_LEVEL, 0);
 					if (delayLevelObj instanceof Number) {
 						delayLevel = ((Number) delayLevelObj).intValue();
 					}
@@ -190,19 +175,15 @@ public class RocketMQMessageHandler extends AbstractMessageHandler implements Li
 				catch (Exception e) {
 					// ignore
 				}
-				boolean needSelectQueue = message.getHeaders()
-						.containsKey(BinderHeaders.PARTITION_HEADER);
+				boolean needSelectQueue = message.getHeaders().containsKey(BinderHeaders.PARTITION_HEADER);
 				if (sync) {
 					if (needSelectQueue) {
-						sendRes = rocketMQTemplate.syncSendOrderly(
-								topicWithTags.toString(), message, "",
+						sendRes = rocketMQTemplate.syncSendOrderly(topicWithTags.toString(), message, "",
 								rocketMQTemplate.getProducer().getSendMsgTimeout());
 					}
 					else {
-						sendRes = rocketMQTemplate.syncSend(topicWithTags.toString(),
-								message,
-								rocketMQTemplate.getProducer().getSendMsgTimeout(),
-								delayLevel);
+						sendRes = rocketMQTemplate.syncSend(topicWithTags.toString(), message,
+								rocketMQTemplate.getProducer().getSendMsgTimeout(), delayLevel);
 					}
 					log.debug("sync send to topic " + topicWithTags + " " + sendRes);
 				}
@@ -211,30 +192,24 @@ public class RocketMQMessageHandler extends AbstractMessageHandler implements Li
 					SendCallback sendCallback = new SendCallback() {
 						@Override
 						public void onSuccess(SendResult sendResult) {
-							log.debug("async send to topic " + topicWithTags + " "
-									+ sendResult);
+							log.debug("async send to topic " + topicWithTags + " " + sendResult);
 						}
 
 						@Override
 						public void onException(Throwable e) {
-							log.error("RocketMQ Message hasn't been sent. Caused by "
-									+ e.getMessage());
+							log.error("RocketMQ Message hasn't been sent. Caused by " + e.getMessage());
 							if (getSendFailureChannel() != null) {
-								getSendFailureChannel().send(
-										RocketMQMessageHandler.this.errorMessageStrategy
-												.buildErrorMessage(new MessagingException(
-														finalMessage, e), null));
+								getSendFailureChannel().send(RocketMQMessageHandler.this.errorMessageStrategy
+										.buildErrorMessage(new MessagingException(finalMessage, e), null));
 							}
 						}
 					};
 					if (needSelectQueue) {
-						rocketMQTemplate.asyncSendOrderly(topicWithTags.toString(),
-								message, "", sendCallback,
+						rocketMQTemplate.asyncSendOrderly(topicWithTags.toString(), message, "", sendCallback,
 								rocketMQTemplate.getProducer().getSendMsgTimeout());
 					}
 					else {
-						rocketMQTemplate.asyncSend(topicWithTags.toString(), message,
-								sendCallback);
+						rocketMQTemplate.asyncSend(topicWithTags.toString(), message, sendCallback);
 					}
 				}
 			}
@@ -243,16 +218,15 @@ public class RocketMQMessageHandler extends AbstractMessageHandler implements Li
 					this.getSendFailureChannel().send(message);
 				}
 				else {
-					throw new MessagingException(message,
-							new MQClientException("message hasn't been sent", null));
+					throw new MessagingException(message, new MQClientException("message hasn't been sent", null));
 				}
 			}
 		}
 		catch (Exception e) {
 			log.error("RocketMQ Message hasn't been sent. Caused by " + e.getMessage());
 			if (getSendFailureChannel() != null) {
-				getSendFailureChannel().send(this.errorMessageStrategy
-						.buildErrorMessage(new MessagingException(message, e), null));
+				getSendFailureChannel()
+						.send(this.errorMessageStrategy.buildErrorMessage(new MessagingException(message, e), null));
 			}
 			else {
 				throw new MessagingException(message, e);

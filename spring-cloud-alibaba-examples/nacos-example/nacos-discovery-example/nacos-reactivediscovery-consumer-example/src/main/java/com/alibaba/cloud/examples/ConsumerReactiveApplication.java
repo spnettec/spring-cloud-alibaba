@@ -58,14 +58,12 @@ public class ConsumerReactiveApplication {
 		@GetMapping("/all-services")
 		public Flux<String> allServices() {
 			return reactiveDiscoveryClient.getInstances("service-provider")
-					.map(serviceInstance -> serviceInstance.getHost() + ":"
-							+ serviceInstance.getPort());
+					.map(serviceInstance -> serviceInstance.getHost() + ":" + serviceInstance.getPort());
 		}
 
 		@GetMapping("/service-call/{name}")
 		public Mono<String> serviceCall(@PathVariable("name") String name) {
-			return webClientBuilder.build().get()
-					.uri("http://service-provider/echo/" + name).retrieve()
+			return webClientBuilder.build().get().uri("http://service-provider/echo/" + name).retrieve()
 					.bodyToMono(String.class);
 		}
 

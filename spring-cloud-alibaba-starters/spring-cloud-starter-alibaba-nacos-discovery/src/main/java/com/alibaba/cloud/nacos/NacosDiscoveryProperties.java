@@ -67,8 +67,7 @@ import static com.alibaba.nacos.api.PropertyKeyConst.USERNAME;
 @ConfigurationProperties("spring.cloud.nacos.discovery")
 public class NacosDiscoveryProperties {
 
-	private static final Logger log = LoggerFactory
-			.getLogger(NacosDiscoveryProperties.class);
+	private static final Logger log = LoggerFactory.getLogger(NacosDiscoveryProperties.class);
 
 	/**
 	 * Prefix of {@link NacosDiscoveryProperties}.
@@ -247,26 +246,23 @@ public class NacosDiscoveryProperties {
 				ip = inetUtils.findFirstNonLoopbackHostInfo().getIpAddress();
 			}
 			else {
-				NetworkInterface netInterface = NetworkInterface
-						.getByName(networkInterface);
+				NetworkInterface netInterface = NetworkInterface.getByName(networkInterface);
 				if (null == netInterface) {
-					throw new IllegalArgumentException(
-							"no such interface " + networkInterface);
+					throw new IllegalArgumentException("no such interface " + networkInterface);
 				}
 
 				Enumeration<InetAddress> inetAddress = netInterface.getInetAddresses();
 				while (inetAddress.hasMoreElements()) {
 					InetAddress currentAddress = inetAddress.nextElement();
-					if (currentAddress instanceof Inet4Address
-							&& !currentAddress.isLoopbackAddress()) {
+					if (currentAddress instanceof Inet4Address && !currentAddress.isLoopbackAddress()) {
 						ip = currentAddress.getHostAddress();
 						break;
 					}
 				}
 
 				if (StringUtils.isEmpty(ip)) {
-					throw new RuntimeException("cannot find available ip from"
-							+ " network interface " + networkInterface);
+					throw new RuntimeException(
+							"cannot find available ip from" + " network interface " + networkInterface);
 				}
 
 			}
@@ -274,8 +270,7 @@ public class NacosDiscoveryProperties {
 
 		this.overrideFromEnv(environment);
 		if (nacosServiceManager.isNacosDiscoveryInfoChanged(this)) {
-			applicationEventPublisher
-					.publishEvent(new NacosDiscoveryInfoChangedEvent(this));
+			applicationEventPublisher.publishEvent(new NacosDiscoveryInfoChangedEvent(this));
 		}
 	}
 
@@ -509,88 +504,68 @@ public class NacosDiscoveryProperties {
 			return false;
 		}
 		NacosDiscoveryProperties that = (NacosDiscoveryProperties) o;
-		return Objects.equals(serverAddr, that.serverAddr)
-				&& Objects.equals(username, that.username)
-				&& Objects.equals(password, that.password)
-				&& Objects.equals(endpoint, that.endpoint)
-				&& Objects.equals(namespace, that.namespace)
-				&& Objects.equals(logName, that.logName)
-				&& Objects.equals(service, that.service)
-				&& Objects.equals(clusterName, that.clusterName)
-				&& Objects.equals(group, that.group) && Objects.equals(ip, that.ip)
-				&& Objects.equals(port, that.port)
-				&& Objects.equals(networkInterface, that.networkInterface)
-				&& Objects.equals(accessKey, that.accessKey)
+		return Objects.equals(serverAddr, that.serverAddr) && Objects.equals(username, that.username)
+				&& Objects.equals(password, that.password) && Objects.equals(endpoint, that.endpoint)
+				&& Objects.equals(namespace, that.namespace) && Objects.equals(logName, that.logName)
+				&& Objects.equals(service, that.service) && Objects.equals(clusterName, that.clusterName)
+				&& Objects.equals(group, that.group) && Objects.equals(ip, that.ip) && Objects.equals(port, that.port)
+				&& Objects.equals(networkInterface, that.networkInterface) && Objects.equals(accessKey, that.accessKey)
 				&& Objects.equals(secretKey, that.secretKey)
 				&& Objects.equals(heartBeatInterval, that.heartBeatInterval)
-				&& Objects.equals(heartBeatTimeout, that.heartBeatTimeout)
-				&& Objects.equals(failFast, that.failFast)
+				&& Objects.equals(heartBeatTimeout, that.heartBeatTimeout) && Objects.equals(failFast, that.failFast)
 				&& Objects.equals(ipDeleteTimeout, that.ipDeleteTimeout);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(serverAddr, username, password, endpoint, namespace,
-				watchDelay, logName, service, weight, clusterName, group,
-				namingLoadCacheAtStart, registerEnabled, ip, networkInterface, port,
-				secure, accessKey, secretKey, heartBeatInterval, heartBeatTimeout,
-				ipDeleteTimeout, instanceEnabled, ephemeral, failFast);
+		return Objects.hash(serverAddr, username, password, endpoint, namespace, watchDelay, logName, service, weight,
+				clusterName, group, namingLoadCacheAtStart, registerEnabled, ip, networkInterface, port, secure,
+				accessKey, secretKey, heartBeatInterval, heartBeatTimeout, ipDeleteTimeout, instanceEnabled, ephemeral,
+				failFast);
 	}
 
 	@Override
 	public String toString() {
-		return "NacosDiscoveryProperties{" + "serverAddr='" + serverAddr + '\''
-				+ ", endpoint='" + endpoint + '\'' + ", namespace='" + namespace + '\''
-				+ ", watchDelay=" + watchDelay + ", logName='" + logName + '\''
-				+ ", service='" + service + '\'' + ", weight=" + weight
-				+ ", clusterName='" + clusterName + '\'' + ", group='" + group + '\''
-				+ ", namingLoadCacheAtStart='" + namingLoadCacheAtStart + '\''
-				+ ", metadata=" + metadata + ", registerEnabled=" + registerEnabled
-				+ ", ip='" + ip + '\'' + ", networkInterface='" + networkInterface + '\''
-				+ ", port=" + port + ", secure=" + secure + ", accessKey='" + accessKey
-				+ '\'' + ", secretKey='" + secretKey + '\'' + ", heartBeatInterval="
-				+ heartBeatInterval + ", heartBeatTimeout=" + heartBeatTimeout
-				+ ", ipDeleteTimeout=" + ipDeleteTimeout + ", failFast=" + failFast + '}';
+		return "NacosDiscoveryProperties{" + "serverAddr='" + serverAddr + '\'' + ", endpoint='" + endpoint + '\''
+				+ ", namespace='" + namespace + '\'' + ", watchDelay=" + watchDelay + ", logName='" + logName + '\''
+				+ ", service='" + service + '\'' + ", weight=" + weight + ", clusterName='" + clusterName + '\''
+				+ ", group='" + group + '\'' + ", namingLoadCacheAtStart='" + namingLoadCacheAtStart + '\''
+				+ ", metadata=" + metadata + ", registerEnabled=" + registerEnabled + ", ip='" + ip + '\''
+				+ ", networkInterface='" + networkInterface + '\'' + ", port=" + port + ", secure=" + secure
+				+ ", accessKey='" + accessKey + '\'' + ", secretKey='" + secretKey + '\'' + ", heartBeatInterval="
+				+ heartBeatInterval + ", heartBeatTimeout=" + heartBeatTimeout + ", ipDeleteTimeout=" + ipDeleteTimeout
+				+ ", failFast=" + failFast + '}';
 	}
 
 	public void overrideFromEnv(Environment env) {
 
 		if (StringUtils.isEmpty(this.getServerAddr())) {
-			String serverAddr = env
-					.resolvePlaceholders("${spring.cloud.nacos.discovery.server-addr:}");
+			String serverAddr = env.resolvePlaceholders("${spring.cloud.nacos.discovery.server-addr:}");
 			if (StringUtils.isEmpty(serverAddr)) {
-				serverAddr = env.resolvePlaceholders(
-						"${spring.cloud.nacos.server-addr:localhost:8848}");
+				serverAddr = env.resolvePlaceholders("${spring.cloud.nacos.server-addr:localhost:8848}");
 			}
 			this.setServerAddr(serverAddr);
 		}
 		if (StringUtils.isEmpty(this.getNamespace())) {
-			this.setNamespace(env
-					.resolvePlaceholders("${spring.cloud.nacos.discovery.namespace:}"));
+			this.setNamespace(env.resolvePlaceholders("${spring.cloud.nacos.discovery.namespace:}"));
 		}
 		if (StringUtils.isEmpty(this.getAccessKey())) {
-			this.setAccessKey(env
-					.resolvePlaceholders("${spring.cloud.nacos.discovery.access-key:}"));
+			this.setAccessKey(env.resolvePlaceholders("${spring.cloud.nacos.discovery.access-key:}"));
 		}
 		if (StringUtils.isEmpty(this.getSecretKey())) {
-			this.setSecretKey(env
-					.resolvePlaceholders("${spring.cloud.nacos.discovery.secret-key:}"));
+			this.setSecretKey(env.resolvePlaceholders("${spring.cloud.nacos.discovery.secret-key:}"));
 		}
 		if (StringUtils.isEmpty(this.getLogName())) {
-			this.setLogName(
-					env.resolvePlaceholders("${spring.cloud.nacos.discovery.log-name:}"));
+			this.setLogName(env.resolvePlaceholders("${spring.cloud.nacos.discovery.log-name:}"));
 		}
 		if (StringUtils.isEmpty(this.getClusterName())) {
-			this.setClusterName(env.resolvePlaceholders(
-					"${spring.cloud.nacos.discovery.cluster-name:}"));
+			this.setClusterName(env.resolvePlaceholders("${spring.cloud.nacos.discovery.cluster-name:}"));
 		}
 		if (StringUtils.isEmpty(this.getEndpoint())) {
-			this.setEndpoint(
-					env.resolvePlaceholders("${spring.cloud.nacos.discovery.endpoint:}"));
+			this.setEndpoint(env.resolvePlaceholders("${spring.cloud.nacos.discovery.endpoint:}"));
 		}
 		if (StringUtils.isEmpty(this.getGroup())) {
-			this.setGroup(
-					env.resolvePlaceholders("${spring.cloud.nacos.discovery.group:}"));
+			this.setGroup(env.resolvePlaceholders("${spring.cloud.nacos.discovery.group:}"));
 		}
 		if (StringUtils.isEmpty(this.getUsername())) {
 			this.setUsername(env.resolvePlaceholders("${spring.cloud.nacos.username:}"));
@@ -627,10 +602,9 @@ public class NacosDiscoveryProperties {
 	}
 
 	private void enrichNacosDiscoveryProperties(Properties nacosDiscoveryProperties) {
-		Map<String, Object> properties = PropertySourcesUtils
-				.getSubProperties((ConfigurableEnvironment) environment, PREFIX);
-		properties.forEach((k, v) -> nacosDiscoveryProperties.putIfAbsent(resolveKey(k),
-				String.valueOf(v)));
+		Map<String, Object> properties = PropertySourcesUtils.getSubProperties((ConfigurableEnvironment) environment,
+				PREFIX);
+		properties.forEach((k, v) -> nacosDiscoveryProperties.putIfAbsent(resolveKey(k), String.valueOf(v)));
 	}
 
 	private String resolveKey(String key) {

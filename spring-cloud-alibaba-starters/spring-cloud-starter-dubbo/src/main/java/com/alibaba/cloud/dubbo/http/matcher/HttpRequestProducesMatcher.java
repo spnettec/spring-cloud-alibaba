@@ -62,23 +62,19 @@ public class HttpRequestProducesMatcher extends AbstractHttpRequestMatcher {
 	/**
 	 * Private constructor accepting parsed media type expressions.
 	 */
-	private HttpRequestProducesMatcher(
-			Collection<ProduceMediaTypeExpression> expressions) {
+	private HttpRequestProducesMatcher(Collection<ProduceMediaTypeExpression> expressions) {
 		this.expressions = new ArrayList<>(expressions);
 		Collections.sort(this.expressions);
 	}
 
-	private static Set<ProduceMediaTypeExpression> parseExpressions(String[] produces,
-			String[] headers) {
+	private static Set<ProduceMediaTypeExpression> parseExpressions(String[] produces, String[] headers) {
 		Set<ProduceMediaTypeExpression> result = new LinkedHashSet<>();
 		if (headers != null) {
 			for (String header : headers) {
 				HeaderExpression expr = new HeaderExpression(header);
-				if (HttpHeaders.ACCEPT.equalsIgnoreCase(expr.name)
-						&& expr.value != null) {
+				if (HttpHeaders.ACCEPT.equalsIgnoreCase(expr.name) && expr.value != null) {
 					for (MediaType mediaType : MediaType.parseMediaTypes(expr.value)) {
-						result.add(
-								new ProduceMediaTypeExpression(mediaType, expr.negated));
+						result.add(new ProduceMediaTypeExpression(mediaType, expr.negated));
 					}
 				}
 			}

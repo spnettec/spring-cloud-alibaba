@@ -8,7 +8,7 @@
     <parent>
         <groupId>org.springframework.cloud</groupId>
         <artifactId>spring-cloud-build</artifactId>
-        <version>2.3.1.RELEASE</version>
+        <version>3.0.4</version>
         <relativePath/>
     </parent>
 
@@ -81,9 +81,11 @@
     <properties>
         <!-- Project revision -->
         <revision>2.2.7-SNAPSHOT</revision>
+        <nacos.version>2.0.3.B</nacos.version>
+        <spring-boot.version>2.5.5</spring-boot.version>
 
         <!-- Spring Cloud -->
-        <spring.cloud.version>Hoxton.SR9</spring.cloud.version>
+        <spring.cloud.version>2020.0.4</spring.cloud.version>
 
         <!-- Apache Dubbo -->
         <dubbo.version>2.7.13</dubbo.version>
@@ -114,7 +116,17 @@
 
     <dependencyManagement>
         <dependencies>
-
+            <!--Nacos-->
+            <dependency>
+                <groupId>com.alibaba.nacos</groupId>
+                <artifactId>nacos-api</artifactId>
+                <version>${nacos.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba.nacos</groupId>
+                <artifactId>nacos-common</artifactId>
+                <version>${nacos.version}</version>
+            </dependency>
             <!-- Spring Dependencies -->
             <dependency>
                 <groupId>org.springframework.boot</groupId>
@@ -139,7 +151,21 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-netflix-zuul</artifactId>
+                <version>2.2.9.RELEASE</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-netflix-ribbon</artifactId>
+                <version>2.2.9.RELEASE</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
+                <version>2.2.9.RELEASE</version>
+            </dependency>
             <!-- Dubbo Dependencies -->
             <dependency>
                 <groupId>org.apache.dubbo</groupId>
@@ -223,6 +249,7 @@
                 <groupId>io.spring.javaformat</groupId>
                 <artifactId>spring-javaformat-maven-plugin</artifactId>
             </plugin>
+            <!--
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
@@ -234,7 +261,7 @@
                             <goal>check</goal>
                         </goals>
                         <configuration>
-                            <!-- Checkstyle rules inherited from spring-cloud-build -->
+
                             <suppressionsLocation>${session.executionRootDirectory}/eclipse/checkstyle-suppressions.xml</suppressionsLocation>
                             <includeTestSourceDirectory>true</includeTestSourceDirectory>
                             <consoleOutput>true</consoleOutput>
@@ -245,6 +272,7 @@
                     </execution>
                 </executions>
             </plugin>
+            -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -253,6 +281,7 @@
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
+                    <forceJavacCompilerUse>true</forceJavacCompilerUse>
                     <parameters>true</parameters>
                 </configuration>
             </plugin>

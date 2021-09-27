@@ -72,8 +72,7 @@ public class MethodMetadata {
 		return params;
 	}
 
-	private MethodParameterMetadata toMethodParameterMetadata(int index,
-			Parameter parameter) {
+	private MethodParameterMetadata toMethodParameterMetadata(int index, Parameter parameter) {
 		MethodParameterMetadata metadata = new MethodParameterMetadata();
 		metadata.setIndex(index);
 		metadata.setName(parameter.getName());
@@ -118,8 +117,7 @@ public class MethodMetadata {
 			return false;
 		}
 		MethodMetadata that = (MethodMetadata) o;
-		return Objects.equals(name, that.name)
-				&& Objects.equals(returnType, that.returnType)
+		return Objects.equals(name, that.name) && Objects.equals(returnType, that.returnType)
 				&& Objects.equals(params, that.params);
 	}
 
@@ -130,8 +128,8 @@ public class MethodMetadata {
 
 	@Override
 	public String toString() {
-		return "MethodMetadata{" + "name='" + name + '\'' + ", returnType='" + returnType
-				+ '\'' + ", params=" + params + ", method=" + method + '}';
+		return "MethodMetadata{" + "name='" + name + '\'' + ", returnType='" + returnType + '\'' + ", params=" + params
+				+ ", method=" + method + '}';
 	}
 
 }

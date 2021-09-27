@@ -25,6 +25,7 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cloud.openfeign.EnableFeignClients;
+import org.springframework.cloud.openfeign.FallbackFactory;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -69,8 +70,7 @@ public class ContextIdSentinelFeignTests {
 
 	}
 
-	@FeignClient(contextId = "echoService", name = "service-provider",
-			fallback = EchoServiceFallback.class,
+	@FeignClient(contextId = "echoService", name = "service-provider", fallback = EchoServiceFallback.class,
 			configuration = FeignConfiguration.class)
 	public interface EchoService {
 
@@ -79,8 +79,7 @@ public class ContextIdSentinelFeignTests {
 
 	}
 
-	@FeignClient(contextId = "fooService", value = "foo-service",
-			fallbackFactory = CustomFallbackFactory.class,
+	@FeignClient(contextId = "fooService", value = "foo-service", fallbackFactory = CustomFallbackFactory.class,
 			configuration = FeignConfiguration.class)
 	public interface FooService {
 
@@ -121,8 +120,7 @@ public class ContextIdSentinelFeignTests {
 
 	}
 
-	public static class CustomFallbackFactory
-			implements feign.hystrix.FallbackFactory<FooService> {
+	public static class CustomFallbackFactory implements FallbackFactory<FooService> {
 
 		private FooService fooService = new FooServiceFallback();
 

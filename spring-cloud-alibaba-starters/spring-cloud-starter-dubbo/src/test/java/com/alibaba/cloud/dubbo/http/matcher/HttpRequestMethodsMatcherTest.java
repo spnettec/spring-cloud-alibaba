@@ -28,21 +28,18 @@ import org.springframework.http.HttpMethod;
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  */
-public class HttpRequestMethodsMatcherTest
-		extends AbstractHttpRequestMatcherTest<HttpRequestMethodsMatcher> {
+public class HttpRequestMethodsMatcherTest extends AbstractHttpRequestMatcherTest<HttpRequestMethodsMatcher> {
 
 	HttpRequestMethodsMatcher matcher = new HttpRequestMethodsMatcher("GET");
 
 	@Override
 	public void testEqualsAndHashCode() {
-		Assert.assertEquals(new HashSet<>(Arrays.asList(HttpMethod.GET)),
-				matcher.getMethods());
+		Assert.assertEquals(new HashSet<>(Arrays.asList(HttpMethod.GET)), matcher.getMethods());
 	}
 
 	@Override
 	public void testGetContent() {
-		Assert.assertEquals(new HashSet<>(Arrays.asList(HttpMethod.GET)),
-				matcher.getContent());
+		Assert.assertEquals(new HashSet<>(Arrays.asList(HttpMethod.GET)), matcher.getContent());
 	}
 
 	@Override

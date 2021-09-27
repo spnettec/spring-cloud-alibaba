@@ -43,31 +43,25 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration(proxyBeanMethods = false)
 @ConditionalOnClass(ConsulServiceRegistryAutoConfiguration.class)
-@AutoConfigureBefore({ ConsulAutoServiceRegistrationAutoConfiguration.class,
-		SidecarAutoConfiguration.class })
+@AutoConfigureBefore({ ConsulAutoServiceRegistrationAutoConfiguration.class, SidecarAutoConfiguration.class })
 public class SidecarConsulAutoConfiguration {
 
 	@Bean
 	public ConsulAutoRegistration consulRegistration(
-			AutoServiceRegistrationProperties autoServiceRegistrationProperties,
-			ConsulDiscoveryProperties properties, ApplicationContext applicationContext,
+			AutoServiceRegistrationProperties autoServiceRegistrationProperties, ConsulDiscoveryProperties properties,
+			ApplicationContext applicationContext,
 			ObjectProvider<List<ConsulRegistrationCustomizer>> registrationCustomizers,
 			ObjectProvider<List<ConsulManagementRegistrationCustomizer>> managementRegistrationCustomizers,
-			HeartbeatProperties heartbeatProperties,
-			SidecarProperties sidecarProperties) {
-		return SidecarConsulAutoRegistration.registration(
-				autoServiceRegistrationProperties, properties, applicationContext,
-				registrationCustomizers.getIfAvailable(),
-				managementRegistrationCustomizers.getIfAvailable(), heartbeatProperties,
-				sidecarProperties);
+			HeartbeatProperties heartbeatProperties, SidecarProperties sidecarProperties) {
+		return SidecarConsulAutoRegistration.registration(autoServiceRegistrationProperties, properties,
+				applicationContext, registrationCustomizers.getIfAvailable(),
+				managementRegistrationCustomizers.getIfAvailable(), heartbeatProperties, sidecarProperties);
 	}
 
 	@Bean
-	public SidecarDiscoveryClient sidecarDiscoveryClient(
-			ConsulDiscoveryProperties properties, ConsulServiceRegistry serviceRegistry,
-			ConsulAutoRegistration registration) {
-		return new SidecarConsulDiscoveryClient(properties, serviceRegistry,
-				registration);
+	public SidecarDiscoveryClient sidecarDiscoveryClient(ConsulDiscoveryProperties properties,
+			ConsulServiceRegistry serviceRegistry, ConsulAutoRegistration registration) {
+		return new SidecarConsulDiscoveryClient(properties, serviceRegistry, registration);
 	}
 
 }

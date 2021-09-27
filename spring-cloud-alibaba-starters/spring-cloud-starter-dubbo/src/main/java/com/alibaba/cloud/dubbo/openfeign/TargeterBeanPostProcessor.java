@@ -36,8 +36,7 @@ import static org.springframework.util.ClassUtils.resolveClassName;
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  */
-public class TargeterBeanPostProcessor
-		implements BeanPostProcessor, BeanClassLoaderAware {
+public class TargeterBeanPostProcessor implements BeanPostProcessor, BeanClassLoaderAware {
 
 	private final Environment environment;
 
@@ -60,21 +59,18 @@ public class TargeterBeanPostProcessor
 	}
 
 	@Override
-	public Object postProcessBeforeInitialization(Object bean, String beanName)
-			throws BeansException {
+	public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
 		return bean;
 	}
 
 	@Override
-	public Object postProcessAfterInitialization(final Object bean, String beanName)
-			throws BeansException {
+	public Object postProcessAfterInitialization(final Object bean, String beanName) throws BeansException {
 		if (isPresent(TARGETER_CLASS_NAME, classLoader)) {
 			Class<?> beanClass = getUserClass(bean.getClass());
 			Class<?> targetClass = resolveClassName(TARGETER_CLASS_NAME, classLoader);
 			if (targetClass.isAssignableFrom(beanClass)) {
 				return newProxyInstance(classLoader, new Class[] { targetClass },
-						new TargeterInvocationHandler(bean, environment, classLoader,
-								dubboServiceMetadataRepository,
+						new TargeterInvocationHandler(bean, environment, classLoader, dubboServiceMetadataRepository,
 								dubboGenericServiceFactory, contextFactory));
 			}
 		}

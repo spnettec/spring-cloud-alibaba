@@ -51,11 +51,9 @@ import org.springframework.util.StringUtils;
 /**
  * @author <a href="mailto:fangjian0423@gmail.com">Jim</a>
  */
-public class RocketMQMessageSource extends AbstractMessageSource<Object>
-		implements DisposableBean, Lifecycle {
+public class RocketMQMessageSource extends AbstractMessageSource<Object> implements DisposableBean, Lifecycle {
 
-	private final static Logger log = LoggerFactory
-			.getLogger(RocketMQMessageSource.class);
+	private final static Logger log = LoggerFactory.getLogger(RocketMQMessageSource.class);
 
 	private final RocketMQCallbackFactory ackCallbackFactory;
 
@@ -77,18 +75,17 @@ public class RocketMQMessageSource extends AbstractMessageSource<Object>
 
 	private RocketMQMessageQueueChooser messageQueueChooser = new RocketMQMessageQueueChooser();
 
-	public RocketMQMessageSource(
-			RocketMQBinderConfigurationProperties rocketMQBinderConfigurationProperties,
-			ExtendedConsumerProperties<RocketMQConsumerProperties> rocketMQConsumerProperties,
-			String topic, String group) {
-		this(new RocketMQCallbackFactory(), rocketMQBinderConfigurationProperties,
-				rocketMQConsumerProperties, topic, group);
+	public RocketMQMessageSource(RocketMQBinderConfigurationProperties rocketMQBinderConfigurationProperties,
+			ExtendedConsumerProperties<RocketMQConsumerProperties> rocketMQConsumerProperties, String topic,
+			String group) {
+		this(new RocketMQCallbackFactory(), rocketMQBinderConfigurationProperties, rocketMQConsumerProperties, topic,
+				group);
 	}
 
 	public RocketMQMessageSource(RocketMQCallbackFactory ackCallbackFactory,
 			RocketMQBinderConfigurationProperties rocketMQBinderConfigurationProperties,
-			ExtendedConsumerProperties<RocketMQConsumerProperties> rocketMQConsumerProperties,
-			String topic, String group) {
+			ExtendedConsumerProperties<RocketMQConsumerProperties> rocketMQConsumerProperties, String topic,
+			String group) {
 		this.ackCallbackFactory = ackCallbackFactory;
 		this.rocketMQBinderConfigurationProperties = rocketMQBinderConfigurationProperties;
 		this.rocketMQConsumerProperties = rocketMQConsumerProperties;
@@ -99,15 +96,13 @@ public class RocketMQMessageSource extends AbstractMessageSource<Object>
 	@Override
 	public synchronized void start() {
 		if (this.isRunning()) {
-			throw new IllegalStateException(
-					"pull consumer already running. " + this.toString());
+			throw new IllegalStateException("pull consumer already running. " + this.toString());
 		}
 		try {
 			consumer = new DefaultMQPullConsumer(group);
-			consumer.setNamesrvAddr(RocketMQBinderUtils.getNameServerStr(
-					rocketMQBinderConfigurationProperties.getNameServer()));
-			consumer.setConsumerPullTimeoutMillis(
-					rocketMQConsumerProperties.getExtension().getPullTimeout());
+			consumer.setNamesrvAddr(
+					RocketMQBinderUtils.getNameServerStr(rocketMQBinderConfigurationProperties.getNameServer()));
+			consumer.setConsumerPullTimeoutMillis(rocketMQConsumerProperties.getExtension().getPullTimeout());
 			consumer.setMessageModel(MessageModel.CLUSTERING);
 
 			String tags = rocketMQConsumerProperties.getExtension().getTags();
@@ -125,11 +120,8 @@ public class RocketMQMessageSource extends AbstractMessageSource<Object>
 
 			consumer.registerMessageQueueListener(topic, new MessageQueueListener() {
 				@Override
-				public void messageQueueChanged(String topic, Set<MessageQueue> mqAll,
-						Set<MessageQueue> mqDivided) {
-					log.info(
-							"messageQueueChanged, topic='{}', mqAll=`{}`, mqDivided=`{}`",
-							topic, mqAll, mqDivided);
+				public void messageQueueChanged(String topic, Set<MessageQueue> mqAll, Set<MessageQueue> mqDivided) {
+					log.info("messageQueueChanged, topic='{}', mqAll=`{}`, mqDivided=`{}`", topic, mqAll, mqDivided);
 					switch (consumer.getMessageModel()) {
 					case BROADCASTING:
 						RocketMQMessageSource.this.resetMessageQueues(mqAll);
@@ -165,8 +157,7 @@ public class RocketMQMessageSource extends AbstractMessageSource<Object>
 
 	@Override
 	protected synchronized Object doReceive() {
-		if (messageQueueChooser.getMessageQueues() == null
-				|| messageQueueChooser.getMessageQueues().size() == 0) {
+		if (messageQueueChooser.getMessageQueues() == null || messageQueueChooser.getMessageQueues().size() == 0) {
 			return null;
 		}
 		try {
@@ -181,8 +172,8 @@ public class RocketMQMessageSource extends AbstractMessageSource<Object>
 				long offset = consumer.fetchConsumeOffset(messageQueue,
 						rocketMQConsumerProperties.getExtension().isFromStore());
 
-				log.debug("topic='{}', group='{}', messageQueue='{}', offset now='{}'",
-						this.topic, this.group, messageQueue, offset);
+				log.debug("topic='{}', group='{}', messageQueue='{}', offset now='{}'", this.topic, this.group,
+						messageQueue, offset);
 
 				PullResult pullResult;
 				if (messageSelector != null) {
@@ -195,22 +186,18 @@ public class RocketMQMessageSource extends AbstractMessageSource<Object>
 				if (pullResult.getPullStatus() == PullStatus.FOUND) {
 					List<MessageExt> messageExtList = pullResult.getMsgFoundList();
 
-					Message message = RocketMQUtil
-							.convertToSpringMessage(messageExtList.get(0));
+					Message message = RocketMQUtil.convertToSpringMessage(messageExtList.get(0));
 
 					AcknowledgmentCallback ackCallback = this.ackCallbackFactory
-							.createCallback(new RocketMQAckInfo(messageQueue, pullResult,
-									consumer, offset));
+							.createCallback(new RocketMQAckInfo(messageQueue, pullResult, consumer, offset));
 
-					Message messageResult = MessageBuilder.fromMessage(message).setHeader(
-							IntegrationMessageHeaderAccessor.ACKNOWLEDGMENT_CALLBACK,
-							ackCallback).build();
+					Message messageResult = MessageBuilder.fromMessage(message)
+							.setHeader(IntegrationMessageHeaderAccessor.ACKNOWLEDGMENT_CALLBACK, ackCallback).build();
 					return messageResult;
 				}
 				else {
 					log.debug("messageQueue='{}' PullResult='{}' with topic `{}`",
-							messageQueueChooser.getMessageQueues(),
-							pullResult.getPullStatus(), topic);
+							messageQueueChooser.getMessageQueues(), pullResult.getPullStatus(), topic);
 				}
 				count++;
 			}
@@ -237,8 +224,7 @@ public class RocketMQMessageSource extends AbstractMessageSource<Object>
 		}
 	}
 
-	public static class RocketMQCallbackFactory
-			implements AcknowledgmentCallbackFactory<RocketMQAckInfo> {
+	public static class RocketMQCallbackFactory implements AcknowledgmentCallbackFactory<RocketMQAckInfo> {
 
 		@Override
 		public AcknowledgmentCallback createCallback(RocketMQAckInfo info) {
@@ -290,22 +276,17 @@ public class RocketMQMessageSource extends AbstractMessageSource<Object>
 					switch (status) {
 					case ACCEPT:
 					case REJECT:
-						ackInfo.getConsumer().updateConsumeOffset(
-								ackInfo.getMessageQueue(),
+						ackInfo.getConsumer().updateConsumeOffset(ackInfo.getMessageQueue(),
 								ackInfo.getPullResult().getNextBeginOffset());
-						log.debug("messageQueue='{}' offset update to `{}`",
-								ackInfo.getMessageQueue(), String.valueOf(
-										ackInfo.getPullResult().getNextBeginOffset()));
+						log.debug("messageQueue='{}' offset update to `{}`", ackInfo.getMessageQueue(),
+								String.valueOf(ackInfo.getPullResult().getNextBeginOffset()));
 						break;
 					case REQUEUE:
 						// decrease index and update offset of messageQueue of ackInfo
 						int oldIndex = ackInfo.getMessageQueueChooser().requeue();
-						ackInfo.getConsumer().updateConsumeOffset(
-								ackInfo.getMessageQueue(), ackInfo.getOldOffset());
-						log.debug(
-								"messageQueue='{}' offset requeue to index:`{}`, oldOffset:'{}'",
-								ackInfo.getMessageQueue(), oldIndex,
-								ackInfo.getOldOffset());
+						ackInfo.getConsumer().updateConsumeOffset(ackInfo.getMessageQueue(), ackInfo.getOldOffset());
+						log.debug("messageQueue='{}' offset requeue to index:`{}`, oldOffset:'{}'",
+								ackInfo.getMessageQueue(), oldIndex, ackInfo.getOldOffset());
 						break;
 					default:
 						break;
@@ -322,8 +303,8 @@ public class RocketMQMessageSource extends AbstractMessageSource<Object>
 
 		@Override
 		public String toString() {
-			return "RocketMQAckCallback{" + "ackInfo=" + ackInfo + ", acknowledged="
-					+ acknowledged + ", autoAckEnabled=" + autoAckEnabled + '}';
+			return "RocketMQAckCallback{" + "ackInfo=" + ackInfo + ", acknowledged=" + acknowledged
+					+ ", autoAckEnabled=" + autoAckEnabled + '}';
 		}
 
 	}
@@ -338,8 +319,8 @@ public class RocketMQMessageSource extends AbstractMessageSource<Object>
 
 		private final long oldOffset;
 
-		public RocketMQAckInfo(MessageQueue messageQueue, PullResult pullResult,
-				DefaultMQPullConsumer consumer, long oldOffset) {
+		public RocketMQAckInfo(MessageQueue messageQueue, PullResult pullResult, DefaultMQPullConsumer consumer,
+				long oldOffset) {
 			this.messageQueue = messageQueue;
 			this.pullResult = pullResult;
 			this.consumer = consumer;
@@ -372,9 +353,8 @@ public class RocketMQMessageSource extends AbstractMessageSource<Object>
 
 		@Override
 		public String toString() {
-			return "RocketMQAckInfo{" + "messageQueue=" + messageQueue + ", pullResult="
-					+ pullResult + ", consumer=" + consumer + ", oldOffset=" + oldOffset
-					+ '}';
+			return "RocketMQAckInfo{" + "messageQueue=" + messageQueue + ", pullResult=" + pullResult + ", consumer="
+					+ consumer + ", oldOffset=" + oldOffset + '}';
 		}
 
 	}

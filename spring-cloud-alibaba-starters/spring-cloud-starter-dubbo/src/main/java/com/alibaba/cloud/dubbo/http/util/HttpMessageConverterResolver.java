@@ -51,15 +51,13 @@ public class HttpMessageConverterResolver {
 
 	private final ClassLoader classLoader;
 
-	public HttpMessageConverterResolver(List<HttpMessageConverter<?>> messageConverters,
-			ClassLoader classLoader) {
+	public HttpMessageConverterResolver(List<HttpMessageConverter<?>> messageConverters, ClassLoader classLoader) {
 		this.messageConverters = messageConverters;
 		this.allSupportedMediaTypes = getAllSupportedMediaTypes(messageConverters);
 		this.classLoader = classLoader;
 	}
 
-	public HttpMessageConverterHolder resolve(HttpRequest request,
-			Class<?> parameterType) {
+	public HttpMessageConverterHolder resolve(HttpRequest request, Class<?> parameterType) {
 
 		HttpMessageConverterHolder httpMessageConverterHolder = null;
 
@@ -75,15 +73,13 @@ public class HttpMessageConverterResolver {
 			if (converter instanceof GenericHttpMessageConverter) {
 				GenericHttpMessageConverter genericConverter = (GenericHttpMessageConverter) converter;
 				if (genericConverter.canRead(parameterType, parameterType, contentType)) {
-					httpMessageConverterHolder = new HttpMessageConverterHolder(
-							contentType, converter);
+					httpMessageConverterHolder = new HttpMessageConverterHolder(contentType, converter);
 					break;
 				}
 			}
 			else {
 				if (converter.canRead(parameterType, contentType)) {
-					httpMessageConverterHolder = new HttpMessageConverterHolder(
-							contentType, converter);
+					httpMessageConverterHolder = new HttpMessageConverterHolder(contentType, converter);
 					break;
 				}
 			}
@@ -99,8 +95,7 @@ public class HttpMessageConverterResolver {
 	 * @param restMethodMetadata {@link RestMethodMetadata}
 	 * @return instance of {@link HttpMessageConverterHolder}
 	 */
-	public HttpMessageConverterHolder resolve(RequestMetadata requestMetadata,
-			RestMethodMetadata restMethodMetadata) {
+	public HttpMessageConverterHolder resolve(RequestMetadata requestMetadata, RestMethodMetadata restMethodMetadata) {
 
 		HttpMessageConverterHolder httpMessageConverterHolder = null;
 
@@ -111,15 +106,13 @@ public class HttpMessageConverterResolver {
 		 * MethodParameter, ServletServerHttpRequest, ServletServerHttpResponse)
 		 */
 		List<MediaType> requestedMediaTypes = getAcceptableMediaTypes(requestMetadata);
-		List<MediaType> producibleMediaTypes = getProducibleMediaTypes(restMethodMetadata,
-				returnValueClass);
+		List<MediaType> producibleMediaTypes = getProducibleMediaTypes(restMethodMetadata, returnValueClass);
 
 		Set<MediaType> compatibleMediaTypes = new LinkedHashSet<MediaType>();
 		for (MediaType requestedType : requestedMediaTypes) {
 			for (MediaType producibleType : producibleMediaTypes) {
 				if (requestedType.isCompatibleWith(producibleType)) {
-					compatibleMediaTypes
-							.add(getMostSpecificMediaType(requestedType, producibleType));
+					compatibleMediaTypes.add(getMostSpecificMediaType(requestedType, producibleType));
 				}
 			}
 		}
@@ -138,8 +131,7 @@ public class HttpMessageConverterResolver {
 				selectedMediaType = mediaType;
 				break;
 			}
-			else if (mediaType.equals(MediaType.ALL)
-					|| mediaType.equals(MEDIA_TYPE_APPLICATION)) {
+			else if (mediaType.equals(MediaType.ALL) || mediaType.equals(MEDIA_TYPE_APPLICATION)) {
 				selectedMediaType = MediaType.APPLICATION_OCTET_STREAM;
 				break;
 			}
@@ -149,8 +141,7 @@ public class HttpMessageConverterResolver {
 			selectedMediaType = selectedMediaType.removeQualityValue();
 			for (HttpMessageConverter<?> messageConverter : this.messageConverters) {
 				if (messageConverter.canWrite(returnValueClass, selectedMediaType)) {
-					httpMessageConverterHolder = new HttpMessageConverterHolder(
-							selectedMediaType, messageConverter);
+					httpMessageConverterHolder = new HttpMessageConverterHolder(selectedMediaType, messageConverter);
 					break;
 				}
 			}
@@ -189,8 +180,7 @@ public class HttpMessageConverterResolver {
 	 * @param returnValueClass the class of return value
 	 * @return non-null {@link List}
 	 */
-	private List<MediaType> getProducibleMediaTypes(RestMethodMetadata restMethodMetadata,
-			Class<?> returnValueClass) {
+	private List<MediaType> getProducibleMediaTypes(RestMethodMetadata restMethodMetadata, Class<?> returnValueClass) {
 		RequestMetadata serverRequestMetadata = restMethodMetadata.getRequest();
 		List<MediaType> mediaTypes = serverRequestMetadata.getProduceMediaTypes();
 		if (!CollectionUtils.isEmpty(mediaTypes)) { // Empty
@@ -216,8 +206,7 @@ public class HttpMessageConverterResolver {
 	 * @param messageConverters list of converters
 	 * @return list of MediaTypes
 	 */
-	private List<MediaType> getAllSupportedMediaTypes(
-			List<HttpMessageConverter<?>> messageConverters) {
+	private List<MediaType> getAllSupportedMediaTypes(List<HttpMessageConverter<?>> messageConverters) {
 		Set<MediaType> allSupportedMediaTypes = new LinkedHashSet<MediaType>();
 		for (HttpMessageConverter<?> messageConverter : messageConverters) {
 			allSupportedMediaTypes.addAll(messageConverter.getSupportedMediaTypes());
@@ -231,11 +220,10 @@ public class HttpMessageConverterResolver {
 	 * Return the more specific of the acceptable and the producible media types with the
 	 * q-value of the former.
 	 */
-	private MediaType getMostSpecificMediaType(MediaType acceptType,
-			MediaType produceType) {
+	private MediaType getMostSpecificMediaType(MediaType acceptType, MediaType produceType) {
 		MediaType produceTypeToUse = produceType.copyQualityValue(acceptType);
-		return (MediaType.SPECIFICITY_COMPARATOR.compare(acceptType,
-				produceTypeToUse) <= 0 ? acceptType : produceTypeToUse);
+		return (MediaType.SPECIFICITY_COMPARATOR.compare(acceptType, produceTypeToUse) <= 0 ? acceptType
+				: produceTypeToUse);
 	}
 
 }

@@ -78,8 +78,7 @@ public class DubboMetadataUtils {
 		String dubboURLsJSON = metadata.get(METADATA_SERVICE_URLS_PROPERTY_NAME);
 		List<URL> urls = jsonUtils.toURLs(dubboURLsJSON);
 		String revision = RevisionResolver.getRevision(serviceInstance);
-		urls = urls.stream().map(url -> url.addParameter(SCA_REVSION_KEY, revision))
-				.collect(Collectors.toList());
+		urls = urls.stream().map(url -> url.addParameter(SCA_REVSION_KEY, revision)).collect(Collectors.toList());
 		return urls;
 	}
 
@@ -92,16 +91,12 @@ public class DubboMetadataUtils {
 	 * @param protocol the protocol that Dubbo Service exports
 	 * @return the mutable {@link URL urls}
 	 */
-	public List<URL> getDubboMetadataServiceURLs(List<ServiceInstance> serviceInstances,
-			String serviceInterface, String version, String protocol) {
-		return serviceInstances.stream().map(this::getDubboMetadataServiceURLs)
-				.flatMap(List::stream)
-				.filter(url -> protocol == null
-						|| Objects.equals(protocol, url.getProtocol()))
-				.filter(url -> Objects.equals(serviceInterface,
-						url.getServiceInterface()))
-				.filter(url -> Objects.equals(version, url.getParameter(VERSION_KEY)))
-				.collect(Collectors.toList());
+	public List<URL> getDubboMetadataServiceURLs(List<ServiceInstance> serviceInstances, String serviceInterface,
+			String version, String protocol) {
+		return serviceInstances.stream().map(this::getDubboMetadataServiceURLs).flatMap(List::stream)
+				.filter(url -> protocol == null || Objects.equals(protocol, url.getProtocol()))
+				.filter(url -> Objects.equals(serviceInterface, url.getServiceInterface()))
+				.filter(url -> Objects.equals(version, url.getParameter(VERSION_KEY))).collect(Collectors.toList());
 	}
 
 	/**
@@ -113,8 +108,7 @@ public class DubboMetadataUtils {
 		return format(DUBBO_PROTOCOLS_PORT_PROPERTY_NAME_PATTERN, protocol);
 	}
 
-	public Integer getDubboProtocolPort(ServiceInstance serviceInstance,
-			String protocol) {
+	public Integer getDubboProtocolPort(ServiceInstance serviceInstance, String protocol) {
 		String protocolProperty = getDubboProtocolPropertyName(protocol);
 		Map<String, String> metadata = serviceInstance.getMetadata();
 		String protocolPort = metadata.get(protocolProperty);

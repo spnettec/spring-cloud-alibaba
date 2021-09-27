@@ -191,25 +191,18 @@ public class RestMethodMetadata {
 			return false;
 		}
 		RestMethodMetadata that = (RestMethodMetadata) o;
-		return queryMapEncoded == that.queryMapEncoded
-				&& Objects.equals(method, that.method)
-				&& Objects.equals(request, that.request)
-				&& Objects.equals(urlIndex, that.urlIndex)
-				&& Objects.equals(bodyIndex, that.bodyIndex)
-				&& Objects.equals(headerMapIndex, that.headerMapIndex)
-				&& Objects.equals(queryMapIndex, that.queryMapIndex)
-				&& Objects.equals(returnType, that.returnType)
-				&& Objects.equals(bodyType, that.bodyType)
-				&& Objects.equals(indexToName, that.indexToName)
-				&& Objects.equals(formParams, that.formParams)
-				&& Objects.equals(indexToEncoded, that.indexToEncoded);
+		return queryMapEncoded == that.queryMapEncoded && Objects.equals(method, that.method)
+				&& Objects.equals(request, that.request) && Objects.equals(urlIndex, that.urlIndex)
+				&& Objects.equals(bodyIndex, that.bodyIndex) && Objects.equals(headerMapIndex, that.headerMapIndex)
+				&& Objects.equals(queryMapIndex, that.queryMapIndex) && Objects.equals(returnType, that.returnType)
+				&& Objects.equals(bodyType, that.bodyType) && Objects.equals(indexToName, that.indexToName)
+				&& Objects.equals(formParams, that.formParams) && Objects.equals(indexToEncoded, that.indexToEncoded);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(method, request, urlIndex, bodyIndex, headerMapIndex,
-				queryMapIndex, queryMapEncoded, returnType, bodyType, indexToName,
-				formParams, indexToEncoded);
+		return Objects.hash(method, request, urlIndex, bodyIndex, headerMapIndex, queryMapIndex, queryMapEncoded,
+				returnType, bodyType, indexToName, formParams, indexToEncoded);
 	}
 
 	private String getClassName(Type type) {
@@ -222,13 +215,11 @@ public class RestMethodMetadata {
 
 	@Override
 	public String toString() {
-		return "RestMethodMetadata{" + "method=" + method + ", request=" + request
-				+ ", urlIndex=" + urlIndex + ", bodyIndex=" + bodyIndex
-				+ ", headerMapIndex=" + headerMapIndex + ", queryMapIndex="
-				+ queryMapIndex + ", queryMapEncoded=" + queryMapEncoded
-				+ ", returnType='" + returnType + '\'' + ", bodyType='" + bodyType + '\''
-				+ ", indexToName=" + indexToName + ", formParams=" + formParams
-				+ ", indexToEncoded=" + indexToEncoded + '}';
+		return "RestMethodMetadata{" + "method=" + method + ", request=" + request + ", urlIndex=" + urlIndex
+				+ ", bodyIndex=" + bodyIndex + ", headerMapIndex=" + headerMapIndex + ", queryMapIndex=" + queryMapIndex
+				+ ", queryMapEncoded=" + queryMapEncoded + ", returnType='" + returnType + '\'' + ", bodyType='"
+				+ bodyType + '\'' + ", indexToName=" + indexToName + ", formParams=" + formParams + ", indexToEncoded="
+				+ indexToEncoded + '}';
 	}
 
 }

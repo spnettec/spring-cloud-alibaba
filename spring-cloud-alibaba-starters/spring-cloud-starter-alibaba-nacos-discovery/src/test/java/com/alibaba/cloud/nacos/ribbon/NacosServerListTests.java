@@ -44,14 +44,12 @@ public class NacosServerListTests {
 	@Test
 	@SuppressWarnings("unchecked")
 	public void testEmptyInstancesReturnsEmptyList() throws Exception {
-		NacosDiscoveryProperties nacosDiscoveryProperties = mock(
-				NacosDiscoveryProperties.class);
+		NacosDiscoveryProperties nacosDiscoveryProperties = mock(NacosDiscoveryProperties.class);
 
 		NamingService namingService = mock(NamingService.class);
 
 		when(nacosDiscoveryProperties.namingServiceInstance()).thenReturn(namingService);
-		when(namingService.selectInstances(anyString(), eq("DEFAULT"), eq(true)))
-				.thenReturn(null);
+		when(namingService.selectInstances(anyString(), eq("DEFAULT"), eq(true))).thenReturn(null);
 
 		NacosServerList serverList = new NacosServerList(nacosDiscoveryProperties);
 		List<NacosServer> servers = serverList.getInitialListOfServers();
@@ -63,19 +61,16 @@ public class NacosServerListTests {
 	public void testGetServers() throws Exception {
 
 		ArrayList<Instance> instances = new ArrayList<>();
-		instances.add(NacosMockTest.serviceInstance("test-service", false,
-				Collections.emptyMap()));
+		instances.add(NacosMockTest.serviceInstance("test-service", false, Collections.emptyMap()));
 
-		NacosDiscoveryProperties nacosDiscoveryProperties = mock(
-				NacosDiscoveryProperties.class);
+		NacosDiscoveryProperties nacosDiscoveryProperties = mock(NacosDiscoveryProperties.class);
 
 		NamingService namingService = mock(NamingService.class);
 
 		when(nacosDiscoveryProperties.namingServiceInstance()).thenReturn(namingService);
 		when(nacosDiscoveryProperties.getGroup()).thenReturn("DEFAULT");
 		when(nacosDiscoveryProperties.getGroup()).thenReturn("DEFAULT");
-		when(namingService.selectInstances(eq("test-service"), eq("DEFAULT"), eq(true)))
-				.thenReturn(instances);
+		when(namingService.selectInstances(eq("test-service"), eq("DEFAULT"), eq(true))).thenReturn(instances);
 
 		IClientConfig clientConfig = mock(IClientConfig.class);
 		when(clientConfig.getClientName()).thenReturn("test-service");
@@ -100,16 +95,14 @@ public class NacosServerListTests {
 		instances.add(NacosMockTest.serviceInstance("test-service", false, map1));
 		instances.add(NacosMockTest.serviceInstance("test-service", true, map2));
 
-		NacosDiscoveryProperties nacosDiscoveryProperties = mock(
-				NacosDiscoveryProperties.class);
+		NacosDiscoveryProperties nacosDiscoveryProperties = mock(NacosDiscoveryProperties.class);
 
 		NamingService namingService = mock(NamingService.class);
 
 		when(nacosDiscoveryProperties.namingServiceInstance()).thenReturn(namingService);
 		when(nacosDiscoveryProperties.getGroup()).thenReturn("DEFAULT");
 		when(namingService.selectInstances(eq("test-service"), eq("DEFAULT"), eq(true)))
-				.thenReturn(instances.stream().filter(Instance::isHealthy)
-						.collect(Collectors.toList()));
+				.thenReturn(instances.stream().filter(Instance::isHealthy).collect(Collectors.toList()));
 
 		IClientConfig clientConfig = mock(IClientConfig.class);
 		when(clientConfig.getClientName()).thenReturn("test-service");
@@ -120,13 +113,11 @@ public class NacosServerListTests {
 
 		NacosServer nacosServer = servers.get(0);
 
-		assertThat(nacosServer.getMetaInfo().getInstanceId())
-				.isEqualTo(instances.get(1).getInstanceId());
+		assertThat(nacosServer.getMetaInfo().getInstanceId()).isEqualTo(instances.get(1).getInstanceId());
 		assertThat(nacosServer.getMetadata()).isEqualTo(map2);
 		assertThat(nacosServer.getInstance().isHealthy()).isEqualTo(true);
 		assertThat(nacosServer.getInstance().getServiceName()).isEqualTo("test-service");
-		assertThat(nacosServer.getInstance().getMetadata().get("instanceNum"))
-				.isEqualTo("2");
+		assertThat(nacosServer.getInstance().getMetadata().get("instanceNum")).isEqualTo("2");
 
 	}
 
@@ -138,16 +129,14 @@ public class NacosServerListTests {
 		map.put("instanceNum", "1");
 		instances.add(NacosMockTest.serviceInstance("test-service", true, map));
 
-		NacosDiscoveryProperties nacosDiscoveryProperties = mock(
-				NacosDiscoveryProperties.class);
+		NacosDiscoveryProperties nacosDiscoveryProperties = mock(NacosDiscoveryProperties.class);
 
 		NamingService namingService = mock(NamingService.class);
 
 		when(nacosDiscoveryProperties.namingServiceInstance()).thenReturn(namingService);
 		when(nacosDiscoveryProperties.getGroup()).thenReturn("DEFAULT");
 		when(namingService.selectInstances(eq("test-service"), eq("DEFAULT"), eq(true)))
-				.thenReturn(instances.stream().filter(Instance::isHealthy)
-						.collect(Collectors.toList()));
+				.thenReturn(instances.stream().filter(Instance::isHealthy).collect(Collectors.toList()));
 
 		IClientConfig clientConfig = mock(IClientConfig.class);
 		when(clientConfig.getClientName()).thenReturn("test-service");
@@ -158,8 +147,7 @@ public class NacosServerListTests {
 		assertThat(servers).hasSize(1);
 
 		assertThat(servers.get(0).getInstance().isHealthy()).isEqualTo(true);
-		assertThat(servers.get(0).getInstance().getMetadata().get("instanceNum"))
-				.isEqualTo("1");
+		assertThat(servers.get(0).getInstance().getMetadata().get("instanceNum")).isEqualTo("1");
 	}
 
 }

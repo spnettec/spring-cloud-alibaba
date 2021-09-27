@@ -30,8 +30,7 @@ import org.springframework.beans.factory.FactoryBean;
  * @author <a href="mailto:fangjian0423@gmail.com">Jim</a>
  * @see FileRefreshableDataSource
  */
-public class FileRefreshableDataSourceFactoryBean
-		implements FactoryBean<FileRefreshableDataSource> {
+public class FileRefreshableDataSourceFactoryBean implements FactoryBean<FileRefreshableDataSource> {
 
 	private String file;
 
@@ -45,8 +44,8 @@ public class FileRefreshableDataSourceFactoryBean
 
 	@Override
 	public FileRefreshableDataSource getObject() throws Exception {
-		return new FileRefreshableDataSource(new File(file), converter,
-				recommendRefreshMs, bufSize, Charset.forName(charset));
+		return new FileRefreshableDataSource(new File(file), converter, recommendRefreshMs, bufSize,
+				Charset.forName(charset));
 	}
 
 	@Override

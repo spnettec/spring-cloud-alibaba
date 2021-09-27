@@ -42,27 +42,20 @@ public class SentinelCircuitBreakerTest {
 	@Test
 	public void testCreateDirectlyThenRun() {
 		// Create a circuit breaker without any circuit breaking rules.
-		CircuitBreaker cb = new SentinelCircuitBreaker(
-				"testSentinelCreateDirectlyThenRunA");
+		CircuitBreaker cb = new SentinelCircuitBreaker("testSentinelCreateDirectlyThenRunA");
 		assertThat(cb.run(() -> "Sentinel")).isEqualTo("Sentinel");
-		assertThat(DegradeRuleManager.hasConfig("testSentinelCreateDirectlyThenRunA"))
-				.isFalse();
+		assertThat(DegradeRuleManager.hasConfig("testSentinelCreateDirectlyThenRunA")).isFalse();
 
-		CircuitBreaker cb2 = new SentinelCircuitBreaker(
-				"testSentinelCreateDirectlyThenRunB",
-				Collections.singletonList(
-						new DegradeRule("testSentinelCreateDirectlyThenRunB")
-								.setCount(100).setTimeWindow(10)));
+		CircuitBreaker cb2 = new SentinelCircuitBreaker("testSentinelCreateDirectlyThenRunB", Collections
+				.singletonList(new DegradeRule("testSentinelCreateDirectlyThenRunB").setCount(100).setTimeWindow(10)));
 		assertThat(cb2.run(() -> "Sentinel")).isEqualTo("Sentinel");
-		assertThat(DegradeRuleManager.hasConfig("testSentinelCreateDirectlyThenRunB"))
-				.isTrue();
+		assertThat(DegradeRuleManager.hasConfig("testSentinelCreateDirectlyThenRunB")).isTrue();
 	}
 
 	@Test
 	public void testCreateWithNullRule() {
 		String id = "testCreateCbWithNullRule";
-		CircuitBreaker cb = new SentinelCircuitBreaker(id,
-				Collections.singletonList(null));
+		CircuitBreaker cb = new SentinelCircuitBreaker(id, Collections.singletonList(null));
 		assertThat(cb.run(() -> "Sentinel")).isEqualTo("Sentinel");
 		assertThat(DegradeRuleManager.hasConfig(id)).isFalse();
 	}
@@ -75,8 +68,7 @@ public class SentinelCircuitBreakerTest {
 
 	@Test
 	public void testRunWithFallback() {
-		CircuitBreaker cb = new SentinelCircuitBreakerFactory()
-				.create("testSentinelRunWithFallback");
+		CircuitBreaker cb = new SentinelCircuitBreakerFactory().create("testSentinelRunWithFallback");
 		assertThat(cb.<String>run(() -> {
 			throw new RuntimeException("boom");
 		}, t -> "fallback")).isEqualTo("fallback");

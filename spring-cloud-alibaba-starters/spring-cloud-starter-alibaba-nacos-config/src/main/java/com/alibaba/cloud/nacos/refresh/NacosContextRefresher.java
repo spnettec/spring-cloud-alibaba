@@ -46,11 +46,9 @@ import org.springframework.context.ApplicationListener;
  * @author juven.xuxb
  * @author pbting
  */
-public class NacosContextRefresher
-		implements ApplicationListener<ApplicationReadyEvent>, ApplicationContextAware {
+public class NacosContextRefresher implements ApplicationListener<ApplicationReadyEvent>, ApplicationContextAware {
 
-	private final static Logger log = LoggerFactory
-			.getLogger(NacosContextRefresher.class);
+	private final static Logger log = LoggerFactory.getLogger(NacosContextRefresher.class);
 
 	private static final AtomicLong REFRESH_COUNT = new AtomicLong(0);
 
@@ -68,8 +66,7 @@ public class NacosContextRefresher
 
 	private Map<String, Listener> listenerMap = new ConcurrentHashMap<>(16);
 
-	public NacosContextRefresher(NacosConfigManager nacosConfigManager,
-			NacosRefreshHistory refreshHistory) {
+	public NacosContextRefresher(NacosConfigManager nacosConfigManager, NacosRefreshHistory refreshHistory) {
 		this.nacosConfigProperties = nacosConfigManager.getNacosConfigProperties();
 		this.nacosRefreshHistory = refreshHistory;
 		this.configService = nacosConfigManager.getConfigService();
@@ -84,8 +81,8 @@ public class NacosContextRefresher
 	 * @param configService configService
 	 */
 	@Deprecated
-	public NacosContextRefresher(NacosRefreshProperties refreshProperties,
-			NacosRefreshHistory refreshHistory, ConfigService configService) {
+	public NacosContextRefresher(NacosRefreshProperties refreshProperties, NacosRefreshHistory refreshHistory,
+			ConfigService configService) {
 		this.isRefreshEnabled = refreshProperties.isEnabled();
 		this.nacosRefreshHistory = refreshHistory;
 		this.configService = configService;
@@ -109,8 +106,7 @@ public class NacosContextRefresher
 	 */
 	private void registerNacosListenersForApplications() {
 		if (isRefreshEnabled()) {
-			for (NacosPropertySource propertySource : NacosPropertySourceRepository
-					.getAll()) {
+			for (NacosPropertySource propertySource : NacosPropertySourceRepository.getAll()) {
 				if (!propertySource.isRefreshable()) {
 					continue;
 				}
@@ -122,30 +118,24 @@ public class NacosContextRefresher
 
 	private void registerNacosListener(final String groupKey, final String dataKey) {
 		String key = NacosPropertySourceRepository.getMapKey(dataKey, groupKey);
-		Listener listener = listenerMap.computeIfAbsent(key,
-				lst -> new AbstractSharedListener() {
-					@Override
-					public void innerReceive(String dataId, String group,
-							String configInfo) {
-						refreshCountIncrement();
-						nacosRefreshHistory.addRefreshRecord(dataId, group, configInfo);
-						// todo feature: support single refresh for listening
-						applicationContext.publishEvent(
-								new RefreshEvent(this, null, "Refresh Nacos config"));
-						if (log.isDebugEnabled()) {
-							log.debug(String.format(
-									"Refresh Nacos config group=%s,dataId=%s,configInfo=%s",
-									group, dataId, configInfo));
-						}
-					}
-				});
+		Listener listener = listenerMap.computeIfAbsent(key, lst -> new AbstractSharedListener() {
+			@Override
+			public void innerReceive(String dataId, String group, String configInfo) {
+				refreshCountIncrement();
+				nacosRefreshHistory.addRefreshRecord(dataId, group, configInfo);
+				// todo feature: support single refresh for listening
+				applicationContext.publishEvent(new RefreshEvent(this, null, "Refresh Nacos config"));
+				if (log.isDebugEnabled()) {
+					log.debug(String.format("Refresh Nacos config group=%s,dataId=%s,configInfo=%s", group, dataId,
+							configInfo));
+				}
+			}
+		});
 		try {
 			configService.addListener(dataKey, groupKey, listener);
 		}
 		catch (NacosException e) {
-			log.warn(String.format(
-					"register fail for nacos listener ,dataId=[%s],group=[%s]", dataKey,
-					groupKey), e);
+			log.warn(String.format("register fail for nacos listener ,dataId=[%s],group=[%s]", dataKey, groupKey), e);
 		}
 	}
 
@@ -153,8 +143,7 @@ public class NacosContextRefresher
 		return nacosConfigProperties;
 	}
 
-	public NacosContextRefresher setNacosConfigProperties(
-			NacosConfigProperties nacosConfigProperties) {
+	public NacosContextRefresher setNacosConfigProperties(NacosConfigProperties nacosConfigProperties) {
 		this.nacosConfigProperties = nacosConfigProperties;
 		return this;
 	}

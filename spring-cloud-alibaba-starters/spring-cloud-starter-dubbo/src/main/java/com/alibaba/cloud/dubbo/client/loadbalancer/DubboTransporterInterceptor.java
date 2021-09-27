@@ -65,23 +65,20 @@ public class DubboTransporterInterceptor implements ClientHttpRequestInterceptor
 
 	private final PathMatcher pathMatcher = new AntPathMatcher();
 
-	public DubboTransporterInterceptor(
-			DubboServiceMetadataRepository dubboServiceMetadataRepository,
+	public DubboTransporterInterceptor(DubboServiceMetadataRepository dubboServiceMetadataRepository,
 			List<HttpMessageConverter<?>> messageConverters, ClassLoader classLoader,
-			Map<String, Object> dubboTranslatedAttributes,
-			DubboGenericServiceFactory serviceFactory,
+			Map<String, Object> dubboTranslatedAttributes, DubboGenericServiceFactory serviceFactory,
 			DubboGenericServiceExecutionContextFactory contextFactory) {
 		this.repository = dubboServiceMetadataRepository;
 		this.dubboTranslatedAttributes = dubboTranslatedAttributes;
-		this.clientHttpResponseFactory = new DubboClientHttpResponseFactory(
-				messageConverters, classLoader);
+		this.clientHttpResponseFactory = new DubboClientHttpResponseFactory(messageConverters, classLoader);
 		this.serviceFactory = serviceFactory;
 		this.contextFactory = contextFactory;
 	}
 
 	@Override
-	public ClientHttpResponse intercept(HttpRequest request, byte[] body,
-			ClientHttpRequestExecution execution) throws IOException {
+	public ClientHttpResponse intercept(HttpRequest request, byte[] body, ClientHttpRequestExecution execution)
+			throws IOException {
 
 		URI originalUri = request.getURI();
 
@@ -98,30 +95,26 @@ public class DubboTransporterInterceptor implements ClientHttpRequestInterceptor
 
 		RestMethodMetadata dubboRestMethodMetadata = metadata.getRestMethodMetadata();
 
-		GenericService genericService = serviceFactory.create(metadata,
-				dubboTranslatedAttributes);
+		GenericService genericService = serviceFactory.create(metadata, dubboTranslatedAttributes);
 
-		MutableHttpServerRequest httpServerRequest = new MutableHttpServerRequest(request,
-				body);
+		MutableHttpServerRequest httpServerRequest = new MutableHttpServerRequest(request, body);
 
 		customizeRequest(httpServerRequest, dubboRestMethodMetadata, clientMetadata);
 
-		DubboGenericServiceExecutionContext context = contextFactory
-				.create(dubboRestMethodMetadata, httpServerRequest);
+		DubboGenericServiceExecutionContext context = contextFactory.create(dubboRestMethodMetadata, httpServerRequest);
 
 		Object result = null;
 		GenericException exception = null;
 
 		try {
-			result = genericService.$invoke(context.getMethodName(),
-					context.getParameterTypes(), context.getParameters());
+			result = genericService.$invoke(context.getMethodName(), context.getParameterTypes(),
+					context.getParameters());
 		}
 		catch (GenericException e) {
 			exception = e;
 		}
 
-		return clientHttpResponseFactory.build(result, exception, clientMetadata,
-				dubboRestMethodMetadata);
+		return clientHttpResponseFactory.build(result, exception, clientMetadata, dubboRestMethodMetadata);
 	}
 
 	protected void customizeRequest(MutableHttpServerRequest httpServerRequest,
@@ -130,8 +123,8 @@ public class DubboTransporterInterceptor implements ClientHttpRequestInterceptor
 		RequestMetadata dubboRequestMetadata = dubboRestMethodMetadata.getRequest();
 		String pathPattern = dubboRequestMetadata.getPath();
 
-		Map<String, String> pathVariables = pathMatcher
-				.extractUriTemplateVariables(pathPattern, httpServerRequest.getPath());
+		Map<String, String> pathVariables = pathMatcher.extractUriTemplateVariables(pathPattern,
+				httpServerRequest.getPath());
 
 		if (!CollectionUtils.isEmpty(pathVariables)) {
 			// Put path variables Map into query parameters Map

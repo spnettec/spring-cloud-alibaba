@@ -29,7 +29,6 @@ import org.springframework.core.Ordered;
  * @see Ordered
  * @see ApplicationListener
  */
-public interface ServiceInstanceChangeListener
-		extends ApplicationListener<ServiceInstancesChangedEvent>, Ordered {
+public interface ServiceInstanceChangeListener extends ApplicationListener<ServiceInstancesChangedEvent>, Ordered {
 
 }

@@ -31,19 +31,15 @@ import org.springframework.cloud.stream.binder.BinderHeaders;
  */
 public class PartitionMessageQueueSelector implements MessageQueueSelector {
 
-	private static final Logger LOGGER = LoggerFactory
-			.getLogger(PartitionMessageQueueSelector.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(PartitionMessageQueueSelector.class);
 
 	@Override
 	public MessageQueue select(List<MessageQueue> mqs, Message msg, Object arg) {
 		Integer partition = 0;
 		try {
-			partition = Math.abs(
-					Integer.parseInt(msg.getProperty(BinderHeaders.PARTITION_HEADER)));
+			partition = Math.abs(Integer.parseInt(msg.getProperty(BinderHeaders.PARTITION_HEADER)));
 			if (partition >= mqs.size()) {
-				LOGGER.warn(
-						"the partition '{}' is greater than the number of queues '{}'.",
-						partition, mqs.size());
+				LOGGER.warn("the partition '{}' is greater than the number of queues '{}'.", partition, mqs.size());
 				partition = partition % mqs.size();
 			}
 		}

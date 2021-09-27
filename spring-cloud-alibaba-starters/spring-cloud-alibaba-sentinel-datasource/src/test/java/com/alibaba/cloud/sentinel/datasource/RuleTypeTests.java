@@ -52,20 +52,13 @@ public class RuleTypeTests {
 
 	@Test
 	public void testGetByClass() {
-		assertThat(RuleType.getByClass(Object.class).isPresent())
-				.isEqualTo(Boolean.FALSE);
-		assertThat(RuleType.getByClass(AbstractRule.class).isPresent())
-				.isEqualTo(Boolean.FALSE);
-		assertThat(RuleType.getByClass(FlowRule.class).isPresent())
-				.isEqualTo(Boolean.TRUE);
-		assertThat(RuleType.getByClass(DegradeRule.class).isPresent())
-				.isEqualTo(Boolean.TRUE);
-		assertThat(RuleType.getByClass(ParamFlowRule.class).isPresent())
-				.isEqualTo(Boolean.TRUE);
-		assertThat(RuleType.getByClass(SystemRule.class).isPresent())
-				.isEqualTo(Boolean.TRUE);
-		assertThat(RuleType.getByClass(AuthorityRule.class).isPresent())
-				.isEqualTo(Boolean.TRUE);
+		assertThat(RuleType.getByClass(Object.class).isPresent()).isEqualTo(Boolean.FALSE);
+		assertThat(RuleType.getByClass(AbstractRule.class).isPresent()).isEqualTo(Boolean.FALSE);
+		assertThat(RuleType.getByClass(FlowRule.class).isPresent()).isEqualTo(Boolean.TRUE);
+		assertThat(RuleType.getByClass(DegradeRule.class).isPresent()).isEqualTo(Boolean.TRUE);
+		assertThat(RuleType.getByClass(ParamFlowRule.class).isPresent()).isEqualTo(Boolean.TRUE);
+		assertThat(RuleType.getByClass(SystemRule.class).isPresent()).isEqualTo(Boolean.TRUE);
+		assertThat(RuleType.getByClass(AuthorityRule.class).isPresent()).isEqualTo(Boolean.TRUE);
 	}
 
 }

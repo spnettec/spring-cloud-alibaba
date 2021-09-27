@@ -62,8 +62,7 @@ public class SentinelHealthIndicator extends AbstractHealthIndicator {
 
 	private SentinelProperties sentinelProperties;
 
-	public SentinelHealthIndicator(DefaultListableBeanFactory beanFactory,
-			SentinelProperties sentinelProperties) {
+	public SentinelHealthIndicator(DefaultListableBeanFactory beanFactory, SentinelProperties sentinelProperties) {
 		this.beanFactory = beanFactory;
 		this.sentinelProperties = sentinelProperties;
 	}
@@ -88,14 +87,12 @@ public class SentinelHealthIndicator extends AbstractHealthIndicator {
 		if (CollectionUtils.isEmpty(consoleServerList)) {
 			// If Dashboard isn't configured, it's OK and mark the status of Dashboard
 			// with UNKNOWN.
-			detailMap.put("dashboard",
-					new Status(Status.UNKNOWN.getCode(), "dashboard isn't configured"));
+			detailMap.put("dashboard", new Status(Status.UNKNOWN.getCode(), "dashboard isn't configured"));
 		}
 		else {
 			// If Dashboard is configured, send a heartbeat message to it and check the
 			// result
-			HeartbeatSender heartbeatSender = HeartbeatSenderProvider
-					.getHeartbeatSender();
+			HeartbeatSender heartbeatSender = HeartbeatSenderProvider.getHeartbeatSender();
 			boolean result = heartbeatSender.sendHeartbeat();
 			if (result) {
 				detailMap.put("dashboard", Status.UP);
@@ -103,10 +100,8 @@ public class SentinelHealthIndicator extends AbstractHealthIndicator {
 			else {
 				// If failed to send heartbeat message, means that the Dashboard is DOWN
 				dashboardUp = false;
-				detailMap.put("dashboard",
-						new Status(Status.UNKNOWN.getCode(), String.format(
-								"the dashboard servers [%s] one of them can't be connected",
-								consoleServerList)));
+				detailMap.put("dashboard", new Status(Status.UNKNOWN.getCode(),
+						String.format("the dashboard servers [%s] one of them can't be connected", consoleServerList)));
 			}
 		}
 
@@ -122,10 +117,8 @@ public class SentinelHealthIndicator extends AbstractHealthIndicator {
 		// successfully
 		// e.g. for Nacos client, it might retrieve from the local cache)
 		// But in most circumstances it's okay
-		Map<String, AbstractDataSource> dataSourceMap = beanFactory
-				.getBeansOfType(AbstractDataSource.class);
-		for (Map.Entry<String, AbstractDataSource> dataSourceMapEntry : dataSourceMap
-				.entrySet()) {
+		Map<String, AbstractDataSource> dataSourceMap = beanFactory.getBeansOfType(AbstractDataSource.class);
+		for (Map.Entry<String, AbstractDataSource> dataSourceMapEntry : dataSourceMap.entrySet()) {
 			String dataSourceBeanName = dataSourceMapEntry.getKey();
 			AbstractDataSource dataSource = dataSourceMapEntry.getValue();
 			try {
@@ -136,8 +129,7 @@ public class SentinelHealthIndicator extends AbstractHealthIndicator {
 				// If one DataSource failed to loadConfig, means that the DataSource is
 				// DOWN
 				dataSourceUp = false;
-				dataSourceDetailMap.put(dataSourceBeanName,
-						new Status(Status.UNKNOWN.getCode(), e.getMessage()));
+				dataSourceDetailMap.put(dataSourceBeanName, new Status(Status.UNKNOWN.getCode(), e.getMessage()));
 			}
 		}
 

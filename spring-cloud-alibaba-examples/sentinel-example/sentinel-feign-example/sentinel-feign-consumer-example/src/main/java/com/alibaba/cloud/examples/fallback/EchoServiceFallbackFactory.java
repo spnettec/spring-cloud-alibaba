@@ -16,8 +16,7 @@
 
 package com.alibaba.cloud.examples.fallback;
 
-import feign.hystrix.FallbackFactory;
-
+import org.springframework.cloud.openfeign.FallbackFactory;
 import org.springframework.stereotype.Component;
 
 /**

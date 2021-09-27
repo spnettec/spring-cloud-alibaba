@@ -38,19 +38,17 @@ class DubboClientHttpResponseFactory {
 
 	private final HttpMessageConverterResolver httpMessageConverterResolver;
 
-	DubboClientHttpResponseFactory(List<HttpMessageConverter<?>> messageConverters,
-			ClassLoader classLoader) {
-		this.httpMessageConverterResolver = new HttpMessageConverterResolver(
-				messageConverters, classLoader);
+	DubboClientHttpResponseFactory(List<HttpMessageConverter<?>> messageConverters, ClassLoader classLoader) {
+		this.httpMessageConverterResolver = new HttpMessageConverterResolver(messageConverters, classLoader);
 	}
 
-	public ClientHttpResponse build(Object result, GenericException exception,
-			RequestMetadata requestMetadata, RestMethodMetadata restMethodMetadata) {
+	public ClientHttpResponse build(Object result, GenericException exception, RequestMetadata requestMetadata,
+			RestMethodMetadata restMethodMetadata) {
 
 		DubboHttpOutputMessage httpOutputMessage = new DubboHttpOutputMessage();
 
-		HttpMessageConverterHolder httpMessageConverterHolder = httpMessageConverterResolver
-				.resolve(requestMetadata, restMethodMetadata);
+		HttpMessageConverterHolder httpMessageConverterHolder = httpMessageConverterResolver.resolve(requestMetadata,
+				restMethodMetadata);
 
 		if (httpMessageConverterHolder != null) {
 			MediaType mediaType = httpMessageConverterHolder.getMediaType();

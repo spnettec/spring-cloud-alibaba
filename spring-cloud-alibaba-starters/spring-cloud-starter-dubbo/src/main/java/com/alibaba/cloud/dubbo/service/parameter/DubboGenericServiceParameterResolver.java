@@ -37,11 +37,10 @@ public interface DubboGenericServiceParameterResolver extends Ordered {
 	 * @param request Http server request
 	 * @return the result of resolve
 	 */
-	Object resolve(RestMethodMetadata restMethodMetadata,
-			MethodParameterMetadata methodParameterMetadata, HttpServerRequest request);
+	Object resolve(RestMethodMetadata restMethodMetadata, MethodParameterMetadata methodParameterMetadata,
+			HttpServerRequest request);
 
-	Object resolve(RestMethodMetadata restMethodMetadata,
-			MethodParameterMetadata methodParameterMetadata,
+	Object resolve(RestMethodMetadata restMethodMetadata, MethodParameterMetadata methodParameterMetadata,
 			RestMethodMetadata clientRestMethodMetadata, Object[] arguments);
 
 }

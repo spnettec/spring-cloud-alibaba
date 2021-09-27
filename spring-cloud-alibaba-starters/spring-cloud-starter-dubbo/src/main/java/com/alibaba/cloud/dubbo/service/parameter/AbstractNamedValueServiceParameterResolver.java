@@ -35,20 +35,18 @@ import static org.springframework.util.ObjectUtils.isEmpty;
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  */
-public abstract class AbstractNamedValueServiceParameterResolver
-		extends AbstractDubboGenericServiceParameterResolver {
+public abstract class AbstractNamedValueServiceParameterResolver extends AbstractDubboGenericServiceParameterResolver {
 
 	/**
 	 * Get the {@link MultiValueMap} of names and values.
 	 * @param request Http server request
 	 * @return map of name and values
 	 */
-	protected abstract MultiValueMap<String, String> getNameAndValuesMap(
-			HttpServerRequest request);
+	protected abstract MultiValueMap<String, String> getNameAndValuesMap(HttpServerRequest request);
 
 	@Override
-	public Object resolve(RestMethodMetadata restMethodMetadata,
-			MethodParameterMetadata methodParameterMetadata, HttpServerRequest request) {
+	public Object resolve(RestMethodMetadata restMethodMetadata, MethodParameterMetadata methodParameterMetadata,
+			HttpServerRequest request) {
 
 		Collection<String> names = getNames(restMethodMetadata, methodParameterMetadata);
 
@@ -86,8 +84,7 @@ public abstract class AbstractNamedValueServiceParameterResolver
 	}
 
 	@Override
-	public Object resolve(RestMethodMetadata restMethodMetadata,
-			MethodParameterMetadata methodParameterMetadata,
+	public Object resolve(RestMethodMetadata restMethodMetadata, MethodParameterMetadata methodParameterMetadata,
 			RestMethodMetadata clientRestMethodMetadata, Object[] arguments) {
 
 		Collection<String> names = getNames(restMethodMetadata, methodParameterMetadata);
@@ -98,11 +95,9 @@ public abstract class AbstractNamedValueServiceParameterResolver
 
 		Integer index = null;
 
-		Map<Integer, Collection<String>> clientIndexToName = clientRestMethodMetadata
-				.getIndexToName();
+		Map<Integer, Collection<String>> clientIndexToName = clientRestMethodMetadata.getIndexToName();
 
-		for (Map.Entry<Integer, Collection<String>> entry : clientIndexToName
-				.entrySet()) {
+		for (Map.Entry<Integer, Collection<String>> entry : clientIndexToName.entrySet()) {
 
 			Collection<String> clientParamNames = entry.getValue();
 
@@ -118,8 +113,7 @@ public abstract class AbstractNamedValueServiceParameterResolver
 	protected Collection<String> getNames(RestMethodMetadata restMethodMetadata,
 			MethodParameterMetadata methodParameterMetadata) {
 
-		Map<Integer, Collection<String>> indexToName = restMethodMetadata
-				.getIndexToName();
+		Map<Integer, Collection<String>> indexToName = restMethodMetadata.getIndexToName();
 
 		int index = methodParameterMetadata.getIndex();
 

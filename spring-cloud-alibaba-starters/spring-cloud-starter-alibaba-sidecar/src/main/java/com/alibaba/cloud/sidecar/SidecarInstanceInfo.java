@@ -64,8 +64,7 @@ public class SidecarInstanceInfo {
 			return false;
 		}
 		SidecarInstanceInfo that = (SidecarInstanceInfo) o;
-		return Objects.equals(ip, that.ip) && Objects.equals(port, that.port)
-				&& Objects.equals(status, that.status);
+		return Objects.equals(ip, that.ip) && Objects.equals(port, that.port) && Objects.equals(status, that.status);
 	}
 
 	@Override

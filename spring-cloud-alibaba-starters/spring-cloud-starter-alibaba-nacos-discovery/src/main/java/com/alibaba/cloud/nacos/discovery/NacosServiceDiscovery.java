@@ -54,8 +54,7 @@ public class NacosServiceDiscovery {
 	 */
 	public List<ServiceInstance> getInstances(String serviceId) throws NacosException {
 		String group = discoveryProperties.getGroup();
-		List<Instance> instances = namingService().selectInstances(serviceId, group,
-				true);
+		List<Instance> instances = namingService().selectInstances(serviceId, group, true);
 		return hostToServiceInstanceList(instances, serviceId);
 	}
 
@@ -66,13 +65,11 @@ public class NacosServiceDiscovery {
 	 */
 	public List<String> getServices() throws NacosException {
 		String group = discoveryProperties.getGroup();
-		ListView<String> services = namingService().getServicesOfServer(1,
-				Integer.MAX_VALUE, group);
+		ListView<String> services = namingService().getServicesOfServer(1, Integer.MAX_VALUE, group);
 		return services.getData();
 	}
 
-	public static List<ServiceInstance> hostToServiceInstanceList(
-			List<Instance> instances, String serviceId) {
+	public static List<ServiceInstance> hostToServiceInstanceList(List<Instance> instances, String serviceId) {
 		List<ServiceInstance> result = new ArrayList<>(instances.size());
 		for (Instance instance : instances) {
 			ServiceInstance serviceInstance = hostToServiceInstance(instance, serviceId);
@@ -83,8 +80,7 @@ public class NacosServiceDiscovery {
 		return result;
 	}
 
-	public static ServiceInstance hostToServiceInstance(Instance instance,
-			String serviceId) {
+	public static ServiceInstance hostToServiceInstance(Instance instance, String serviceId) {
 		if (instance == null || !instance.isEnabled() || !instance.isHealthy()) {
 			return null;
 		}
@@ -112,8 +108,7 @@ public class NacosServiceDiscovery {
 	}
 
 	private NamingService namingService() {
-		return nacosServiceManager
-				.getNamingService(discoveryProperties.getNacosProperties());
+		return nacosServiceManager.getNamingService(discoveryProperties.getNacosProperties());
 	}
 
 }

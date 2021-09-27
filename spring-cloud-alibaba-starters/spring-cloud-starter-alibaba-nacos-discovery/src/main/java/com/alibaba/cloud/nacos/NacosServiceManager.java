@@ -61,8 +61,7 @@ public class NacosServiceManager {
 		return namingMaintainService;
 	}
 
-	public boolean isNacosDiscoveryInfoChanged(
-			NacosDiscoveryProperties nacosDiscoveryProperties) {
+	public boolean isNacosDiscoveryInfoChanged(NacosDiscoveryProperties nacosDiscoveryProperties) {
 		if (Objects.isNull(nacosDiscoveryPropertiesCache)
 				|| this.nacosDiscoveryPropertiesCache.equals(nacosDiscoveryProperties)) {
 			return false;
@@ -123,11 +122,9 @@ public class NacosServiceManager {
 	}
 
 	@EventListener
-	public void onInstancePreRegisteredEvent(
-			InstancePreRegisteredEvent instancePreRegisteredEvent) {
+	public void onInstancePreRegisteredEvent(InstancePreRegisteredEvent instancePreRegisteredEvent) {
 		Registration registration = instancePreRegisteredEvent.getRegistration();
-		if (Objects.isNull(nacosDiscoveryPropertiesCache)
-				&& registration instanceof NacosRegistration) {
+		if (Objects.isNull(nacosDiscoveryPropertiesCache) && registration instanceof NacosRegistration) {
 			NacosDiscoveryProperties nacosDiscoveryProperties = ((NacosRegistration) registration)
 					.getNacosDiscoveryProperties();
 

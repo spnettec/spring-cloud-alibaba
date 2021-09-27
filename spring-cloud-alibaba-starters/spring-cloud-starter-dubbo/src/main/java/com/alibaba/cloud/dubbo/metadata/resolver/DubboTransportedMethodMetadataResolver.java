@@ -48,21 +48,17 @@ public class DubboTransportedMethodMetadataResolver {
 
 	private final Contract contract;
 
-	public DubboTransportedMethodMetadataResolver(PropertyResolver propertyResolver,
-			Contract contract) {
-		this.attributesResolver = new DubboTransportedAttributesResolver(
-				propertyResolver);
+	public DubboTransportedMethodMetadataResolver(PropertyResolver propertyResolver, Contract contract) {
+		this.attributesResolver = new DubboTransportedAttributesResolver(propertyResolver);
 		this.contract = contract;
 	}
 
-	public Map<DubboTransportedMethodMetadata, RestMethodMetadata> resolve(
-			Class<?> targetType) {
+	public Map<DubboTransportedMethodMetadata, RestMethodMetadata> resolve(Class<?> targetType) {
 		Set<DubboTransportedMethodMetadata> dubboTransportedMethodMetadataSet = resolveDubboTransportedMethodMetadataSet(
 				targetType);
-		Map<String, RestMethodMetadata> restMethodMetadataMap = resolveRestRequestMetadataMap(
-				targetType);
-		return dubboTransportedMethodMetadataSet.stream().collect(
-				Collectors.toMap(methodMetadata -> methodMetadata, methodMetadata -> {
+		Map<String, RestMethodMetadata> restMethodMetadataMap = resolveRestRequestMetadataMap(targetType);
+		return dubboTransportedMethodMetadataSet.stream()
+				.collect(Collectors.toMap(methodMetadata -> methodMetadata, methodMetadata -> {
 					RestMethodMetadata restMethodMetadata = restMethodMetadataMap
 							.get(configKey(targetType, methodMetadata.getMethod()));
 					restMethodMetadata.setMethod(methodMetadata.getMethodMetadata());
@@ -70,8 +66,7 @@ public class DubboTransportedMethodMetadataResolver {
 				}));
 	}
 
-	protected Set<DubboTransportedMethodMetadata> resolveDubboTransportedMethodMetadataSet(
-			Class<?> targetType) {
+	protected Set<DubboTransportedMethodMetadata> resolveDubboTransportedMethodMetadataSet(Class<?> targetType) {
 		// The public methods of target interface
 		Method[] methods = targetType.getMethods();
 
@@ -80,38 +75,35 @@ public class DubboTransportedMethodMetadataResolver {
 		for (Method method : methods) {
 			DubboTransported dubboTransported = resolveDubboTransported(method);
 			if (dubboTransported != null) {
-				DubboTransportedMethodMetadata methodMetadata = createDubboTransportedMethodMetadata(
-						method, dubboTransported);
+				DubboTransportedMethodMetadata methodMetadata = createDubboTransportedMethodMetadata(method,
+						dubboTransported);
 				methodMetadataSet.add(methodMetadata);
 			}
 		}
 		return methodMetadataSet;
 	}
 
-	private Map<String, RestMethodMetadata> resolveRestRequestMetadataMap(
-			Class<?> targetType) {
-		return contract.parseAndValidateMetadata(targetType).stream().collect(Collectors
-				.toMap(feign.MethodMetadata::configKey, this::restMethodMetadata));
+	private Map<String, RestMethodMetadata> resolveRestRequestMetadataMap(Class<?> targetType) {
+		return contract.parseAndValidateMetadata(targetType).stream()
+				.collect(Collectors.toMap(feign.MethodMetadata::configKey, this::restMethodMetadata));
 	}
 
 	private RestMethodMetadata restMethodMetadata(feign.MethodMetadata methodMetadata) {
 		return new RestMethodMetadata(methodMetadata);
 	}
 
-	private DubboTransportedMethodMetadata createDubboTransportedMethodMetadata(
-			Method method, DubboTransported dubboTransported) {
+	private DubboTransportedMethodMetadata createDubboTransportedMethodMetadata(Method method,
+			DubboTransported dubboTransported) {
 		Map<String, Object> attributes = attributesResolver.resolve(dubboTransported);
 		return new DubboTransportedMethodMetadata(method, attributes);
 	}
 
 	private DubboTransported resolveDubboTransported(Method method) {
-		DubboTransported dubboTransported = AnnotationUtils.findAnnotation(method,
-				DUBBO_TRANSPORTED_CLASS);
+		DubboTransported dubboTransported = AnnotationUtils.findAnnotation(method, DUBBO_TRANSPORTED_CLASS);
 		if (dubboTransported == null) { // Attempt to find @DubboTransported in the
 										// declaring class
 			Class<?> declaringClass = method.getDeclaringClass();
-			dubboTransported = AnnotationUtils.findAnnotation(declaringClass,
-					DUBBO_TRANSPORTED_CLASS);
+			dubboTransported = AnnotationUtils.findAnnotation(declaringClass, DUBBO_TRANSPORTED_CLASS);
 		}
 		return dubboTransported;
 	}

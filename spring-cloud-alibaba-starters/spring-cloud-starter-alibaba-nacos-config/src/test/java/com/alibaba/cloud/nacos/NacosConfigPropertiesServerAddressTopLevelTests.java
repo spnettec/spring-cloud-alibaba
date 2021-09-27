@@ -34,10 +34,8 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
  * @author <a href="mailto:lyuzb@lyuzb.com">lyuzb</a>
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest(
-		classes = NacosConfigPropertiesServerAddressTopLevelTests.TestConfig.class,
-		properties = { "spring.cloud.nacos.server-addr=123.123.123.123:8848" },
-		webEnvironment = RANDOM_PORT)
+@SpringBootTest(classes = NacosConfigPropertiesServerAddressTopLevelTests.TestConfig.class,
+		properties = { "spring.cloud.nacos.server-addr=123.123.123.123:8848" }, webEnvironment = RANDOM_PORT)
 public class NacosConfigPropertiesServerAddressTopLevelTests {
 
 	@Autowired
@@ -50,8 +48,8 @@ public class NacosConfigPropertiesServerAddressTopLevelTests {
 
 	@Configuration
 	@EnableAutoConfiguration
-	@ImportAutoConfiguration({ NacosConfigEndpointAutoConfiguration.class,
-			NacosConfigAutoConfiguration.class, NacosConfigBootstrapConfiguration.class })
+	@ImportAutoConfiguration({ NacosConfigEndpointAutoConfiguration.class, NacosConfigAutoConfiguration.class,
+			NacosConfigBootstrapConfiguration.class })
 	public static class TestConfig {
 
 	}

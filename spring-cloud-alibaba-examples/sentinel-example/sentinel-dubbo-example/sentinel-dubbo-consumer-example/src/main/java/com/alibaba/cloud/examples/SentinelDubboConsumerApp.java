@@ -43,17 +43,15 @@ public class SentinelDubboConsumerApp {
 	public static void main(String[] args) {
 
 		FlowRule flowRule = new FlowRule();
-		flowRule.setResource(
-				"com.alibaba.cloud.examples.FooService:hello(java.lang.String)");
+		flowRule.setResource("com.alibaba.cloud.examples.FooService:hello(java.lang.String)");
 		flowRule.setCount(10);
 		flowRule.setGrade(RuleConstant.FLOW_GRADE_QPS);
 		flowRule.setLimitApp("default");
 		FlowRuleManager.loadRules(Collections.singletonList(flowRule));
 
 		SpringApplicationBuilder consumerBuilder = new SpringApplicationBuilder();
-		ApplicationContext applicationContext = consumerBuilder
-				.web(WebApplicationType.NONE).sources(SentinelDubboConsumerApp.class)
-				.run(args);
+		ApplicationContext applicationContext = consumerBuilder.web(WebApplicationType.NONE)
+				.sources(SentinelDubboConsumerApp.class).run(args);
 
 		FooServiceConsumer service = applicationContext.getBean(FooServiceConsumer.class);
 

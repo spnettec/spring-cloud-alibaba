@@ -62,15 +62,13 @@ import org.springframework.web.client.RestTemplate;
  */
 @Configuration(proxyBeanMethods = false)
 @ConditionalOnClass(name = { "org.springframework.web.client.RestTemplate" })
-@AutoConfigureAfter(name = {
-		"org.springframework.cloud.client.loadbalancer.LoadBalancerAutoConfiguration" })
-public class DubboLoadBalancedRestTemplateAutoConfiguration implements
-		BeanClassLoaderAware, ApplicationContextAware, SmartInitializingSingleton {
+@AutoConfigureAfter(name = { "org.springframework.cloud.client.loadbalancer.LoadBalancerAutoConfiguration" })
+public class DubboLoadBalancedRestTemplateAutoConfiguration
+		implements BeanClassLoaderAware, ApplicationContextAware, SmartInitializingSingleton {
 
 	private static final Class<DubboTransported> DUBBO_TRANSPORTED_CLASS = DubboTransported.class;
 
-	private static final String DUBBO_TRANSPORTED_CLASS_NAME = DUBBO_TRANSPORTED_CLASS
-			.getName();
+	private static final String DUBBO_TRANSPORTED_CLASS_NAME = DUBBO_TRANSPORTED_CLASS.getName();
 
 	@Autowired
 	private DubboServiceMetadataRepository repository;
@@ -110,8 +108,8 @@ public class DubboLoadBalancedRestTemplateAutoConfiguration implements
 
 	@Override
 	public void afterSingletonsInstantiated() {
-		loadBalancerInterceptorBean = retryLoadBalancerInterceptor != null
-				? retryLoadBalancerInterceptor : loadBalancerInterceptor;
+		loadBalancerInterceptorBean = retryLoadBalancerInterceptor != null ? retryLoadBalancerInterceptor
+				: loadBalancerInterceptor;
 	}
 
 	/**
@@ -127,13 +125,12 @@ public class DubboLoadBalancedRestTemplateAutoConfiguration implements
 
 		if (event.getApplicationContext() == this.applicationContext) {
 
-			DubboTransportedAttributesResolver attributesResolver = new DubboTransportedAttributesResolver(
-					environment);
+			DubboTransportedAttributesResolver attributesResolver = new DubboTransportedAttributesResolver(environment);
 
 			for (Map.Entry<String, RestTemplate> entry : restTemplates.entrySet()) {
 				String beanName = entry.getKey();
-				Map<String, Object> dubboTranslatedAttributes = getDubboTranslatedAttributes(
-						beanName, attributesResolver);
+				Map<String, Object> dubboTranslatedAttributes = getDubboTranslatedAttributes(beanName,
+						attributesResolver);
 				if (!CollectionUtils.isEmpty(dubboTranslatedAttributes)) {
 					adaptRestTemplate(entry.getValue(), dubboTranslatedAttributes);
 				}
@@ -155,12 +152,11 @@ public class DubboLoadBalancedRestTemplateAutoConfiguration implements
 		BeanDefinition beanDefinition = beanFactory.getBeanDefinition(beanName);
 		if (beanDefinition instanceof AnnotatedBeanDefinition) {
 			AnnotatedBeanDefinition annotatedBeanDefinition = (AnnotatedBeanDefinition) beanDefinition;
-			MethodMetadata factoryMethodMetadata = annotatedBeanDefinition
-					.getFactoryMethodMetadata();
-			attributes = factoryMethodMetadata != null ? Optional
-					.ofNullable(factoryMethodMetadata
-							.getAnnotationAttributes(DUBBO_TRANSPORTED_CLASS_NAME))
-					.orElse(attributes) : Collections.emptyMap();
+			MethodMetadata factoryMethodMetadata = annotatedBeanDefinition.getFactoryMethodMetadata();
+			attributes = factoryMethodMetadata != null
+					? Optional.ofNullable(factoryMethodMetadata.getAnnotationAttributes(DUBBO_TRANSPORTED_CLASS_NAME))
+							.orElse(attributes)
+					: Collections.emptyMap();
 		}
 		return attributesResolver.resolve(attributes);
 	}
@@ -173,24 +169,19 @@ public class DubboLoadBalancedRestTemplateAutoConfiguration implements
 	 * {@link RestTemplate} bean being annotated
 	 * {@link DubboTransported @DubboTransported}
 	 */
-	private void adaptRestTemplate(RestTemplate restTemplate,
-			Map<String, Object> dubboTranslatedAttributes) {
+	private void adaptRestTemplate(RestTemplate restTemplate, Map<String, Object> dubboTranslatedAttributes) {
 
-		List<ClientHttpRequestInterceptor> interceptors = new ArrayList<>(
-				restTemplate.getInterceptors());
+		List<ClientHttpRequestInterceptor> interceptors = new ArrayList<>(restTemplate.getInterceptors());
 
-		int index = loadBalancerInterceptorBean == null ? -1
-				: interceptors.indexOf(loadBalancerInterceptorBean);
+		int index = loadBalancerInterceptorBean == null ? -1 : interceptors.indexOf(loadBalancerInterceptorBean);
 
 		index = index < 0 ? 0 : index;
 
 		// Add ClientHttpRequestInterceptor instances before loadBalancerInterceptor
 		interceptors.add(index++, new DubboMetadataInitializerInterceptor(repository));
 
-		interceptors.add(index++,
-				new DubboTransporterInterceptor(repository,
-						restTemplate.getMessageConverters(), classLoader,
-						dubboTranslatedAttributes, serviceFactory, contextFactory));
+		interceptors.add(index++, new DubboTransporterInterceptor(repository, restTemplate.getMessageConverters(),
+				classLoader, dubboTranslatedAttributes, serviceFactory, contextFactory));
 
 		restTemplate.setInterceptors(interceptors);
 	}

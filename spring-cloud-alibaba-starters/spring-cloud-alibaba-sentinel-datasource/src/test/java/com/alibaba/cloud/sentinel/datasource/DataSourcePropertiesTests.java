@@ -55,8 +55,7 @@ public class DataSourcePropertiesTests {
 		assertThat(apolloDataSourceProperties.getNamespaceName()).isEqualTo("namespace");
 		assertThat(apolloDataSourceProperties.getDataType()).isEqualTo("json");
 		assertThat(apolloDataSourceProperties.getRuleType()).isEqualTo(RuleType.DEGRADE);
-		assertThat(apolloDataSourceProperties.getDefaultFlowRuleValue())
-				.isEqualTo("dft-val");
+		assertThat(apolloDataSourceProperties.getDefaultFlowRuleValue()).isEqualTo("dft-val");
 		assertThat(apolloDataSourceProperties.getFactoryBeanName())
 				.isEqualTo(ApolloDataSourceFactoryBean.class.getName());
 		assertThat(apolloDataSourceProperties.getConverterClass()).isNull();
@@ -73,17 +72,14 @@ public class DataSourcePropertiesTests {
 		zookeeperDataSourceProperties.setConverterClass("test.ConverterClass");
 		zookeeperDataSourceProperties.setRuleType(RuleType.AUTHORITY);
 
-		assertThat(zookeeperDataSourceProperties.getServerAddr())
-				.isEqualTo("localhost:2181");
+		assertThat(zookeeperDataSourceProperties.getServerAddr()).isEqualTo("localhost:2181");
 		assertThat(zookeeperDataSourceProperties.getGroupId()).isEqualTo("groupId");
 		assertThat(zookeeperDataSourceProperties.getDataId()).isEqualTo("dataId");
 		assertThat(zookeeperDataSourceProperties.getPath()).isEqualTo("/path");
 		assertThat(zookeeperDataSourceProperties.getFactoryBeanName())
 				.isEqualTo(ZookeeperDataSourceFactoryBean.class.getName());
-		assertThat(zookeeperDataSourceProperties.getConverterClass())
-				.isEqualTo("test.ConverterClass");
-		assertThat(zookeeperDataSourceProperties.getRuleType())
-				.isEqualTo(RuleType.AUTHORITY);
+		assertThat(zookeeperDataSourceProperties.getConverterClass()).isEqualTo("test.ConverterClass");
+		assertThat(zookeeperDataSourceProperties.getRuleType()).isEqualTo(RuleType.AUTHORITY);
 	}
 
 	@Test
@@ -131,20 +127,16 @@ public class DataSourcePropertiesTests {
 		fileDataSourceProperties.setFile("classpath: flowrule.json");
 		fileDataSourceProperties.setRuleType(RuleType.FLOW);
 
-		FileRefreshableDataSource fileRefreshableDataSource = new FileRefreshableDataSource(
-				ResourceUtils
-						.getFile(StringUtils
-								.trimAllWhitespace(fileDataSourceProperties.getFile()))
-						.getAbsolutePath(),
+		FileRefreshableDataSource fileRefreshableDataSource = new FileRefreshableDataSource(ResourceUtils
+				.getFile(StringUtils.trimAllWhitespace(fileDataSourceProperties.getFile())).getAbsolutePath(),
 				new Converter<String, List<FlowRule>>() {
 					ObjectMapper objectMapper = new ObjectMapper();
 
 					@Override
 					public List<FlowRule> convert(String source) {
 						try {
-							return objectMapper.readValue(source,
-									new TypeReference<List<FlowRule>>() {
-									});
+							return objectMapper.readValue(source, new TypeReference<List<FlowRule>>() {
+							});
 						}
 						catch (IOException e) {
 							// ignore
@@ -153,8 +145,7 @@ public class DataSourcePropertiesTests {
 					}
 				});
 		fileDataSourceProperties.postRegister(fileRefreshableDataSource);
-		assertThat(FlowRuleManager.getRules())
-				.isEqualTo(fileRefreshableDataSource.loadConfig());
+		assertThat(FlowRuleManager.getRules()).isEqualTo(fileRefreshableDataSource.loadConfig());
 	}
 
 }

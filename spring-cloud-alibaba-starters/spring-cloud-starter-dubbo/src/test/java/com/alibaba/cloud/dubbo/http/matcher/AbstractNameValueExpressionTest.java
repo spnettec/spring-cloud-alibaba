@@ -32,8 +32,7 @@ import org.springframework.core.ResolvableType;
 public abstract class AbstractNameValueExpressionTest<T extends AbstractNameValueExpression> {
 
 	protected T createExpression(String expression) {
-		ResolvableType resolvableType = ResolvableType
-				.forType(getClass().getGenericSuperclass());
+		ResolvableType resolvableType = ResolvableType.forType(getClass().getGenericSuperclass());
 		Class<T> firstGenericType = (Class<T>) resolvableType.resolveGeneric(0);
 		Constructor<T> constructor = null;
 		try {
@@ -71,14 +70,11 @@ public abstract class AbstractNameValueExpressionTest<T extends AbstractNameValu
 	@Test
 	public void testEqualsAndHashCode() {
 		Assert.assertEquals(createExpression("a"), createExpression("a"));
-		Assert.assertEquals(createExpression("a").hashCode(),
-				createExpression("a").hashCode());
+		Assert.assertEquals(createExpression("a").hashCode(), createExpression("a").hashCode());
 		Assert.assertEquals(createExpression("a=1"), createExpression("a = 1 "));
-		Assert.assertEquals(createExpression("a=1").hashCode(),
-				createExpression("a = 1 ").hashCode());
+		Assert.assertEquals(createExpression("a=1").hashCode(), createExpression("a = 1 ").hashCode());
 		Assert.assertNotEquals(createExpression("a"), createExpression("b"));
-		Assert.assertNotEquals(createExpression("a").hashCode(),
-				createExpression("b").hashCode());
+		Assert.assertNotEquals(createExpression("a").hashCode(), createExpression("b").hashCode());
 	}
 
 }

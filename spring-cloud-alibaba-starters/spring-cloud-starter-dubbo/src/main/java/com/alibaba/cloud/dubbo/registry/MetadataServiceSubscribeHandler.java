@@ -36,9 +36,8 @@ public class MetadataServiceSubscribeHandler extends AbstractServiceSubscribeHan
 
 	private final DubboMetadataUtils dubboMetadataUtils;
 
-	public MetadataServiceSubscribeHandler(String appName, URL url,
-			NotifyListener listener, DubboCloudRegistry registry,
-			DubboMetadataUtils dubboMetadataUtils) {
+	public MetadataServiceSubscribeHandler(String appName, URL url, NotifyListener listener,
+			DubboCloudRegistry registry, DubboMetadataUtils dubboMetadataUtils) {
 		super(url, listener, registry);
 		this.appName = appName;
 		this.dubboMetadataUtils = dubboMetadataUtils;
@@ -52,23 +51,21 @@ public class MetadataServiceSubscribeHandler extends AbstractServiceSubscribeHan
 	}
 
 	public void refresh(List<ServiceInstance> serviceInstances) {
-		logger.debug("Subscription app {}, instance changed, new size = {}", appName,
-				serviceInstances.size());
+		logger.debug("Subscription app {}, instance changed, new size = {}", appName, serviceInstances.size());
 		subscribeDubboMetadataServiceURLs(url, listener, serviceInstances);
 	}
 
-	private void subscribeDubboMetadataServiceURLs(URL subscribedURL,
-			NotifyListener listener, List<ServiceInstance> serviceInstances) {
+	private void subscribeDubboMetadataServiceURLs(URL subscribedURL, NotifyListener listener,
+			List<ServiceInstance> serviceInstances) {
 
-		logger.debug("Subscription app {}, service instance changed to size {}", appName,
-				serviceInstances.size());
+		logger.debug("Subscription app {}, service instance changed to size {}", appName, serviceInstances.size());
 
 		String serviceInterface = subscribedURL.getServiceInterface();
 		String version = subscribedURL.getParameter(VERSION_KEY);
 		String protocol = subscribedURL.getParameter(PROTOCOL_KEY);
 
-		List<URL> urls = dubboMetadataUtils.getDubboMetadataServiceURLs(serviceInstances,
-				serviceInterface, version, protocol);
+		List<URL> urls = dubboMetadataUtils.getDubboMetadataServiceURLs(serviceInstances, serviceInterface, version,
+				protocol);
 
 		notifyAllSubscribedURLs(subscribedURL, urls, listener);
 	}

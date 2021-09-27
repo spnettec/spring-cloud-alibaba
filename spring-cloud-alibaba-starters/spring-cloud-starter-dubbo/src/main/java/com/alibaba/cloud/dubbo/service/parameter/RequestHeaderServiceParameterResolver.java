@@ -26,8 +26,7 @@ import org.springframework.util.MultiValueMap;
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  */
-public class RequestHeaderServiceParameterResolver
-		extends AbstractNamedValueServiceParameterResolver {
+public class RequestHeaderServiceParameterResolver extends AbstractNamedValueServiceParameterResolver {
 
 	/**
 	 * default order.
@@ -40,8 +39,7 @@ public class RequestHeaderServiceParameterResolver
 	}
 
 	@Override
-	protected MultiValueMap<String, String> getNameAndValuesMap(
-			HttpServerRequest request) {
+	protected MultiValueMap<String, String> getNameAndValuesMap(HttpServerRequest request) {
 		return request.getHeaders();
 	}
 

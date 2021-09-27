@@ -25,15 +25,11 @@ import org.springframework.boot.diagnostics.FailureAnalysis;
  *
  * @author juven.xuxb
  */
-public class NacosConnectionFailureAnalyzer
-		extends AbstractFailureAnalyzer<NacosConnectionFailureException> {
+public class NacosConnectionFailureAnalyzer extends AbstractFailureAnalyzer<NacosConnectionFailureException> {
 
 	@Override
-	protected FailureAnalysis analyze(Throwable rootFailure,
-			NacosConnectionFailureException cause) {
-		return new FailureAnalysis(
-				"Application failed to connect to Nacos server: \""
-						+ cause.getServerAddr() + "\"",
+	protected FailureAnalysis analyze(Throwable rootFailure, NacosConnectionFailureException cause) {
+		return new FailureAnalysis("Application failed to connect to Nacos server: \"" + cause.getServerAddr() + "\"",
 				"Please check your Nacos server config", cause);
 	}
 

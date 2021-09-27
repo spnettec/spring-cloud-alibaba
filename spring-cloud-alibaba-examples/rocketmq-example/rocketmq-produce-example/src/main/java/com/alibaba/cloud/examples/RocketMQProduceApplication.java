@@ -102,8 +102,7 @@ public class RocketMQProduceApplication {
 				int count = 20;
 				for (int index = 1; index <= count; index++) {
 					String msgContent = "pullMsg-" + index;
-					mySource.output3()
-							.send(MessageBuilder.withPayload(msgContent).build());
+					mySource.output3().send(MessageBuilder.withPayload(msgContent).build());
 				}
 			}
 

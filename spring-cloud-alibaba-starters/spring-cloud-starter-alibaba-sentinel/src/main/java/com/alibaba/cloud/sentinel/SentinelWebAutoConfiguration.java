@@ -50,8 +50,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @EnableConfigurationProperties(SentinelProperties.class)
 public class SentinelWebAutoConfiguration implements WebMvcConfigurer {
 
-	private static final Logger log = LoggerFactory
-			.getLogger(SentinelWebAutoConfiguration.class);
+	private static final Logger log = LoggerFactory.getLogger(SentinelWebAutoConfiguration.class);
 
 	@Autowired
 	private SentinelProperties properties;
@@ -74,42 +73,35 @@ public class SentinelWebAutoConfiguration implements WebMvcConfigurer {
 			return;
 		}
 		SentinelProperties.Filter filterConfig = properties.getFilter();
-		registry.addInterceptor(sentinelWebInterceptorOptional.get())
-				.order(filterConfig.getOrder())
+		registry.addInterceptor(sentinelWebInterceptorOptional.get()).order(filterConfig.getOrder())
 				.addPathPatterns(filterConfig.getUrlPatterns());
-		log.info(
-				"[Sentinel Starter] register SentinelWebInterceptor with urlPatterns: {}.",
+		log.info("[Sentinel Starter] register SentinelWebInterceptor with urlPatterns: {}.",
 				filterConfig.getUrlPatterns());
 	}
 
 	@Bean
-	@ConditionalOnProperty(name = "spring.cloud.sentinel.filter.enabled",
-			matchIfMissing = true)
-	public SentinelWebInterceptor sentinelWebInterceptor(
-			SentinelWebMvcConfig sentinelWebMvcConfig) {
+	@ConditionalOnProperty(name = "spring.cloud.sentinel.filter.enabled", matchIfMissing = true)
+	public SentinelWebInterceptor sentinelWebInterceptor(SentinelWebMvcConfig sentinelWebMvcConfig) {
 		return new SentinelWebInterceptor(sentinelWebMvcConfig);
 	}
 
 	@Bean
-	@ConditionalOnProperty(name = "spring.cloud.sentinel.filter.enabled",
-			matchIfMissing = true)
+	@ConditionalOnProperty(name = "spring.cloud.sentinel.filter.enabled", matchIfMissing = true)
 	public SentinelWebMvcConfig sentinelWebMvcConfig() {
 		SentinelWebMvcConfig sentinelWebMvcConfig = new SentinelWebMvcConfig();
 		sentinelWebMvcConfig.setHttpMethodSpecify(properties.getHttpMethodSpecify());
 		sentinelWebMvcConfig.setWebContextUnify(properties.getWebContextUnify());
 
 		if (blockExceptionHandlerOptional.isPresent()) {
-			blockExceptionHandlerOptional
-					.ifPresent(sentinelWebMvcConfig::setBlockExceptionHandler);
+			blockExceptionHandlerOptional.ifPresent(sentinelWebMvcConfig::setBlockExceptionHandler);
 		}
 		else {
 			if (StringUtils.hasText(properties.getBlockPage())) {
-				sentinelWebMvcConfig.setBlockExceptionHandler(((request, response,
-						e) -> response.sendRedirect(properties.getBlockPage())));
+				sentinelWebMvcConfig.setBlockExceptionHandler(
+						((request, response, e) -> response.sendRedirect(properties.getBlockPage())));
 			}
 			else {
-				sentinelWebMvcConfig
-						.setBlockExceptionHandler(new DefaultBlockExceptionHandler());
+				sentinelWebMvcConfig.setBlockExceptionHandler(new DefaultBlockExceptionHandler());
 			}
 		}
 

@@ -42,18 +42,15 @@ abstract class AbstractNameValueExpression<T> implements NameValueExpression<T> 
 		int separator = expression.indexOf('=');
 		if (separator == -1) {
 			this.negated = expression.startsWith("!");
-			this.name = trimWhitespace(
-					(this.negated ? expression.substring(1) : expression));
+			this.name = trimWhitespace((this.negated ? expression.substring(1) : expression));
 			this.value = null;
 		}
 		else {
 			this.negated = (separator > 0) && (expression.charAt(separator - 1) == '!');
 			this.name = trimWhitespace(
-					(this.negated ? expression.substring(0, separator - 1)
-							: expression.substring(0, separator)));
+					(this.negated ? expression.substring(0, separator - 1) : expression.substring(0, separator)));
 			String valueExpression = getValueExpression(expression, separator);
-			this.value = isExcludedValue(valueExpression) ? null
-					: parseValue(valueExpression);
+			this.value = isExcludedValue(valueExpression) ? null : parseValue(valueExpression);
 		}
 	}
 
@@ -68,8 +65,7 @@ abstract class AbstractNameValueExpression<T> implements NameValueExpression<T> 
 	 * @return exclude or not
 	 */
 	protected boolean isExcludedValue(String valueExpression) {
-		return StringUtils.hasText(valueExpression) && valueExpression.startsWith("{")
-				&& valueExpression.endsWith("}");
+		return StringUtils.hasText(valueExpression) && valueExpression.startsWith("{") && valueExpression.endsWith("}");
 	}
 
 	@Override
@@ -115,16 +111,13 @@ abstract class AbstractNameValueExpression<T> implements NameValueExpression<T> 
 			return false;
 		}
 		AbstractNameValueExpression<?> that = (AbstractNameValueExpression<?>) other;
-		return ((isCaseSensitiveName() ? this.name.equals(that.name)
-				: this.name.equalsIgnoreCase(that.name))
-				&& ObjectUtils.nullSafeEquals(this.value, that.value)
-				&& this.negated == that.negated);
+		return ((isCaseSensitiveName() ? this.name.equals(that.name) : this.name.equalsIgnoreCase(that.name))
+				&& ObjectUtils.nullSafeEquals(this.value, that.value) && this.negated == that.negated);
 	}
 
 	@Override
 	public int hashCode() {
-		int result = (isCaseSensitiveName() ? this.name.hashCode()
-				: this.name.toLowerCase().hashCode());
+		int result = (isCaseSensitiveName() ? this.name.hashCode() : this.name.toLowerCase().hashCode());
 		result = 31 * result + (this.value != null ? this.value.hashCode() : 0);
 		result = 31 * result + (this.negated ? 1 : 0);
 		return result;

@@ -93,16 +93,13 @@ public class DubboSpringCloudConsumerBootstrap {
 			user.setAge(33);
 
 			// save User
-			System.out.printf("UserService.save(%s) : %s\n", user,
-					userService.save(user));
+			System.out.printf("UserService.save(%s) : %s\n", user, userService.save(user));
 
 			// find all Users
-			System.out.printf("UserService.findAll() : %s\n", user,
-					userService.findAll());
+			System.out.printf("UserService.findAll() : %s\n", user, userService.findAll());
 
 			// remove User
-			System.out.printf("UserService.remove(%d) : %s\n", user.getId(),
-					userService.remove(user.getId()));
+			System.out.printf("UserService.remove(%d) : %s\n", user.getId(), userService.remove(user.getId()));
 
 		};
 	}
@@ -147,8 +144,7 @@ public class DubboSpringCloudConsumerBootstrap {
 
 		// RestTemplate call
 		System.out.println(restTemplate.getForEntity(
-				"http://" + providerApplicationName + "//path-variables/{p1}/{p2}?v=c",
-				String.class, "a", "b"));
+				"http://" + providerApplicationName + "//path-variables/{p1}/{p2}?v=c", String.class, "a", "b"));
 	}
 
 	private void callHeaders() {
@@ -178,8 +174,8 @@ public class DubboSpringCloudConsumerBootstrap {
 		// System.out.println(feignRestService.params("1", 1));
 
 		// RestTemplate call
-		System.out.println(restTemplate.getForEntity(
-				"http://" + providerApplicationName + "/param?param=小马哥", String.class));
+		System.out.println(
+				restTemplate.getForEntity("http://" + providerApplicationName + "/param?param=小马哥", String.class));
 	}
 
 	private void callRequestBodyMap() {
@@ -197,9 +193,8 @@ public class DubboSpringCloudConsumerBootstrap {
 		// System.out.println(feignRestService.requestBody("Hello,World", data));
 
 		// RestTemplate call
-		System.out.println(restTemplate.postForObject(
-				"http://" + providerApplicationName + "/request/body/map?param=小马哥", data,
-				User.class));
+		System.out.println(restTemplate
+				.postForObject("http://" + providerApplicationName + "/request/body/map?param=小马哥", data, User.class));
 	}
 
 	@Bean
@@ -210,8 +205,8 @@ public class DubboSpringCloudConsumerBootstrap {
 	}
 
 	public static void main(String[] args) {
-		new SpringApplicationBuilder(DubboSpringCloudConsumerBootstrap.class)
-				.properties("spring.profiles.active=nacos").run(args);
+		new SpringApplicationBuilder(DubboSpringCloudConsumerBootstrap.class).properties("spring.profiles.active=nacos")
+				.run(args);
 	}
 
 	@FeignClient("${provider.application.name}")
@@ -224,16 +219,15 @@ public class DubboSpringCloudConsumerBootstrap {
 		String params(@RequestParam("b") String b, @RequestParam("a") int a);
 
 		@PostMapping(value = "/request/body/map", produces = APPLICATION_JSON_VALUE)
-		User requestBody(@RequestParam("param") String param,
-				@RequestBody Map<String, Object> data);
+		User requestBody(@RequestParam("param") String param, @RequestBody Map<String, Object> data);
 
 		@GetMapping("/headers")
-		String headers(@RequestHeader("h2") String header2,
-				@RequestHeader("h") String header, @RequestParam("v") Integer value);
+		String headers(@RequestHeader("h2") String header2, @RequestHeader("h") String header,
+				@RequestParam("v") Integer value);
 
 		@GetMapping("/path-variables/{p1}/{p2}")
-		String pathVariables(@PathVariable("p2") String path2,
-				@PathVariable("p1") String path1, @RequestParam("v") String param);
+		String pathVariables(@PathVariable("p2") String path2, @PathVariable("p1") String path1,
+				@RequestParam("v") String param);
 
 	}
 
@@ -248,16 +242,15 @@ public class DubboSpringCloudConsumerBootstrap {
 		String params(@RequestParam("b") String paramB, @RequestParam("a") int paramA);
 
 		@PostMapping(value = "/request/body/map", produces = APPLICATION_JSON_UTF8_VALUE)
-		User requestBody(@RequestParam("param") String param,
-				@RequestBody Map<String, Object> data);
+		User requestBody(@RequestParam("param") String param, @RequestBody Map<String, Object> data);
 
 		@GetMapping("/headers")
-		String headers(@RequestHeader("h2") String header2,
-				@RequestParam("v") Integer value, @RequestHeader("h") String header);
+		String headers(@RequestHeader("h2") String header2, @RequestParam("v") Integer value,
+				@RequestHeader("h") String header);
 
 		@GetMapping("/path-variables/{p1}/{p2}")
-		String pathVariables(@RequestParam("v") String param,
-				@PathVariable("p2") String path2, @PathVariable("p1") String path1);
+		String pathVariables(@RequestParam("v") String param, @PathVariable("p2") String path2,
+				@PathVariable("p1") String path1);
 
 	}
 

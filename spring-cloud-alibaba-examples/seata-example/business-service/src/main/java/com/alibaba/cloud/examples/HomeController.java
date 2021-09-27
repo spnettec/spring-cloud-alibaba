@@ -56,8 +56,7 @@ public class HomeController {
 
 	private final StorageService storageService;
 
-	public HomeController(RestTemplate restTemplate, OrderService orderService,
-			StorageService storageService) {
+	public HomeController(RestTemplate restTemplate, OrderService orderService, StorageService storageService) {
 		this.restTemplate = restTemplate;
 		this.orderService = orderService;
 		this.storageService = storageService;
@@ -67,9 +66,8 @@ public class HomeController {
 	@GetMapping(value = "/seata/rest", produces = "application/json")
 	public String rest() {
 
-		String result = restTemplate.getForObject(
-				"http://127.0.0.1:18082/storage/" + COMMODITY_CODE + "/" + ORDER_COUNT,
-				String.class);
+		String result = restTemplate
+				.getForObject("http://127.0.0.1:18082/storage/" + COMMODITY_CODE + "/" + ORDER_COUNT, String.class);
 
 		if (!SUCCESS.equals(result)) {
 			throw new RuntimeException();
@@ -84,8 +82,7 @@ public class HomeController {
 		map.add("commodityCode", COMMODITY_CODE);
 		map.add("orderCount", ORDER_COUNT + "");
 
-		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(
-				map, headers);
+		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(map, headers);
 
 		ResponseEntity<String> response;
 		try {

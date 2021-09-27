@@ -100,10 +100,8 @@ import static org.springframework.util.StringUtils.hasText;
 @ConditionalOnClass(name = "org.springframework.cloud.client.discovery.DiscoveryClient")
 @ConditionalOnProperty(name = "spring.cloud.discovery.enabled", matchIfMissing = true)
 @AutoConfigureAfter(
-		name = { EUREKA_CLIENT_AUTO_CONFIGURATION_CLASS_NAME,
-				ZOOKEEPER_DISCOVERY_AUTO_CONFIGURATION_CLASS_NAME,
-				CONSUL_DISCOVERY_AUTO_CONFIGURATION_CLASS_NAME,
-				NACOS_DISCOVERY_AUTO_CONFIGURATION_CLASS_NAME },
+		name = { EUREKA_CLIENT_AUTO_CONFIGURATION_CLASS_NAME, ZOOKEEPER_DISCOVERY_AUTO_CONFIGURATION_CLASS_NAME,
+				CONSUL_DISCOVERY_AUTO_CONFIGURATION_CLASS_NAME, NACOS_DISCOVERY_AUTO_CONFIGURATION_CLASS_NAME },
 		value = { DubboServiceRegistrationAutoConfiguration.class })
 public class DubboServiceDiscoveryAutoConfiguration {
 
@@ -140,10 +138,8 @@ public class DubboServiceDiscoveryAutoConfiguration {
 	@Value("${spring.application.name:${dubbo.application.name:application}}")
 	private String currentApplicationName;
 
-	public DubboServiceDiscoveryAutoConfiguration(
-			DubboServiceMetadataRepository dubboServiceMetadataRepository,
-			ApplicationEventPublisher applicationEventPublisher,
-			DiscoveryClient discoveryClient,
+	public DubboServiceDiscoveryAutoConfiguration(DubboServiceMetadataRepository dubboServiceMetadataRepository,
+			ApplicationEventPublisher applicationEventPublisher, DiscoveryClient discoveryClient,
 			ObjectProvider<Predicate<HeartbeatEvent>> heartbeatEventChangedPredicate) {
 		this.dubboServiceMetadataRepository = dubboServiceMetadataRepository;
 		this.applicationEventPublisher = applicationEventPublisher;
@@ -158,18 +154,14 @@ public class DubboServiceDiscoveryAutoConfiguration {
 	 * @see AbstractSpringCloudRegistry#registerServiceInstancesChangedEventListener(URL,
 	 * NotifyListener)
 	 */
-	private void dispatchServiceInstancesChangedEvent(String serviceName,
-			List<ServiceInstance> serviceInstances) {
-		if (!hasText(serviceName) || Objects.equals(currentApplicationName, serviceName)
-				|| serviceInstances == null) {
+	private void dispatchServiceInstancesChangedEvent(String serviceName, List<ServiceInstance> serviceInstances) {
+		if (!hasText(serviceName) || Objects.equals(currentApplicationName, serviceName) || serviceInstances == null) {
 			return;
 		}
 
-		ServiceInstancesChangedEvent event = new ServiceInstancesChangedEvent(serviceName,
-				serviceInstances);
+		ServiceInstancesChangedEvent event = new ServiceInstancesChangedEvent(serviceName, serviceInstances);
 		if (logger.isInfoEnabled()) {
-			logger.info(
-					"The event of the service instances[name : {} , size : {}] change is about to be dispatched",
+			logger.info("The event of the service instances[name : {} , size : {}] change is about to be dispatched",
 					serviceName, serviceInstances.size());
 		}
 		applicationEventPublisher.publishEvent(event);
@@ -234,8 +226,7 @@ public class DubboServiceDiscoveryAutoConfiguration {
 		 * services if {@link DubboCloudProperties#getSubscribedServices()} is wildcard
 		 * that indicates all services should be subscribed.
 		 */
-		Stream<String> subscribedServices = dubboServiceMetadataRepository
-				.initSubscribedServices();
+		Stream<String> subscribedServices = dubboServiceMetadataRepository.initSubscribedServices();
 
 		heartbeatEventChangedPredicate.ifAvailable(predicate -> {
 			if (predicate.test(event)) {
@@ -261,8 +252,7 @@ public class DubboServiceDiscoveryAutoConfiguration {
 		return event -> {
 			Object oldState = heartbeatState.get();
 			Object newState = event.getValue();
-			return heartbeatState.compareAndSet(oldState, newState)
-					&& !Objects.equals(oldState, newState);
+			return heartbeatState.compareAndSet(oldState, newState) && !Objects.equals(oldState, newState);
 		};
 	}
 
@@ -286,8 +276,7 @@ public class DubboServiceDiscoveryAutoConfiguration {
 		public Predicate<HeartbeatEvent> heartbeatEventChangedPredicate() {
 			return event -> {
 				String oldAppsHashCode = appsHashCodeCache.get();
-				CloudEurekaClient cloudEurekaClient = (CloudEurekaClient) event
-						.getSource();
+				CloudEurekaClient cloudEurekaClient = (CloudEurekaClient) event.getSource();
 				Applications applications = cloudEurekaClient.getApplications();
 				String appsHashCode = applications.getAppsHashCode();
 				return appsHashCodeCache.compareAndSet(oldAppsHashCode, appsHashCode)
@@ -303,8 +292,7 @@ public class DubboServiceDiscoveryAutoConfiguration {
 	@Configuration(proxyBeanMethods = false)
 	@ConditionalOnBean(name = ZOOKEEPER_DISCOVERY_AUTO_CONFIGURATION_CLASS_NAME)
 	@Aspect
-	public class ZookeeperConfiguration
-			implements ApplicationListener<InstanceRegisteredEvent> {
+	public class ZookeeperConfiguration implements ApplicationListener<InstanceRegisteredEvent> {
 
 		/**
 		 * The pointcut expression for
@@ -355,9 +343,8 @@ public class DubboServiceDiscoveryAutoConfiguration {
 			this.zookeeperServiceWatch = zookeeperServiceWatch;
 			this.rootPath = zookeeperDiscoveryProperties.getRoot();
 			this.pathMatcher = new AntPathMatcher(NODE_PATH_SEPARATOR);
-			this.serviceInstancePathPattern = rootPath + NODE_PATH_SEPARATOR + "{"
-					+ SERVICE_NAME_PATH_VARIABLE_NAME + "}" + NODE_PATH_SEPARATOR + "{"
-					+ SERVICE_INSTANCE_ID_PATH_VARIABLE_NAME + "}";
+			this.serviceInstancePathPattern = rootPath + NODE_PATH_SEPARATOR + "{" + SERVICE_NAME_PATH_VARIABLE_NAME
+					+ "}" + NODE_PATH_SEPARATOR + "{" + SERVICE_INSTANCE_ID_PATH_VARIABLE_NAME + "}";
 			this.processedServiceNameThreadLocal = new ThreadLocal<>();
 		}
 
@@ -443,8 +430,7 @@ public class DubboServiceDiscoveryAutoConfiguration {
 			if (supportsEventType(event)) {
 				String serviceName = resolveServiceName(event);
 				if (hasText(serviceName)) {
-					dispatchServiceInstancesChangedEvent(serviceName,
-							getInstances(serviceName));
+					dispatchServiceInstancesChangedEvent(serviceName, getInstances(serviceName));
 				}
 			}
 		}
@@ -470,8 +456,8 @@ public class DubboServiceDiscoveryAutoConfiguration {
 			String serviceName = null;
 
 			if (pathMatcher.match(serviceInstancePathPattern, path)) {
-				Map<String, String> variables = pathMatcher
-						.extractUriTemplateVariables(serviceInstancePathPattern, path);
+				Map<String, String> variables = pathMatcher.extractUriTemplateVariables(serviceInstancePathPattern,
+						path);
 				serviceName = variables.get(SERVICE_NAME_PATH_VARIABLE_NAME);
 			}
 
@@ -519,10 +505,8 @@ public class DubboServiceDiscoveryAutoConfiguration {
 		 */
 		private final Set<String> listeningServices;
 
-		NacosConfiguration(NacosServiceManager nacosServiceManager,
-				NacosDiscoveryProperties nacosDiscoveryProperties) {
-			this.namingService = nacosServiceManager
-					.getNamingService(nacosDiscoveryProperties.getNacosProperties());
+		NacosConfiguration(NacosServiceManager nacosServiceManager, NacosDiscoveryProperties nacosDiscoveryProperties) {
+			this.namingService = nacosServiceManager.getNamingService(nacosDiscoveryProperties.getNacosProperties());
 			this.nacosDiscoveryProperties = nacosDiscoveryProperties;
 			this.listeningServices = new ConcurrentSkipListSet<>();
 		}
@@ -539,8 +523,7 @@ public class DubboServiceDiscoveryAutoConfiguration {
 		}
 
 		@EventListener(SubscribedServicesChangedEvent.class)
-		public void onSubscribedServicesChangedEvent(SubscribedServicesChangedEvent event)
-				throws Exception {
+		public void onSubscribedServicesChangedEvent(SubscribedServicesChangedEvent event) throws Exception {
 			// subscribe EventListener for each service
 			event.getNewSubscribedServices().forEach(this::subscribeEventListener);
 		}
@@ -554,8 +537,7 @@ public class DubboServiceDiscoveryAutoConfiguration {
 							NamingEvent namingEvent = (NamingEvent) event;
 							List<ServiceInstance> serviceInstances = hostToServiceInstanceList(
 									namingEvent.getInstances(), serviceName);
-							dispatchServiceInstancesChangedEvent(serviceName,
-									serviceInstances);
+							dispatchServiceInstancesChangedEvent(serviceName, serviceInstances);
 						}
 					});
 				}
