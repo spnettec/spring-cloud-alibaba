@@ -80,7 +80,7 @@
 
     <properties>
         <!-- Project revision -->
-        <revision>2.2.7-SNAPSHOT</revision>
+        <revision>2.2.6.B</revision>
         <nacos.version>2.0.3.B</nacos.version>
         <spring-boot.version>2.5.5</spring-boot.version>
 
@@ -212,7 +212,40 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-
+    <repositories>
+        <!--阿里云主仓库，代理了maven central和jcenter仓库-->
+        <repository>
+            <id>aliyun</id>
+            <name>aliyun</name>
+            <url>https://maven.aliyun.com/repository/public</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>fis-release</id>
+            <url>http://10.70.19.94:8081/repository/yofc-release/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>fis-snapshot</id>
+            <url>http://10.70.19.94:8081/repository/yofc-snapshot/</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
     <build>
         <pluginManagement>
             <plugins>
@@ -363,7 +396,7 @@
                             </execution>
                         </executions>
                     </plugin>
-
+                    <!--
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
@@ -377,19 +410,15 @@
                             </execution>
                         </executions>
                     </plugin>
+                    -->
                 </plugins>
             </build>
 
             <distributionManagement>
-                <snapshotRepository>
-                    <id>sonatype-nexus-snapshots</id>
-                    <name>Sonatype Nexus Snapshots</name>
-                    <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-                </snapshotRepository>
                 <repository>
-                    <id>sonatype-nexus-staging</id>
-                    <name>Nexus Release Repository</name>
-                    <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+                    <id>yofc-release-repo</id>
+                    <name>yofc Repository</name>
+                    <url>http://admin:admin@10.70.19.94:8081/repository/yofc-release/</url>
                 </repository>
             </distributionManagement>
         </profile>
