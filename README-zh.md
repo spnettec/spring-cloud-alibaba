@@ -9,6 +9,8 @@ Spring Cloud Alibaba 致力于提供微服务开发的一站式解决方案。�
 
 依托 Spring Cloud Alibaba，您只需要添加一些注解和少量配置，就可以将 Spring Cloud 应用接入阿里微服务解决方案，通过阿里中间件来迅速搭建分布式应用系统。
 
+此外，阿里云同时还提供了 Spring Cloud Alibaba 企业版 [微服务解决方案](https://www.aliyun.com/product/aliware/mse?spm=github.spring.com.topbar)，包括无侵入服务治理(全链路灰度，无损上下线，离群实例摘除等)，企业级 Nacos 注册配置中心和企业级云原生网关等众多产品。
+
 参考文档 请查看 [WIKI](https://github.com/alibaba/spring-cloud-alibaba/wiki) 。
 
 为 Spring Cloud Alibaba 贡献代码请参考 [如何贡献](https://github.com/alibaba/spring-cloud-alibaba/wiki/%E5%A6%82%E4%BD%95%E8%B4%A1%E7%8C%AE%E4%BB%A3%E7%A0%81) 。
@@ -26,6 +28,8 @@ Spring Cloud Alibaba 致力于提供微服务开发的一站式解决方案。�
 
 
 更多功能请参考 [Roadmap](https://github.com/alibaba/spring-cloud-alibaba/blob/master/Roadmap-zh.md)。
+
+除了上述所具有的功能外，针对企业级用户的场景，Spring Cloud Alibaba 配套的企业版微服务治理方案 [微服务引擎MSE](https://www.aliyun.com/product/aliware/mse?spm=github.spring.com.topbar) 还提供了企业级微服务治理中心，包括全链路灰度、服务预热、无损上下线和离群实例摘除等更多更强大的治理能力，同时还提供了企业级 Nacos 注册配置中心，企业级云原生网关等多种产品及解决方案。
 
 ## 组件
 
@@ -122,9 +126,11 @@ spring-cloud-alibaba@googlegroups.com，欢迎通过此邮件列表讨论与 spr
 
 ### 钉钉群
 
-![DingQR](https://img.alicdn.com/tfs/TB1jXikzAL0gK0jSZFtXXXQCXXa-1002-323.png)
-
-如图片有问题，访问 https://img.alicdn.com/tfs/TB1jXikzAL0gK0jSZFtXXXQCXXa-1002-323.png
+* Spring Cloud Alibaba 开源交流群（1群）：21914947
+* Spring Cloud Alibaba 开源交流群（2群，已满）：21992595
+* Spring Cloud Alibaba 开源交流群（3群）：35153903
+* Spring Cloud Alibaba 开源交流群（4群，已满）：30301472
+* Spring Cloud Alibaba 开源交流群（5群）：34930571
 
 ## 社区相关开源
 
