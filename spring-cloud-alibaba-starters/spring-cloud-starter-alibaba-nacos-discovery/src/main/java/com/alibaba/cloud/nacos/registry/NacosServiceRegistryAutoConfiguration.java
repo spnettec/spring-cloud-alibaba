@@ -42,16 +42,13 @@ import org.springframework.context.annotation.Configuration;
 @Configuration(proxyBeanMethods = false)
 @EnableConfigurationProperties
 @ConditionalOnNacosDiscoveryEnabled
-@ConditionalOnProperty(value = "spring.cloud.service-registry.auto-registration.enabled",
-		matchIfMissing = true)
-@AutoConfigureAfter({ AutoServiceRegistrationConfiguration.class,
-		AutoServiceRegistrationAutoConfiguration.class,
+@ConditionalOnProperty(value = "spring.cloud.service-registry.auto-registration.enabled", matchIfMissing = true)
+@AutoConfigureAfter({ AutoServiceRegistrationConfiguration.class, AutoServiceRegistrationAutoConfiguration.class,
 		NacosDiscoveryAutoConfiguration.class })
 public class NacosServiceRegistryAutoConfiguration {
 
 	@Bean
-	public NacosServiceRegistry nacosServiceRegistry(
-			NacosServiceManager nacosServiceManager,
+	public NacosServiceRegistry nacosServiceRegistry(NacosServiceManager nacosServiceManager,
 			NacosDiscoveryProperties nacosDiscoveryProperties) {
 		return new NacosServiceRegistry(nacosServiceManager, nacosDiscoveryProperties);
 	}
@@ -60,20 +57,15 @@ public class NacosServiceRegistryAutoConfiguration {
 	@ConditionalOnBean(AutoServiceRegistrationProperties.class)
 	public NacosRegistration nacosRegistration(
 			ObjectProvider<List<NacosRegistrationCustomizer>> registrationCustomizers,
-			NacosDiscoveryProperties nacosDiscoveryProperties,
-			ApplicationContext context) {
-		return new NacosRegistration(registrationCustomizers.getIfAvailable(),
-				nacosDiscoveryProperties, context);
+			NacosDiscoveryProperties nacosDiscoveryProperties, ApplicationContext context) {
+		return new NacosRegistration(registrationCustomizers.getIfAvailable(), nacosDiscoveryProperties, context);
 	}
 
 	@Bean
 	@ConditionalOnBean(AutoServiceRegistrationProperties.class)
-	public NacosAutoServiceRegistration nacosAutoServiceRegistration(
-			NacosServiceRegistry registry,
-			AutoServiceRegistrationProperties autoServiceRegistrationProperties,
-			NacosRegistration registration) {
-		return new NacosAutoServiceRegistration(registry,
-				autoServiceRegistrationProperties, registration);
+	public NacosAutoServiceRegistration nacosAutoServiceRegistration(NacosServiceRegistry registry,
+			AutoServiceRegistrationProperties autoServiceRegistrationProperties, NacosRegistration registration) {
+		return new NacosAutoServiceRegistration(registry, autoServiceRegistrationProperties, registration);
 	}
 
 }

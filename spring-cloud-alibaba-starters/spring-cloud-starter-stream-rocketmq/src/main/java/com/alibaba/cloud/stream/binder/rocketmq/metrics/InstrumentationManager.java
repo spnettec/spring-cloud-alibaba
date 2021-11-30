@@ -37,14 +37,13 @@ public final class InstrumentationManager {
 
 	public static void addHealthInstrumentation(Instrumentation instrumentation) {
 		if (null != instrumentation) {
-			HEALTH_INSTRUMENTATIONS.computeIfPresent(instrumentation.hashCode(),
-					(k, v) -> {
-						if (instrumentation.getActuator() != null) {
-							instrumentation.getActuator().stop();
-						}
-						throw new IllegalArgumentException(
-								"The current actuator exists, please confirm if there is a repeat operation!!!");
-					});
+			HEALTH_INSTRUMENTATIONS.computeIfPresent(instrumentation.hashCode(), (k, v) -> {
+				if (instrumentation.getActuator() != null) {
+					instrumentation.getActuator().stop();
+				}
+				throw new IllegalArgumentException(
+						"The current actuator exists, please confirm if there is a repeat operation!!!");
+			});
 		}
 
 	}

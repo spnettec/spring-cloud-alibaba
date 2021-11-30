@@ -54,11 +54,9 @@ import org.springframework.messaging.MessagingException;
 /**
  * @author <a href="mailto:fangjian0423@gmail.com">Jim</a>
  */
-public class RocketMQProducerMessageHandler extends AbstractMessageHandler
-		implements Lifecycle {
+public class RocketMQProducerMessageHandler extends AbstractMessageHandler implements Lifecycle {
 
-	private final static Logger log = LoggerFactory
-			.getLogger(RocketMQProducerMessageHandler.class);
+	private final static Logger log = LoggerFactory.getLogger(RocketMQProducerMessageHandler.class);
 
 	private volatile boolean running = false;
 
@@ -94,38 +92,31 @@ public class RocketMQProducerMessageHandler extends AbstractMessageHandler
 			return;
 		}
 		super.onInit();
-		this.defaultMQProducer = RocketMQProduceFactory
-				.initRocketMQProducer(destination.getName(), mqProducerProperties);
+		this.defaultMQProducer = RocketMQProduceFactory.initRocketMQProducer(destination.getName(),
+				mqProducerProperties);
 		this.isTrans = defaultMQProducer instanceof TransactionMQProducer;
 		// Use the default if the partition is on and no customization is available.
-		this.messageQueueSelector = RocketMQBeanContainerCache.getBean(
-				mqProducerProperties.getMessageQueueSelector(),
-				MessageQueueSelector.class, extendedProducerProperties.isPartitioned()
-						? new PartitionMessageQueueSelector() : null);
+		this.messageQueueSelector = RocketMQBeanContainerCache.getBean(mqProducerProperties.getMessageQueueSelector(),
+				MessageQueueSelector.class,
+				extendedProducerProperties.isPartitioned() ? new PartitionMessageQueueSelector() : null);
 	}
 
 	@Override
 	public void start() {
-		Instrumentation instrumentation = new Instrumentation(destination.getName(),
-				this);
+		Instrumentation instrumentation = new Instrumentation(destination.getName(), this);
 		try {
 			defaultMQProducer.start();
 			// TransactionMQProducer does not currently support custom
 			// MessageQueueSelector.
 			if (!isTrans && extendedProducerProperties.isPartitioned()) {
-				List<MessageQueue> messageQueues = defaultMQProducer
-						.fetchPublishMessageQueues(destination.getName());
-				if (extendedProducerProperties.getPartitionCount() != messageQueues
-						.size()) {
-					logger.info(String.format(
-							"The partition count of topic '%s' will change from '%s' to '%s'",
-							destination.getName(),
-							extendedProducerProperties.getPartitionCount(),
+				List<MessageQueue> messageQueues = defaultMQProducer.fetchPublishMessageQueues(destination.getName());
+				if (extendedProducerProperties.getPartitionCount() != messageQueues.size()) {
+					logger.info(String.format("The partition count of topic '%s' will change from '%s' to '%s'",
+							destination.getName(), extendedProducerProperties.getPartitionCount(),
 							messageQueues.size()));
 					extendedProducerProperties.setPartitionCount(messageQueues.size());
 					// may be npe!
-					partitioningInterceptor.setPartitionCount(
-							extendedProducerProperties.getPartitionCount());
+					partitioningInterceptor.setPartitionCount(extendedProducerProperties.getPartitionCount());
 				}
 			}
 			running = true;
@@ -161,50 +152,41 @@ public class RocketMQProducerMessageHandler extends AbstractMessageHandler
 			SendResult sendResult;
 			if (defaultMQProducer instanceof TransactionMQProducer) {
 				TransactionListener transactionListener = RocketMQBeanContainerCache
-						.getBean(mqProducerProperties.getTransactionListener(),
-								TransactionListener.class);
+						.getBean(mqProducerProperties.getTransactionListener(), TransactionListener.class);
 				if (transactionListener == null) {
-					throw new MessagingException(
-							"TransactionMQProducer must have a TransactionListener !!! ");
+					throw new MessagingException("TransactionMQProducer must have a TransactionListener !!! ");
 				}
-				((TransactionMQProducer) defaultMQProducer)
-						.setTransactionListener(transactionListener);
-				if(log.isDebugEnabled()){
-					log.debug("send transaction message ->{}" , mqMessage);
+				((TransactionMQProducer) defaultMQProducer).setTransactionListener(transactionListener);
+				if (log.isDebugEnabled()) {
+					log.debug("send transaction message ->{}", mqMessage);
 				}
 				sendResult = defaultMQProducer.sendMessageInTransaction(mqMessage,
 						message.getHeaders().get(RocketMQConst.USER_TRANSACTIONAL_ARGS));
 			}
 			else {
-				if(log.isDebugEnabled()){
-					log.debug("send message ->{}" , mqMessage);
+				if (log.isDebugEnabled()) {
+					log.debug("send message ->{}", mqMessage);
 				}
-				sendResult = this.send(mqMessage, this.messageQueueSelector,
-						message.getHeaders(), message);
+				sendResult = this.send(mqMessage, this.messageQueueSelector, message.getHeaders(), message);
 			}
-			log.info("the message has sent,message={},sendResult={}",mqMessage,sendResult);
-			if (sendResult == null
-					|| !SendStatus.SEND_OK.equals(sendResult.getSendStatus())) {
-				log.error("message send fail.SendStatus is not OK.the message={}",mqMessage);
-				this.doFail(message, new MessagingException(
-						"message send fail.SendStatus is not OK."));
+			log.info("the message has sent,message={},sendResult={}", mqMessage, sendResult);
+			if (sendResult == null || !SendStatus.SEND_OK.equals(sendResult.getSendStatus())) {
+				log.error("message send fail.SendStatus is not OK.the message={}", mqMessage);
+				this.doFail(message, new MessagingException("message send fail.SendStatus is not OK."));
 			}
 		}
 		catch (Exception e) {
-			log.error("RocketMQ Message hasn't been sent. Caused by " + e.getMessage(),
-					e);
+			log.error("RocketMQ Message hasn't been sent. Caused by " + e.getMessage(), e);
 			this.doFail(message, e);
 		}
 	}
 
-	private SendResult send(org.apache.rocketmq.common.message.Message mqMessage,
-			MessageQueueSelector selector, Object args, Message<?> message)
-			throws RemotingException, MQClientException, InterruptedException,
-			MQBrokerException {
+	private SendResult send(org.apache.rocketmq.common.message.Message mqMessage, MessageQueueSelector selector,
+			Object args, Message<?> message)
+			throws RemotingException, MQClientException, InterruptedException, MQBrokerException {
 		SendResult sendResult = new SendResult();
 		sendResult.setSendStatus(SendStatus.SEND_OK);
-		if (RocketMQProducerProperties.SendType.OneWay
-				.equalsName(mqProducerProperties.getSendType())) {
+		if (RocketMQProducerProperties.SendType.OneWay.equalsName(mqProducerProperties.getSendType())) {
 			if (null != selector) {
 				defaultMQProducer.sendOneway(mqMessage, selector, args);
 			}
@@ -213,18 +195,15 @@ public class RocketMQProducerMessageHandler extends AbstractMessageHandler
 			}
 			return sendResult;
 		}
-		if (RocketMQProducerProperties.SendType.Sync
-				.equalsName(mqProducerProperties.getSendType())) {
+		if (RocketMQProducerProperties.SendType.Sync.equalsName(mqProducerProperties.getSendType())) {
 			if (null != selector) {
 				return defaultMQProducer.send(mqMessage, selector, args);
 			}
 			return defaultMQProducer.send(mqMessage);
 		}
-		if (RocketMQProducerProperties.SendType.Async
-				.equalsName(mqProducerProperties.getSendType())) {
+		if (RocketMQProducerProperties.SendType.Async.equalsName(mqProducerProperties.getSendType())) {
 			if (null != selector) {
-				defaultMQProducer.send(mqMessage, selector, args,
-						this.getSendCallback(message));
+				defaultMQProducer.send(mqMessage, selector, args, this.getSendCallback(message));
 			}
 			else {
 				defaultMQProducer.send(mqMessage, this.getSendCallback(message));
@@ -241,8 +220,8 @@ public class RocketMQProducerMessageHandler extends AbstractMessageHandler
 	 * @return SendCallback
 	 */
 	private SendCallback getSendCallback(Message<?> message) {
-		SendCallback sendCallback = RocketMQBeanContainerCache
-				.getBean(mqProducerProperties.getSendCallBack(), SendCallback.class);
+		SendCallback sendCallback = RocketMQBeanContainerCache.getBean(mqProducerProperties.getSendCallBack(),
+				SendCallback.class);
 		if (null == sendCallback) {
 			sendCallback = new SendCallback() {
 				@Override
@@ -288,8 +267,7 @@ public class RocketMQProducerMessageHandler extends AbstractMessageHandler
 		return partitioningInterceptor;
 	}
 
-	public RocketMQProducerMessageHandler setPartitioningInterceptor(
-			PartitioningInterceptor partitioningInterceptor) {
+	public RocketMQProducerMessageHandler setPartitioningInterceptor(PartitioningInterceptor partitioningInterceptor) {
 		this.partitioningInterceptor = partitioningInterceptor;
 		return this;
 	}

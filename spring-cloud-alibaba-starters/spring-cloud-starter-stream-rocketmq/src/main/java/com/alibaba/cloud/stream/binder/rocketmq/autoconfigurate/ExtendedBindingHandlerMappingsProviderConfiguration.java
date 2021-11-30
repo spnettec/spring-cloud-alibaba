@@ -36,13 +36,10 @@ public class ExtendedBindingHandlerMappingsProviderConfiguration {
 	public MappingsProvider rocketExtendedPropertiesDefaultMappingsProvider() {
 		return () -> {
 			Map<ConfigurationPropertyName, ConfigurationPropertyName> mappings = new HashMap<>();
-			mappings.put(
-					ConfigurationPropertyName.of("spring.cloud.stream.rocketmq.bindings"),
+			mappings.put(ConfigurationPropertyName.of("spring.cloud.stream.rocketmq.bindings"),
 					ConfigurationPropertyName.of("spring.cloud.stream.rocketmq.default"));
-			mappings.put(
-					ConfigurationPropertyName.of("spring.cloud.stream.rocketmq.streams"),
-					ConfigurationPropertyName
-							.of("spring.cloud.stream.rocketmq.streams.default"));
+			mappings.put(ConfigurationPropertyName.of("spring.cloud.stream.rocketmq.streams"),
+					ConfigurationPropertyName.of("spring.cloud.stream.rocketmq.streams.default"));
 			return mappings;
 		};
 	}
@@ -52,9 +49,9 @@ public class ExtendedBindingHandlerMappingsProviderConfiguration {
 		return new RocketMQConfigBeanPostProcessor();
 	}
 
-
 	/**
-	 * if you want to customize a bean, please use this BeanName {@code RocketMQMessageConverter.DEFAULT_NAME}.
+	 * if you want to customize a bean, please use this BeanName
+	 * {@code RocketMQMessageConverter.DEFAULT_NAME}.
 	 */
 	@Bean(RocketMQMessageConverter.DEFAULT_NAME)
 	@ConditionalOnMissingBean(name = { RocketMQMessageConverter.DEFAULT_NAME })

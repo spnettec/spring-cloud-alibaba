@@ -44,48 +44,36 @@ public final class RocketMQConsumerFactory {
 	private RocketMQConsumerFactory() {
 	}
 
-	private final static Logger log = LoggerFactory
-			.getLogger(RocketMQConsumerFactory.class);
+	private final static Logger log = LoggerFactory.getLogger(RocketMQConsumerFactory.class);
 
 	public static DefaultMQPushConsumer initPushConsumer(
 			ExtendedConsumerProperties<RocketMQConsumerProperties> extendedConsumerProperties) {
-		RocketMQConsumerProperties consumerProperties = extendedConsumerProperties
-				.getExtension();
-		Assert.notNull(consumerProperties.getGroup(),
-				"Property 'group' is required - consumerGroup");
-		Assert.notNull(consumerProperties.getNameServer(),
-				"Property 'nameServer' is required");
-		AllocateMessageQueueStrategy allocateMessageQueueStrategy = RocketMQBeanContainerCache
-				.getBean(consumerProperties.getAllocateMessageQueueStrategy(),
-						AllocateMessageQueueStrategy.class,
-						new AllocateMessageQueueAveragely());
+		RocketMQConsumerProperties consumerProperties = extendedConsumerProperties.getExtension();
+		Assert.notNull(consumerProperties.getGroup(), "Property 'group' is required - consumerGroup");
+		Assert.notNull(consumerProperties.getNameServer(), "Property 'nameServer' is required");
+		AllocateMessageQueueStrategy allocateMessageQueueStrategy = RocketMQBeanContainerCache.getBean(
+				consumerProperties.getAllocateMessageQueueStrategy(), AllocateMessageQueueStrategy.class,
+				new AllocateMessageQueueAveragely());
 		RPCHook rpcHook = null;
 		if (!StringUtils.isEmpty(consumerProperties.getAccessKey())
 				&& !StringUtils.isEmpty(consumerProperties.getSecretKey())) {
 			rpcHook = new AclClientRPCHook(
-					new SessionCredentials(consumerProperties.getAccessKey(),
-							consumerProperties.getSecretKey()));
+					new SessionCredentials(consumerProperties.getAccessKey(), consumerProperties.getSecretKey()));
 		}
-		DefaultMQPushConsumer consumer = new DefaultMQPushConsumer(
-				consumerProperties.getGroup(), rpcHook, allocateMessageQueueStrategy,
-				consumerProperties.getEnableMsgTrace(),
+		DefaultMQPushConsumer consumer = new DefaultMQPushConsumer(consumerProperties.getGroup(), rpcHook,
+				allocateMessageQueueStrategy, consumerProperties.getEnableMsgTrace(),
 				consumerProperties.getCustomizedTraceTopic());
-		consumer.setVipChannelEnabled(
-				null == rpcHook && consumerProperties.getVipChannelEnabled());
-		consumer.setInstanceName(
-				RocketMQUtils.getInstanceName(rpcHook, consumerProperties.getGroup()));
+		consumer.setVipChannelEnabled(null == rpcHook && consumerProperties.getVipChannelEnabled());
+		consumer.setInstanceName(RocketMQUtils.getInstanceName(rpcHook, consumerProperties.getGroup()));
 		consumer.setNamespace(consumerProperties.getNamespace());
 		consumer.setNamesrvAddr(consumerProperties.getNameServer());
 		consumer.setMessageModel(getMessageModel(consumerProperties.getMessageModel()));
 		consumer.setUseTLS(consumerProperties.getUseTLS());
-		consumer.setPullTimeDelayMillsWhenException(
-				consumerProperties.getPullTimeDelayMillsWhenException());
+		consumer.setPullTimeDelayMillsWhenException(consumerProperties.getPullTimeDelayMillsWhenException());
 		consumer.setPullBatchSize(consumerProperties.getPullBatchSize());
 		consumer.setConsumeFromWhere(consumerProperties.getConsumeFromWhere());
-		consumer.setHeartbeatBrokerInterval(
-				consumerProperties.getHeartbeatBrokerInterval());
-		consumer.setPersistConsumerOffsetInterval(
-				consumerProperties.getPersistConsumerOffsetInterval());
+		consumer.setHeartbeatBrokerInterval(consumerProperties.getHeartbeatBrokerInterval());
+		consumer.setPersistConsumerOffsetInterval(consumerProperties.getPersistConsumerOffsetInterval());
 		consumer.setPullInterval(consumerProperties.getPush().getPullInterval());
 		consumer.setConsumeThreadMin(extendedConsumerProperties.getConcurrency());
 		consumer.setConsumeThreadMax(extendedConsumerProperties.getConcurrency());
@@ -100,53 +88,40 @@ public final class RocketMQConsumerFactory {
 	 */
 	public static DefaultLitePullConsumer initPullConsumer(
 			ExtendedConsumerProperties<RocketMQConsumerProperties> extendedConsumerProperties) {
-		RocketMQConsumerProperties consumerProperties = extendedConsumerProperties
-				.getExtension();
-		Assert.notNull(consumerProperties.getGroup(),
-				"Property 'group' is required - consumerGroup");
-		Assert.notNull(consumerProperties.getNameServer(),
-				"Property 'nameServer' is required");
+		RocketMQConsumerProperties consumerProperties = extendedConsumerProperties.getExtension();
+		Assert.notNull(consumerProperties.getGroup(), "Property 'group' is required - consumerGroup");
+		Assert.notNull(consumerProperties.getNameServer(), "Property 'nameServer' is required");
 		AllocateMessageQueueStrategy allocateMessageQueueStrategy = RocketMQBeanContainerCache
-				.getBean(consumerProperties.getAllocateMessageQueueStrategy(),
-						AllocateMessageQueueStrategy.class);
+				.getBean(consumerProperties.getAllocateMessageQueueStrategy(), AllocateMessageQueueStrategy.class);
 
 		RPCHook rpcHook = null;
 		if (!StringUtils.isEmpty(consumerProperties.getAccessKey())
 				&& !StringUtils.isEmpty(consumerProperties.getSecretKey())) {
 			rpcHook = new AclClientRPCHook(
-					new SessionCredentials(consumerProperties.getAccessKey(),
-							consumerProperties.getSecretKey()));
+					new SessionCredentials(consumerProperties.getAccessKey(), consumerProperties.getSecretKey()));
 		}
 
-		DefaultLitePullConsumer consumer = new DefaultLitePullConsumer(
-				consumerProperties.getNamespace(), consumerProperties.getGroup(),
-				rpcHook);
-		consumer.setVipChannelEnabled(
-				null == rpcHook && consumerProperties.getVipChannelEnabled());
-		consumer.setInstanceName(
-				RocketMQUtils.getInstanceName(rpcHook, consumerProperties.getGroup()));
-		if(null != allocateMessageQueueStrategy) {
+		DefaultLitePullConsumer consumer = new DefaultLitePullConsumer(consumerProperties.getNamespace(),
+				consumerProperties.getGroup(), rpcHook);
+		consumer.setVipChannelEnabled(null == rpcHook && consumerProperties.getVipChannelEnabled());
+		consumer.setInstanceName(RocketMQUtils.getInstanceName(rpcHook, consumerProperties.getGroup()));
+		if (null != allocateMessageQueueStrategy) {
 			consumer.setAllocateMessageQueueStrategy(allocateMessageQueueStrategy);
 		}
 		consumer.setNamesrvAddr(consumerProperties.getNameServer());
 		consumer.setMessageModel(getMessageModel(consumerProperties.getMessageModel()));
 		consumer.setUseTLS(consumerProperties.getUseTLS());
-		consumer.setPullTimeDelayMillsWhenException(
-				consumerProperties.getPullTimeDelayMillsWhenException());
+		consumer.setPullTimeDelayMillsWhenException(consumerProperties.getPullTimeDelayMillsWhenException());
 		consumer.setConsumerTimeoutMillisWhenSuspend(
 				consumerProperties.getPull().getConsumerTimeoutMillisWhenSuspend());
 		consumer.setPullBatchSize(consumerProperties.getPullBatchSize());
 		consumer.setConsumeFromWhere(consumerProperties.getConsumeFromWhere());
-		consumer.setHeartbeatBrokerInterval(
-				consumerProperties.getHeartbeatBrokerInterval());
-		consumer.setPersistConsumerOffsetInterval(
-				consumerProperties.getPersistConsumerOffsetInterval());
-		consumer.setPollTimeoutMillis(
-				consumerProperties.getPull().getPollTimeoutMillis());
+		consumer.setHeartbeatBrokerInterval(consumerProperties.getHeartbeatBrokerInterval());
+		consumer.setPersistConsumerOffsetInterval(consumerProperties.getPersistConsumerOffsetInterval());
+		consumer.setPollTimeoutMillis(consumerProperties.getPull().getPollTimeoutMillis());
 		consumer.setPullThreadNums(extendedConsumerProperties.getConcurrency());
 		// The internal queues are cached by a maximum of 1000
-		consumer.setPullThresholdForAll(extendedConsumerProperties.getExtension()
-				.getPull().getPullThresholdForAll());
+		consumer.setPullThresholdForAll(extendedConsumerProperties.getExtension().getPull().getPullThresholdForAll());
 		consumer.setUnitName(consumerProperties.getUnitName());
 		return consumer;
 	}

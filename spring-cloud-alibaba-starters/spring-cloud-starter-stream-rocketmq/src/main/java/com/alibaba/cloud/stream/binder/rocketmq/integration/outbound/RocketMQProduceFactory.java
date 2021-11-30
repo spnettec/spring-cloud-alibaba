@@ -48,8 +48,7 @@ public final class RocketMQProduceFactory {
 	private RocketMQProduceFactory() {
 	}
 
-	private final static Logger log = LoggerFactory
-			.getLogger(RocketMQProduceFactory.class);
+	private final static Logger log = LoggerFactory.getLogger(RocketMQProduceFactory.class);
 
 	/**
 	 * init for the producer,including convert producer params.
@@ -57,76 +56,59 @@ public final class RocketMQProduceFactory {
 	 * @param producerProperties producerProperties
 	 * @return DefaultMQProducer
 	 */
-	public static DefaultMQProducer initRocketMQProducer(String topic,
-			RocketMQProducerProperties producerProperties) {
-		Assert.notNull(producerProperties.getGroup(),
-				"Property 'group' is required - producerGroup");
-		Assert.notNull(producerProperties.getNameServer(),
-				"Property 'nameServer' is required");
+	public static DefaultMQProducer initRocketMQProducer(String topic, RocketMQProducerProperties producerProperties) {
+		Assert.notNull(producerProperties.getGroup(), "Property 'group' is required - producerGroup");
+		Assert.notNull(producerProperties.getNameServer(), "Property 'nameServer' is required");
 
 		RPCHook rpcHook = null;
 		if (!StringUtils.isEmpty(producerProperties.getAccessKey())
 				&& !StringUtils.isEmpty(producerProperties.getSecretKey())) {
 			rpcHook = new AclClientRPCHook(
-					new SessionCredentials(producerProperties.getAccessKey(),
-							producerProperties.getSecretKey()));
+					new SessionCredentials(producerProperties.getAccessKey(), producerProperties.getSecretKey()));
 		}
 		DefaultMQProducer producer;
-		if (RocketMQProducerProperties.ProducerType.Trans
-				.equalsName(producerProperties.getProducerType())) {
-			producer = new TransactionMQProducer(producerProperties.getNamespace(),
-					producerProperties.getGroup(), rpcHook);
+		if (RocketMQProducerProperties.ProducerType.Trans.equalsName(producerProperties.getProducerType())) {
+			producer = new TransactionMQProducer(producerProperties.getNamespace(), producerProperties.getGroup(),
+					rpcHook);
 			if (producerProperties.getEnableMsgTrace()) {
 				try {
-					AsyncTraceDispatcher dispatcher = new AsyncTraceDispatcher(
-							producerProperties.getGroup(), TraceDispatcher.Type.PRODUCE,
-							producerProperties.getCustomizedTraceTopic(), rpcHook);
+					AsyncTraceDispatcher dispatcher = new AsyncTraceDispatcher(producerProperties.getGroup(),
+							TraceDispatcher.Type.PRODUCE, producerProperties.getCustomizedTraceTopic(), rpcHook);
 					dispatcher.setHostProducer(producer.getDefaultMQProducerImpl());
-					Field field = DefaultMQProducer.class
-							.getDeclaredField("traceDispatcher");
+					Field field = DefaultMQProducer.class.getDeclaredField("traceDispatcher");
 					field.setAccessible(true);
 					field.set(producer, dispatcher);
-					producer.getDefaultMQProducerImpl().registerSendMessageHook(
-							new SendMessageTraceHookImpl(dispatcher));
+					producer.getDefaultMQProducerImpl()
+							.registerSendMessageHook(new SendMessageTraceHookImpl(dispatcher));
 				}
 				catch (Throwable e) {
-					log.error(
-							"system mq-trace hook init failed ,maybe can't send msg trace data");
+					log.error("system mq-trace hook init failed ,maybe can't send msg trace data");
 				}
 			}
 		}
 		else {
-			producer = new DefaultMQProducer(producerProperties.getNamespace(),
-					producerProperties.getGroup(), rpcHook,
-					producerProperties.getEnableMsgTrace(),
-					producerProperties.getCustomizedTraceTopic());
+			producer = new DefaultMQProducer(producerProperties.getNamespace(), producerProperties.getGroup(), rpcHook,
+					producerProperties.getEnableMsgTrace(), producerProperties.getCustomizedTraceTopic());
 		}
 
-		producer.setVipChannelEnabled(
-				null == rpcHook && producerProperties.getVipChannelEnabled());
-		producer.setInstanceName(
-				RocketMQUtils.getInstanceName(rpcHook, topic + "|" + UtilAll.getPid()));
+		producer.setVipChannelEnabled(null == rpcHook && producerProperties.getVipChannelEnabled());
+		producer.setInstanceName(RocketMQUtils.getInstanceName(rpcHook, topic + "|" + UtilAll.getPid()));
 		producer.setNamesrvAddr(producerProperties.getNameServer());
 		producer.setSendMsgTimeout(producerProperties.getSendMsgTimeout());
-		producer.setRetryTimesWhenSendFailed(
-				producerProperties.getRetryTimesWhenSendFailed());
-		producer.setRetryTimesWhenSendAsyncFailed(
-				producerProperties.getRetryTimesWhenSendAsyncFailed());
-		producer.setCompressMsgBodyOverHowmuch(
-				producerProperties.getCompressMsgBodyThreshold());
-		producer.setRetryAnotherBrokerWhenNotStoreOK(
-				producerProperties.getRetryAnotherBroker());
+		producer.setRetryTimesWhenSendFailed(producerProperties.getRetryTimesWhenSendFailed());
+		producer.setRetryTimesWhenSendAsyncFailed(producerProperties.getRetryTimesWhenSendAsyncFailed());
+		producer.setCompressMsgBodyOverHowmuch(producerProperties.getCompressMsgBodyThreshold());
+		producer.setRetryAnotherBrokerWhenNotStoreOK(producerProperties.getRetryAnotherBroker());
 		producer.setMaxMessageSize(producerProperties.getMaxMessageSize());
 		producer.setUseTLS(producerProperties.getUseTLS());
 		producer.setUnitName(producerProperties.getUnitName());
-		CheckForbiddenHook checkForbiddenHook = RocketMQBeanContainerCache.getBean(
-				producerProperties.getCheckForbiddenHook(), CheckForbiddenHook.class);
+		CheckForbiddenHook checkForbiddenHook = RocketMQBeanContainerCache
+				.getBean(producerProperties.getCheckForbiddenHook(), CheckForbiddenHook.class);
 		if (null != checkForbiddenHook) {
-			producer.getDefaultMQProducerImpl()
-					.registerCheckForbiddenHook(checkForbiddenHook);
+			producer.getDefaultMQProducerImpl().registerCheckForbiddenHook(checkForbiddenHook);
 		}
-		SendMessageHook sendMessageHook = RocketMQBeanContainerCache
-				.getBean(producerProperties.getSendMessageHook(), SendMessageHook.class);
+		SendMessageHook sendMessageHook = RocketMQBeanContainerCache.getBean(producerProperties.getSendMessageHook(),
+				SendMessageHook.class);
 		if (null != sendMessageHook) {
 			producer.getDefaultMQProducerImpl().registerSendMessageHook(sendMessageHook);
 		}

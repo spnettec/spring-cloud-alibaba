@@ -44,14 +44,10 @@ public class RocketMQMessageConverter {
 
 	static {
 		ClassLoader classLoader = RocketMQMessageConverter.class.getClassLoader();
-		JACKSON_PRESENT = ClassUtils
-				.isPresent("com.fasterxml.jackson.databind.ObjectMapper", classLoader)
-				&& ClassUtils.isPresent("com.fasterxml.jackson.core.JsonGenerator",
-						classLoader);
+		JACKSON_PRESENT = ClassUtils.isPresent("com.fasterxml.jackson.databind.ObjectMapper", classLoader)
+				&& ClassUtils.isPresent("com.fasterxml.jackson.core.JsonGenerator", classLoader);
 		FASTJSON_PRESENT = ClassUtils.isPresent("com.alibaba.fastjson.JSON", classLoader)
-				&& ClassUtils.isPresent(
-						"com.alibaba.fastjson.support.config.FastJsonConfig",
-						classLoader);
+				&& ClassUtils.isPresent("com.alibaba.fastjson.support.config.FastJsonConfig", classLoader);
 	}
 
 	private CompositeMessageConverter messageConverter;
@@ -67,12 +63,12 @@ public class RocketMQMessageConverter {
 		}
 		if (FASTJSON_PRESENT) {
 			try {
-				messageConverters.add((MessageConverter) ClassUtils.forName(
-						"com.alibaba.fastjson.support.spring.messaging.MappingFastJsonMessageConverter",
-						ClassUtils.getDefaultClassLoader()).newInstance());
+				messageConverters.add((MessageConverter) ClassUtils
+						.forName("com.alibaba.fastjson.support.spring.messaging.MappingFastJsonMessageConverter",
+								ClassUtils.getDefaultClassLoader())
+						.newInstance());
 			}
-			catch (ClassNotFoundException | IllegalAccessException
-					| InstantiationException ignored) {
+			catch (ClassNotFoundException | IllegalAccessException | InstantiationException ignored) {
 				// ignore this exception
 			}
 		}

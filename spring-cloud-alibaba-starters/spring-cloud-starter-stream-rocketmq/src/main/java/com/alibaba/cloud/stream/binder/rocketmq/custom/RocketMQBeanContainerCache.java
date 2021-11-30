@@ -41,10 +41,9 @@ public final class RocketMQBeanContainerCache {
 	private RocketMQBeanContainerCache() {
 	}
 
-	private static final Class<?>[] CLASSES = new Class[] {
-			CompositeMessageConverter.class, AllocateMessageQueueStrategy.class,
-			MessageQueueSelector.class, MessageListener.class, TransactionListener.class,
-			SendCallback.class, CheckForbiddenHook.class, SendMessageHook.class,
+	private static final Class<?>[] CLASSES = new Class[] { CompositeMessageConverter.class,
+			AllocateMessageQueueStrategy.class, MessageQueueSelector.class, MessageListener.class,
+			TransactionListener.class, SendCallback.class, CheckForbiddenHook.class, SendMessageHook.class,
 			ErrorAcknowledgeHandler.class };
 
 	private static final Map<String, Object> BEANS_CACHE = new ConcurrentHashMap<>();

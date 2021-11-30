@@ -48,11 +48,9 @@ import org.springframework.util.CollectionUtils;
 /**
  * @author <a href="mailto:fangjian0423@gmail.com">Jim</a>
  */
-public class RocketMQMessageSource extends AbstractMessageSource<Object>
-		implements DisposableBean, Lifecycle {
+public class RocketMQMessageSource extends AbstractMessageSource<Object> implements DisposableBean, Lifecycle {
 
-	private final static Logger log = LoggerFactory
-			.getLogger(RocketMQMessageSource.class);
+	private final static Logger log = LoggerFactory.getLogger(RocketMQMessageSource.class);
 
 	private DefaultLitePullConsumer consumer;
 
@@ -71,8 +69,8 @@ public class RocketMQMessageSource extends AbstractMessageSource<Object>
 	public RocketMQMessageSource(String name,
 			ExtendedConsumerProperties<RocketMQConsumerProperties> extendedConsumerProperties) {
 		this.topic = name;
-		this.messageSelector = RocketMQUtils.getMessageSelector(
-				extendedConsumerProperties.getExtension().getSubscription());
+		this.messageSelector = RocketMQUtils
+				.getMessageSelector(extendedConsumerProperties.getExtension().getSubscription());
 		this.extendedConsumerProperties = extendedConsumerProperties;
 
 	}
@@ -82,20 +80,18 @@ public class RocketMQMessageSource extends AbstractMessageSource<Object>
 		Instrumentation instrumentation = new Instrumentation(topic, this);
 		try {
 			if (this.isRunning()) {
-				throw new IllegalStateException(
-						"pull consumer already running. " + this.toString());
+				throw new IllegalStateException("pull consumer already running. " + this.toString());
 			}
-			this.consumer = RocketMQConsumerFactory
-					.initPullConsumer(extendedConsumerProperties);
+			this.consumer = RocketMQConsumerFactory.initPullConsumer(extendedConsumerProperties);
 			// This parameter must be 1, otherwise doReceive cannot be handled singly.
 			// this.consumer.setPullBatchSize(1);
 			this.consumer.subscribe(topic, messageSelector);
 			this.consumer.setAutoCommit(false);
-			//register TopicMessageQueueChangeListener for messageQueuesForTopic
+			// register TopicMessageQueueChangeListener for messageQueuesForTopic
 			consumer.registerTopicMessageQueueChangeListener(topic, messageQueuesForTopic::put);
 			this.consumer.start();
-			//Initialize messageQueuesForTopic immediately
-			messageQueuesForTopic.put(topic,consumer.fetchMessageQueues(topic));
+			// Initialize messageQueuesForTopic immediately
+			messageQueuesForTopic.put(topic, consumer.fetchMessageQueues(topic));
 			instrumentation.markStartedSuccessfully();
 		}
 		catch (MQClientException e) {
@@ -108,9 +104,9 @@ public class RocketMQMessageSource extends AbstractMessageSource<Object>
 		this.running = true;
 	}
 
-	private MessageQueue acquireCurrentMessageQueue(String topic,int queueId) {
-		Collection<MessageQueue> messageQueueSet =  messageQueuesForTopic.get(topic);
-		if(CollectionUtils.isEmpty(messageQueueSet)){
+	private MessageQueue acquireCurrentMessageQueue(String topic, int queueId) {
+		Collection<MessageQueue> messageQueueSet = messageQueuesForTopic.get(topic);
+		if (CollectionUtils.isEmpty(messageQueueSet)) {
 			return null;
 		}
 		for (MessageQueue messageQueue : messageQueueSet) {
@@ -151,17 +147,13 @@ public class RocketMQMessageSource extends AbstractMessageSource<Object>
 		if (null == messageExt) {
 			return null;
 		}
-		MessageQueue messageQueue = this.acquireCurrentMessageQueue(messageExt.getTopic(),messageExt.getQueueId());
+		MessageQueue messageQueue = this.acquireCurrentMessageQueue(messageExt.getTopic(), messageExt.getQueueId());
 		if (messageQueue == null) {
-			throw new IllegalArgumentException(
-					"The message queue is not in assigned list");
+			throw new IllegalArgumentException("The message queue is not in assigned list");
 		}
-		Message message = RocketMQMessageConverterSupport
-				.convertMessage2Spring(messageExt);
-		return MessageBuilder.fromMessage(message)
-				.setHeader(IntegrationMessageHeaderAccessor.ACKNOWLEDGMENT_CALLBACK,
-						new RocketMQAckCallback(this.consumer,messageQueue, messageExt))
-				.build();
+		Message message = RocketMQMessageConverterSupport.convertMessage2Spring(messageExt);
+		return MessageBuilder.fromMessage(message).setHeader(IntegrationMessageHeaderAccessor.ACKNOWLEDGMENT_CALLBACK,
+				new RocketMQAckCallback(this.consumer, messageQueue, messageExt)).build();
 	}
 
 	@Override

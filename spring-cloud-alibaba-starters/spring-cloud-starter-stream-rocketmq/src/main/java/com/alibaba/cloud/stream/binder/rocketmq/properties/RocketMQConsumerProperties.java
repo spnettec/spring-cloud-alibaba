@@ -94,8 +94,7 @@ public class RocketMQConsumerProperties extends RocketMQCommonProperties {
 	 * Implying Seventeen twelve and 01 seconds on December 23, 2013 year<br>
 	 * Default backtracking consumption time Half an hour ago.
 	 */
-	private String consumeTimestamp = UtilAll
-			.timeMillisToHumanString3(System.currentTimeMillis() - (1000 * 60 * 30));
+	private String consumeTimestamp = UtilAll.timeMillisToHumanString3(System.currentTimeMillis() - (1000 * 60 * 30));
 
 	/**
 	 * Flow control threshold on queue level, each message queue will cache at most 1000
@@ -165,8 +164,7 @@ public class RocketMQConsumerProperties extends RocketMQCommonProperties {
 		return pullTimeDelayMillsWhenException;
 	}
 
-	public RocketMQConsumerProperties setPullTimeDelayMillsWhenException(
-			long pullTimeDelayMillsWhenException) {
+	public RocketMQConsumerProperties setPullTimeDelayMillsWhenException(long pullTimeDelayMillsWhenException) {
 		this.pullTimeDelayMillsWhenException = pullTimeDelayMillsWhenException;
 		return this;
 	}
@@ -175,8 +173,7 @@ public class RocketMQConsumerProperties extends RocketMQCommonProperties {
 		return consumeFromWhere;
 	}
 
-	public RocketMQConsumerProperties setConsumeFromWhere(
-			ConsumeFromWhere consumeFromWhere) {
+	public RocketMQConsumerProperties setConsumeFromWhere(ConsumeFromWhere consumeFromWhere) {
 		this.consumeFromWhere = consumeFromWhere;
 		return this;
 	}
@@ -194,8 +191,7 @@ public class RocketMQConsumerProperties extends RocketMQCommonProperties {
 		return pullThresholdForQueue;
 	}
 
-	public RocketMQConsumerProperties setPullThresholdForQueue(
-			int pullThresholdForQueue) {
+	public RocketMQConsumerProperties setPullThresholdForQueue(int pullThresholdForQueue) {
 		this.pullThresholdForQueue = pullThresholdForQueue;
 		return this;
 	}
@@ -204,8 +200,7 @@ public class RocketMQConsumerProperties extends RocketMQCommonProperties {
 		return pullThresholdSizeForQueue;
 	}
 
-	public RocketMQConsumerProperties setPullThresholdSizeForQueue(
-			int pullThresholdSizeForQueue) {
+	public RocketMQConsumerProperties setPullThresholdSizeForQueue(int pullThresholdSizeForQueue) {
 		this.pullThresholdSizeForQueue = pullThresholdSizeForQueue;
 		return this;
 	}
@@ -421,8 +416,7 @@ public class RocketMQConsumerProperties extends RocketMQCommonProperties {
 			return topicMetadataCheckIntervalMillis;
 		}
 
-		public void setTopicMetadataCheckIntervalMillis(
-				long topicMetadataCheckIntervalMillis) {
+		public void setTopicMetadataCheckIntervalMillis(long topicMetadataCheckIntervalMillis) {
 			this.topicMetadataCheckIntervalMillis = topicMetadataCheckIntervalMillis;
 		}
 
@@ -430,8 +424,7 @@ public class RocketMQConsumerProperties extends RocketMQCommonProperties {
 			return consumerTimeoutMillisWhenSuspend;
 		}
 
-		public void setConsumerTimeoutMillisWhenSuspend(
-				long consumerTimeoutMillisWhenSuspend) {
+		public void setConsumerTimeoutMillisWhenSuspend(long consumerTimeoutMillisWhenSuspend) {
 			this.consumerTimeoutMillisWhenSuspend = consumerTimeoutMillisWhenSuspend;
 		}
 

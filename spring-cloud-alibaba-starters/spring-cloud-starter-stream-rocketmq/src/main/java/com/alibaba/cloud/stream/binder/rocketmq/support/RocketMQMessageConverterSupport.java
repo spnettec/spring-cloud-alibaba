@@ -43,10 +43,9 @@ public final class RocketMQMessageConverterSupport {
 	private RocketMQMessageConverterSupport() {
 	}
 
-	private static final CompositeMessageConverter MESSAGE_CONVERTER = RocketMQBeanContainerCache
-			.getBean(RocketMQMessageConverter.DEFAULT_NAME,
-					CompositeMessageConverter.class,
-					new RocketMQMessageConverter().getMessageConverter());
+	private static final CompositeMessageConverter MESSAGE_CONVERTER = RocketMQBeanContainerCache.getBean(
+			RocketMQMessageConverter.DEFAULT_NAME, CompositeMessageConverter.class,
+			new RocketMQMessageConverter().getMessageConverter());
 
 	public static Message convertMessage2Spring(MessageExt message) {
 		MessageBuilder messageBuilder = MessageBuilder.withPayload(message.getBody())
@@ -54,15 +53,12 @@ public final class RocketMQMessageConverterSupport {
 				.setHeader(toRocketHeaderKey(Headers.TAGS), message.getTags())
 				.setHeader(toRocketHeaderKey(Headers.TOPIC), message.getTopic())
 				.setHeader(toRocketHeaderKey(Headers.MESSAGE_ID), message.getMsgId())
-				.setHeader(toRocketHeaderKey(Headers.BORN_TIMESTAMP),
-						message.getBornTimestamp())
-				.setHeader(toRocketHeaderKey(Headers.BORN_HOST),
-						message.getBornHostString())
+				.setHeader(toRocketHeaderKey(Headers.BORN_TIMESTAMP), message.getBornTimestamp())
+				.setHeader(toRocketHeaderKey(Headers.BORN_HOST), message.getBornHostString())
 				.setHeader(toRocketHeaderKey(Headers.FLAG), message.getFlag())
 				.setHeader(toRocketHeaderKey(Headers.QUEUE_ID), message.getQueueId())
 				.setHeader(toRocketHeaderKey(Headers.SYS_FLAG), message.getSysFlag())
-				.setHeader(toRocketHeaderKey(Headers.TRANSACTION_ID),
-						message.getTransactionId());
+				.setHeader(toRocketHeaderKey(Headers.TRANSACTION_ID), message.getTransactionId());
 		addUserProperties(message.getProperties(), messageBuilder);
 		return messageBuilder.build();
 	}
@@ -71,12 +67,10 @@ public final class RocketMQMessageConverterSupport {
 		return "ROCKET_" + rawKey;
 	}
 
-	private static void addUserProperties(Map<String, String> properties,
-			MessageBuilder messageBuilder) {
+	private static void addUserProperties(Map<String, String> properties, MessageBuilder messageBuilder) {
 		if (!CollectionUtils.isEmpty(properties)) {
 			properties.forEach((key, val) -> {
-				if (!MessageConst.STRING_HASH_SET.contains(key)
-						&& !MessageHeaders.ID.equals(key)
+				if (!MessageConst.STRING_HASH_SET.contains(key) && !MessageHeaders.ID.equals(key)
 						&& !MessageHeaders.TIMESTAMP.equals(key)) {
 					messageBuilder.setHeader(key, val);
 				}
@@ -84,10 +78,8 @@ public final class RocketMQMessageConverterSupport {
 		}
 	}
 
-	public static org.apache.rocketmq.common.message.Message convertMessage2MQ(
-			String destination, Message<?> source) {
-		Message<?> message = MESSAGE_CONVERTER.toMessage(source.getPayload(),
-				source.getHeaders());
+	public static org.apache.rocketmq.common.message.Message convertMessage2MQ(String destination, Message<?> source) {
+		Message<?> message = MESSAGE_CONVERTER.toMessage(source.getPayload(), source.getHeaders());
 		assert message != null;
 		MessageBuilder<?> builder = MessageBuilder.fromMessage(message);
 		builder.setHeaderIfAbsent(MessageHeaders.CONTENT_TYPE, MimeTypeUtils.TEXT_PLAIN);
@@ -95,8 +87,7 @@ public final class RocketMQMessageConverterSupport {
 		return doConvert(destination, message);
 	}
 
-	private static org.apache.rocketmq.common.message.Message doConvert(String topic,
-			Message<?> message) {
+	private static org.apache.rocketmq.common.message.Message doConvert(String topic, Message<?> message) {
 		Charset charset = Charset.defaultCharset();
 		Object payloadObj = message.getPayload();
 		byte[] payloads;
@@ -108,13 +99,11 @@ public final class RocketMQMessageConverterSupport {
 				payloads = (byte[]) message.getPayload();
 			}
 			else {
-				String jsonObj = (String) MESSAGE_CONVERTER.fromMessage(message,
-						payloadObj.getClass());
+				String jsonObj = (String) MESSAGE_CONVERTER.fromMessage(message, payloadObj.getClass());
 				if (null == jsonObj) {
-					throw new RuntimeException(String.format(
-							"empty after conversion [messageConverter:%s,payloadClass:%s,payloadObj:%s]",
-							MESSAGE_CONVERTER.getClass(), payloadObj.getClass(),
-							payloadObj));
+					throw new RuntimeException(
+							String.format("empty after conversion [messageConverter:%s,payloadClass:%s,payloadObj:%s]",
+									MESSAGE_CONVERTER.getClass(), payloadObj.getClass(), payloadObj));
 				}
 				payloads = jsonObj.getBytes(charset);
 			}
@@ -125,38 +114,33 @@ public final class RocketMQMessageConverterSupport {
 		return getAndWrapMessage(topic, message.getHeaders(), payloads);
 	}
 
-	private static org.apache.rocketmq.common.message.Message getAndWrapMessage(
-			String topic, MessageHeaders headers, byte[] payloads) {
+	private static org.apache.rocketmq.common.message.Message getAndWrapMessage(String topic, MessageHeaders headers,
+			byte[] payloads) {
 		if (topic == null || topic.length() < 1) {
 			return null;
 		}
 		if (payloads == null || payloads.length < 1) {
 			return null;
 		}
-		org.apache.rocketmq.common.message.Message rocketMsg = new org.apache.rocketmq.common.message.Message(
-				topic, payloads);
+		org.apache.rocketmq.common.message.Message rocketMsg = new org.apache.rocketmq.common.message.Message(topic,
+				payloads);
 		if (Objects.nonNull(headers) && !headers.isEmpty()) {
-			Object tag = headers.getOrDefault(Headers.TAGS,
-					headers.get(toRocketHeaderKey(Headers.TAGS)));
+			Object tag = headers.getOrDefault(Headers.TAGS, headers.get(toRocketHeaderKey(Headers.TAGS)));
 			if (!StringUtils.isEmpty(tag)) {
 				rocketMsg.setTags(String.valueOf(tag));
 			}
 
-			Object keys = headers.getOrDefault(Headers.KEYS,
-					headers.get(toRocketHeaderKey(Headers.KEYS)));
+			Object keys = headers.getOrDefault(Headers.KEYS, headers.get(toRocketHeaderKey(Headers.KEYS)));
 			if (!StringUtils.isEmpty(keys)) {
 				rocketMsg.setKeys(keys.toString());
 			}
-			Object flagObj = headers.getOrDefault(Headers.FLAG,
-					headers.get(toRocketHeaderKey(Headers.FLAG)));
+			Object flagObj = headers.getOrDefault(Headers.FLAG, headers.get(toRocketHeaderKey(Headers.FLAG)));
 			int flag = 0;
 			int delayLevel = 0;
 			try {
 				flagObj = flagObj == null ? 0 : flagObj;
-				Object delayLevelObj = headers.getOrDefault(
-						RocketMQConst.PROPERTY_DELAY_TIME_LEVEL,
-						headers.get(toRocketHeaderKey(
-								RocketMQConst.PROPERTY_DELAY_TIME_LEVEL)));
+				Object delayLevelObj = headers.getOrDefault(RocketMQConst.PROPERTY_DELAY_TIME_LEVEL,
+						headers.get(toRocketHeaderKey(RocketMQConst.PROPERTY_DELAY_TIME_LEVEL)));
 				delayLevelObj = delayLevelObj == null ? 0 : delayLevelObj;
 				delayLevel = Integer.parseInt(String.valueOf(delayLevelObj));
 				flag = Integer.parseInt(String.valueOf(flagObj));
@@ -167,16 +151,12 @@ public final class RocketMQMessageConverterSupport {
 				rocketMsg.setDelayTimeLevel(delayLevel);
 			}
 			rocketMsg.setFlag(flag);
-			Object waitStoreMsgOkObj = headers
-					.getOrDefault(RocketMQConst.PROPERTY_WAIT_STORE_MSG_OK, "true");
-			rocketMsg.setWaitStoreMsgOK(
-					Boolean.parseBoolean(String.valueOf(waitStoreMsgOkObj)));
-			headers.entrySet().stream()
-					.filter(entry -> !Objects.equals(entry.getKey(), Headers.FLAG))
+			Object waitStoreMsgOkObj = headers.getOrDefault(RocketMQConst.PROPERTY_WAIT_STORE_MSG_OK, "true");
+			rocketMsg.setWaitStoreMsgOK(Boolean.parseBoolean(String.valueOf(waitStoreMsgOkObj)));
+			headers.entrySet().stream().filter(entry -> !Objects.equals(entry.getKey(), Headers.FLAG))
 					.forEach(entry -> {
 						if (!MessageConst.STRING_HASH_SET.contains(entry.getKey())) {
-							rocketMsg.putUserProperty(entry.getKey(),
-									String.valueOf(entry.getValue()));
+							rocketMsg.putUserProperty(entry.getKey(), String.valueOf(entry.getValue()));
 						}
 					});
 

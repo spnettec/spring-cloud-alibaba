@@ -24,8 +24,7 @@ import org.springframework.cloud.stream.binder.BinderSpecificPropertiesProvider;
  *
  * @author <a href="mailto:fangjian0423@gmail.com">Jim</a>
  */
-public class RocketMQSpecificPropertiesProvider
-		implements BinderSpecificPropertiesProvider {
+public class RocketMQSpecificPropertiesProvider implements BinderSpecificPropertiesProvider {
 
 	/**
 	 * Consumer specific binding properties. @see {@link RocketMQConsumerProperties}.

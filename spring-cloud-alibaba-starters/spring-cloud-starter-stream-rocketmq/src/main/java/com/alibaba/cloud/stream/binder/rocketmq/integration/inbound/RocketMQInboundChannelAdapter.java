@@ -50,11 +50,9 @@ import org.springframework.util.CollectionUtils;
 /**
  * @author <a href="mailto:fangjian0423@gmail.com">Jim</a>
  */
-public class RocketMQInboundChannelAdapter extends MessageProducerSupport
-		implements OrderlyShutdownCapable {
+public class RocketMQInboundChannelAdapter extends MessageProducerSupport implements OrderlyShutdownCapable {
 
-	private static final Logger log = LoggerFactory
-			.getLogger(RocketMQInboundChannelAdapter.class);
+	private static final Logger log = LoggerFactory.getLogger(RocketMQInboundChannelAdapter.class);
 
 	private RetryTemplate retryTemplate;
 
@@ -87,54 +85,45 @@ public class RocketMQInboundChannelAdapter extends MessageProducerSupport
 								+ "send an error message when retries are exhausted");
 				this.retryTemplate.registerListener(new RetryListener() {
 					@Override
-					public <T, E extends Throwable> boolean open(RetryContext context,
-							RetryCallback<T, E> callback) {
+					public <T, E extends Throwable> boolean open(RetryContext context, RetryCallback<T, E> callback) {
 						return true;
 					}
 
 					@Override
-					public <T, E extends Throwable> void close(RetryContext context,
-							RetryCallback<T, E> callback, Throwable throwable) {
+					public <T, E extends Throwable> void close(RetryContext context, RetryCallback<T, E> callback,
+							Throwable throwable) {
 					}
 
 					@Override
-					public <T, E extends Throwable> void onError(RetryContext context,
-							RetryCallback<T, E> callback, Throwable throwable) {
+					public <T, E extends Throwable> void onError(RetryContext context, RetryCallback<T, E> callback,
+							Throwable throwable) {
 					}
 				});
 			}
-			pushConsumer = RocketMQConsumerFactory
-					.initPushConsumer(extendedConsumerProperties);
+			pushConsumer = RocketMQConsumerFactory.initPushConsumer(extendedConsumerProperties);
 			// prepare register consumer message listener,the next step is to be
 			// compatible with a custom MessageListener.
 			if (extendedConsumerProperties.getExtension().getPush().getOrderly()) {
 				pushConsumer.registerMessageListener((MessageListenerOrderly) (msgs,
-						context) -> RocketMQInboundChannelAdapter.this
-								.consumeMessage(msgs, () -> {
-									context.setSuspendCurrentQueueTimeMillis(
-											extendedConsumerProperties.getExtension()
-													.getPush()
-													.getSuspendCurrentQueueTimeMillis());
-									return ConsumeOrderlyStatus.SUSPEND_CURRENT_QUEUE_A_MOMENT;
-								}, () -> ConsumeOrderlyStatus.SUCCESS));
+						context) -> RocketMQInboundChannelAdapter.this.consumeMessage(msgs, () -> {
+							context.setSuspendCurrentQueueTimeMillis(extendedConsumerProperties.getExtension().getPush()
+									.getSuspendCurrentQueueTimeMillis());
+							return ConsumeOrderlyStatus.SUSPEND_CURRENT_QUEUE_A_MOMENT;
+						}, () -> ConsumeOrderlyStatus.SUCCESS));
 			}
 			else {
 				pushConsumer.registerMessageListener((MessageListenerConcurrently) (msgs,
-						context) -> RocketMQInboundChannelAdapter.this
-								.consumeMessage(msgs, () -> {
-									context.setDelayLevelWhenNextConsume(
-											extendedConsumerProperties.getExtension()
-													.getPush()
-													.getDelayLevelWhenNextConsume());
-									return ConsumeConcurrentlyStatus.RECONSUME_LATER;
-								}, () -> ConsumeConcurrentlyStatus.CONSUME_SUCCESS));
+						context) -> RocketMQInboundChannelAdapter.this.consumeMessage(msgs, () -> {
+							context.setDelayLevelWhenNextConsume(
+									extendedConsumerProperties.getExtension().getPush().getDelayLevelWhenNextConsume());
+							return ConsumeConcurrentlyStatus.RECONSUME_LATER;
+						}, () -> ConsumeConcurrentlyStatus.CONSUME_SUCCESS));
 			}
 		}
 		catch (Exception e) {
 			log.error("DefaultMQPushConsumer init failed, Caused by " + e.getMessage());
-			throw new MessagingException(MessageBuilder.withPayload(
-					"DefaultMQPushConsumer init failed, Caused by " + e.getMessage())
-					.build(), e);
+			throw new MessagingException(MessageBuilder
+					.withPayload("DefaultMQPushConsumer init failed, Caused by " + e.getMessage()).build(), e);
 		}
 	}
 
@@ -148,16 +137,13 @@ public class RocketMQInboundChannelAdapter extends MessageProducerSupport
 	 * @param <R> object
 	 * @return R
 	 */
-	private <R> R consumeMessage(List<MessageExt> messageExtList,
-			Supplier<R> failSupplier, Supplier<R> sucSupplier) {
+	private <R> R consumeMessage(List<MessageExt> messageExtList, Supplier<R> failSupplier, Supplier<R> sucSupplier) {
 		if (CollectionUtils.isEmpty(messageExtList)) {
-			throw new MessagingException(
-					"DefaultMQPushConsumer consuming failed, Caused by messageExtList is empty");
+			throw new MessagingException("DefaultMQPushConsumer consuming failed, Caused by messageExtList is empty");
 		}
 		for (MessageExt messageExt : messageExtList) {
 			try {
-				Message<?> message = RocketMQMessageConverterSupport
-						.convertMessage2Spring(messageExt);
+				Message<?> message = RocketMQMessageConverterSupport.convertMessage2Spring(messageExt);
 				if (this.retryTemplate != null) {
 					this.retryTemplate.execute(context -> {
 						this.sendMessage(message);
@@ -184,18 +170,18 @@ public class RocketMQInboundChannelAdapter extends MessageProducerSupport
 		}
 		Instrumentation instrumentation = new Instrumentation(topic, this);
 		try {
-			pushConsumer.subscribe(topic, RocketMQUtils.getMessageSelector(
-					extendedConsumerProperties.getExtension().getSubscription()));
+			pushConsumer.subscribe(topic,
+					RocketMQUtils.getMessageSelector(extendedConsumerProperties.getExtension().getSubscription()));
 			pushConsumer.start();
 			instrumentation.markStartedSuccessfully();
 		}
 		catch (Exception e) {
 			instrumentation.markStartFailed(e);
 			log.error("DefaultMQPushConsumer init failed, Caused by " + e.getMessage());
-			throw new MessagingException(MessageBuilder.withPayload(
-					"DefaultMQPushConsumer init failed, Caused by " + e.getMessage())
-					.build(), e);
-		}finally {
+			throw new MessagingException(MessageBuilder
+					.withPayload("DefaultMQPushConsumer init failed, Caused by " + e.getMessage()).build(), e);
+		}
+		finally {
 			InstrumentationManager.addHealthInstrumentation(instrumentation);
 		}
 	}

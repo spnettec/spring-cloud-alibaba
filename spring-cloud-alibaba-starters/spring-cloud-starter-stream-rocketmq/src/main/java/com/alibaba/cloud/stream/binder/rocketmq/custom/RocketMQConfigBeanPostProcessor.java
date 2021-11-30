@@ -30,8 +30,7 @@ import org.springframework.beans.factory.config.BeanPostProcessor;
 public class RocketMQConfigBeanPostProcessor implements BeanPostProcessor {
 
 	@Override
-	public Object postProcessAfterInitialization(Object bean, String beanName)
-			throws BeansException {
+	public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
 		Stream.of(RocketMQBeanContainerCache.getClassAry()).forEach(clazz -> {
 			if (clazz.isAssignableFrom(bean.getClass())) {
 				RocketMQBeanContainerCache.putBean(beanName, bean);

@@ -36,8 +36,7 @@ import org.springframework.context.annotation.Configuration;
  * @author <a href="mailto:fangjian0423@gmail.com">Jim</a>
  */
 @Configuration(proxyBeanMethods = false)
-@EnableConfigurationProperties({ RocketMQExtendedBindingProperties.class,
-		RocketMQBinderConfigurationProperties.class })
+@EnableConfigurationProperties({ RocketMQExtendedBindingProperties.class, RocketMQBinderConfigurationProperties.class })
 public class RocketMQBinderAutoConfiguration {
 
 	@Autowired
@@ -59,10 +58,9 @@ public class RocketMQBinderAutoConfiguration {
 	}
 
 	@Bean
-	public RocketMQMessageChannelBinder rocketMQMessageChannelBinder(
-			RocketMQTopicProvisioner provisioningProvider) {
-		return new RocketMQMessageChannelBinder(rocketBinderConfigurationProperties,
-				extendedBindingProperties, provisioningProvider);
+	public RocketMQMessageChannelBinder rocketMQMessageChannelBinder(RocketMQTopicProvisioner provisioningProvider) {
+		return new RocketMQMessageChannelBinder(rocketBinderConfigurationProperties, extendedBindingProperties,
+				provisioningProvider);
 	}
 
 }

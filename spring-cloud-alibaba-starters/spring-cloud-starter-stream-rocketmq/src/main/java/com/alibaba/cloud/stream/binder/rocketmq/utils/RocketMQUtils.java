@@ -36,8 +36,7 @@ public final class RocketMQUtils {
 	}
 
 	public static <T extends RocketMQCommonProperties> T mergeRocketMQProperties(
-			RocketMQBinderConfigurationProperties binderConfigurationProperties,
-			T mqProperties) {
+			RocketMQBinderConfigurationProperties binderConfigurationProperties, T mqProperties) {
 		if (null == binderConfigurationProperties || mqProperties == null) {
 			return mqProperties;
 		}
@@ -51,8 +50,7 @@ public final class RocketMQUtils {
 			mqProperties.setAccessKey(binderConfigurationProperties.getAccessKey());
 		}
 		if (StringUtils.isEmpty(mqProperties.getAccessChannel())) {
-			mqProperties
-					.setAccessChannel(binderConfigurationProperties.getAccessChannel());
+			mqProperties.setAccessChannel(binderConfigurationProperties.getAccessChannel());
 		}
 		if (StringUtils.isEmpty(mqProperties.getNamespace())) {
 			mqProperties.setNamespace(binderConfigurationProperties.getNamespace());
@@ -61,8 +59,7 @@ public final class RocketMQUtils {
 			mqProperties.setGroup(binderConfigurationProperties.getGroup());
 		}
 		if (StringUtils.isEmpty(mqProperties.getCustomizedTraceTopic())) {
-			mqProperties.setCustomizedTraceTopic(
-					binderConfigurationProperties.getCustomizedTraceTopic());
+			mqProperties.setCustomizedTraceTopic(binderConfigurationProperties.getCustomizedTraceTopic());
 		}
 		if (StringUtils.isEmpty(mqProperties.getUnitName())) {
 			mqProperties.setUnitName(binderConfigurationProperties.getUnitName());
@@ -75,8 +72,7 @@ public final class RocketMQUtils {
 		String separator = "|";
 		StringBuilder instanceName = new StringBuilder();
 		if (null != rpcHook) {
-			SessionCredentials sessionCredentials = ((AclClientRPCHook) rpcHook)
-					.getSessionCredentials();
+			SessionCredentials sessionCredentials = ((AclClientRPCHook) rpcHook).getSessionCredentials();
 			instanceName.append(sessionCredentials.getAccessKey()).append(separator)
 					.append(sessionCredentials.getSecretKey()).append(separator);
 		}

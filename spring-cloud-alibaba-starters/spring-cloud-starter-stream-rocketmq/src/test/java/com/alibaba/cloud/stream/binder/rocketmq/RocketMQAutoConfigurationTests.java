@@ -32,10 +32,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class RocketMQAutoConfigurationTests {
 
 	private ApplicationContextRunner contextRunner = new ApplicationContextRunner()
-			.withConfiguration(
-					AutoConfigurations.of(RocketMQBinderAutoConfiguration.class))
-			.withPropertyValues(
-					"spring.cloud.stream.rocketmq.binder.name-server=127.0.0.1:9876,127.0.0.1:9877",
+			.withConfiguration(AutoConfigurations.of(RocketMQBinderAutoConfiguration.class))
+			.withPropertyValues("spring.cloud.stream.rocketmq.binder.name-server=127.0.0.1:9876,127.0.0.1:9877",
 					"spring.cloud.stream.bindings.output.destination=TopicOrderTest",
 					"spring.cloud.stream.bindings.output.content-type=application/json",
 
@@ -55,16 +53,12 @@ public class RocketMQAutoConfigurationTests {
 		this.contextRunner.run(context -> {
 			RocketMQBinderConfigurationProperties binderConfigurationProperties = context
 					.getBean(RocketMQBinderConfigurationProperties.class);
-			assertThat(binderConfigurationProperties.getNameServer())
-					.isEqualTo("127.0.0.1:9876,127.0.0.1:9877");
+			assertThat(binderConfigurationProperties.getNameServer()).isEqualTo("127.0.0.1:9876,127.0.0.1:9877");
 			RocketMQExtendedBindingProperties bindingProperties = context
 					.getBean(RocketMQExtendedBindingProperties.class);
-			assertThat(bindingProperties.getExtendedConsumerProperties("input2")
-					.getSubscription()).isEqualTo("tag1");
-			assertThat(bindingProperties.getExtendedConsumerProperties("input2").getPush()
-					.getOrderly()).isFalse();
-			assertThat(bindingProperties.getExtendedConsumerProperties("input1").getPush()
-					.getOrderly()).isTrue();
+			assertThat(bindingProperties.getExtendedConsumerProperties("input2").getSubscription()).isEqualTo("tag1");
+			assertThat(bindingProperties.getExtendedConsumerProperties("input2").getPush().getOrderly()).isFalse();
+			assertThat(bindingProperties.getExtendedConsumerProperties("input1").getPush().getOrderly()).isTrue();
 		});
 	}
 

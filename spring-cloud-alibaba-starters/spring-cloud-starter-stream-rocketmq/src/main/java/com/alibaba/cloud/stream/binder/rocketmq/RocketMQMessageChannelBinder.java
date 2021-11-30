@@ -56,15 +56,13 @@ import org.springframework.util.StringUtils;
  */
 public class RocketMQMessageChannelBinder extends
 		AbstractMessageChannelBinder<ExtendedConsumerProperties<RocketMQConsumerProperties>, ExtendedProducerProperties<RocketMQProducerProperties>, RocketMQTopicProvisioner>
-		implements
-		ExtendedPropertiesBinder<MessageChannel, RocketMQConsumerProperties, RocketMQProducerProperties> {
+		implements ExtendedPropertiesBinder<MessageChannel, RocketMQConsumerProperties, RocketMQProducerProperties> {
 
 	private final RocketMQExtendedBindingProperties extendedBindingProperties;
 
 	private final RocketMQBinderConfigurationProperties binderConfigurationProperties;
 
-	public RocketMQMessageChannelBinder(
-			RocketMQBinderConfigurationProperties binderConfigurationProperties,
+	public RocketMQMessageChannelBinder(RocketMQBinderConfigurationProperties binderConfigurationProperties,
 			RocketMQExtendedBindingProperties extendedBindingProperties,
 			RocketMQTopicProvisioner provisioningProvider) {
 		super(new String[0], provisioningProvider);
@@ -74,17 +72,16 @@ public class RocketMQMessageChannelBinder extends
 
 	@Override
 	protected MessageHandler createProducerMessageHandler(ProducerDestination destination,
-			ExtendedProducerProperties<RocketMQProducerProperties> extendedProducerProperties,
-			MessageChannel channel, MessageChannel errorChannel) throws Exception {
+			ExtendedProducerProperties<RocketMQProducerProperties> extendedProducerProperties, MessageChannel channel,
+			MessageChannel errorChannel) throws Exception {
 		if (!extendedProducerProperties.getExtension().getEnabled()) {
-			throw new RuntimeException("Binding for channel " + destination.getName()
-					+ " has been disabled, message can't be delivered");
+			throw new RuntimeException(
+					"Binding for channel " + destination.getName() + " has been disabled, message can't be delivered");
 		}
 		RocketMQProducerProperties mqProducerProperties = RocketMQUtils
-				.mergeRocketMQProperties(binderConfigurationProperties,
-						extendedProducerProperties.getExtension());
-		RocketMQProducerMessageHandler messageHandler = new RocketMQProducerMessageHandler(
-				destination, extendedProducerProperties, mqProducerProperties);
+				.mergeRocketMQProperties(binderConfigurationProperties, extendedProducerProperties.getExtension());
+		RocketMQProducerMessageHandler messageHandler = new RocketMQProducerMessageHandler(destination,
+				extendedProducerProperties, mqProducerProperties);
 		messageHandler.setApplicationContext(this.getApplicationContext());
 		if (errorChannel != null) {
 			messageHandler.setSendFailureChannel(errorChannel);
@@ -102,33 +99,27 @@ public class RocketMQMessageChannelBinder extends
 
 	@Override
 	protected MessageHandler createProducerMessageHandler(ProducerDestination destination,
-			ExtendedProducerProperties<RocketMQProducerProperties> producerProperties,
-			MessageChannel errorChannel) throws Exception {
-		throw new UnsupportedOperationException(
-				"The abstract binder should not call this method");
+			ExtendedProducerProperties<RocketMQProducerProperties> producerProperties, MessageChannel errorChannel)
+			throws Exception {
+		throw new UnsupportedOperationException("The abstract binder should not call this method");
 	}
 
 	@Override
-	protected MessageProducer createConsumerEndpoint(ConsumerDestination destination,
-			String group,
-			ExtendedConsumerProperties<RocketMQConsumerProperties> extendedConsumerProperties)
-			throws Exception {
+	protected MessageProducer createConsumerEndpoint(ConsumerDestination destination, String group,
+			ExtendedConsumerProperties<RocketMQConsumerProperties> extendedConsumerProperties) throws Exception {
 		// todo support anymous consumer
 		if (StringUtils.isEmpty(group)) {
-			throw new RuntimeException(
-					"'group must be configured for channel " + destination.getName());
+			throw new RuntimeException("'group must be configured for channel " + destination.getName());
 		}
-		RocketMQUtils.mergeRocketMQProperties(binderConfigurationProperties,
-				extendedConsumerProperties.getExtension());
+		RocketMQUtils.mergeRocketMQProperties(binderConfigurationProperties, extendedConsumerProperties.getExtension());
 		extendedConsumerProperties.getExtension().setGroup(group);
 
-		RocketMQInboundChannelAdapter inboundChannelAdapter = new RocketMQInboundChannelAdapter(
-				destination.getName(), extendedConsumerProperties);
-		ErrorInfrastructure errorInfrastructure = registerErrorInfrastructure(destination,
-				group, extendedConsumerProperties);
+		RocketMQInboundChannelAdapter inboundChannelAdapter = new RocketMQInboundChannelAdapter(destination.getName(),
+				extendedConsumerProperties);
+		ErrorInfrastructure errorInfrastructure = registerErrorInfrastructure(destination, group,
+				extendedConsumerProperties);
 		if (extendedConsumerProperties.getMaxAttempts() > 1) {
-			inboundChannelAdapter
-					.setRetryTemplate(buildRetryTemplate(extendedConsumerProperties));
+			inboundChannelAdapter.setRetryTemplate(buildRetryTemplate(extendedConsumerProperties));
 			inboundChannelAdapter.setRecoveryCallback(errorInfrastructure.getRecoverer());
 		}
 		else {
@@ -138,36 +129,28 @@ public class RocketMQMessageChannelBinder extends
 	}
 
 	@Override
-	protected PolledConsumerResources createPolledConsumerResources(String name,
-			String group, ConsumerDestination destination,
+	protected PolledConsumerResources createPolledConsumerResources(String name, String group,
+			ConsumerDestination destination,
 			ExtendedConsumerProperties<RocketMQConsumerProperties> extendedConsumerProperties) {
-		RocketMQUtils.mergeRocketMQProperties(binderConfigurationProperties,
-				extendedConsumerProperties.getExtension());
+		RocketMQUtils.mergeRocketMQProperties(binderConfigurationProperties, extendedConsumerProperties.getExtension());
 		extendedConsumerProperties.getExtension().setGroup(group);
-		RocketMQMessageSource messageSource = new RocketMQMessageSource(name,
-				extendedConsumerProperties);
-		return new PolledConsumerResources(messageSource, registerErrorInfrastructure(
-				destination, group, extendedConsumerProperties, true));
+		RocketMQMessageSource messageSource = new RocketMQMessageSource(name, extendedConsumerProperties);
+		return new PolledConsumerResources(messageSource,
+				registerErrorInfrastructure(destination, group, extendedConsumerProperties, true));
 	}
 
 	@Override
-	protected MessageHandler getPolledConsumerErrorMessageHandler(
-			ConsumerDestination destination, String group,
+	protected MessageHandler getPolledConsumerErrorMessageHandler(ConsumerDestination destination, String group,
 			ExtendedConsumerProperties<RocketMQConsumerProperties> properties) {
 		return message -> {
 			if (message.getPayload() instanceof MessagingException) {
 				AcknowledgmentCallback ack = StaticMessageHeaderAccessor
-						.getAcknowledgmentCallback(
-								((MessagingException) message.getPayload())
-										.getFailedMessage());
+						.getAcknowledgmentCallback(((MessagingException) message.getPayload()).getFailedMessage());
 				if (ack != null) {
 					ErrorAcknowledgeHandler handler = RocketMQBeanContainerCache.getBean(
-							properties.getExtension().getPull().getErrAcknowledge(),
-							ErrorAcknowledgeHandler.class,
+							properties.getExtension().getPull().getErrAcknowledge(), ErrorAcknowledgeHandler.class,
 							new DefaultErrorAcknowledgeHandler());
-					ack.acknowledge(
-							handler.handler(((MessagingException) message.getPayload())
-									.getFailedMessage()));
+					ack.acknowledge(handler.handler(((MessagingException) message.getPayload()).getFailedMessage()));
 				}
 			}
 		};
