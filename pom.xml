@@ -8,7 +8,7 @@
     <parent>
         <groupId>org.springframework.cloud</groupId>
         <artifactId>spring-cloud-build</artifactId>
-        <version>3.0.4</version>
+        <version>3.1.0</version>
         <relativePath/>
     </parent>
 
@@ -80,12 +80,12 @@
 
     <properties>
         <!-- Project revision -->
-        <revision>2.2.6.B</revision>
-        <nacos.version>2.0.3.B</nacos.version>
-        <spring-boot.version>2.5.6</spring-boot.version>
+        <revision>2.2.7.B</revision>
+        <nacos.version>2.1.0.B</nacos.version>
+        <spring-boot.version>2.6.1</spring-boot.version>
 
         <!-- Spring Cloud -->
-        <spring.cloud.version>2020.0.4</spring.cloud.version>
+        <spring.cloud.version>2021.0.0</spring.cloud.version>
 
         <!-- Apache Dubbo -->
         <dubbo.version>2.7.13</dubbo.version>
