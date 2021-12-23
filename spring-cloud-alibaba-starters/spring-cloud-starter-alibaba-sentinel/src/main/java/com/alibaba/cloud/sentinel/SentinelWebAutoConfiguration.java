@@ -49,8 +49,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @EnableConfigurationProperties(SentinelProperties.class)
 public class SentinelWebAutoConfiguration implements WebMvcConfigurer {
 
-	private static final Logger log = LoggerFactory
-			.getLogger(SentinelWebAutoConfiguration.class);
+	private static final Logger log = LoggerFactory.getLogger(SentinelWebAutoConfiguration.class);
 
 	@Autowired
 	private SentinelProperties properties;
@@ -65,33 +64,28 @@ public class SentinelWebAutoConfiguration implements WebMvcConfigurer {
 	private Optional<RequestOriginParser> requestOriginParserOptional;
 
 	@Bean
-	@ConditionalOnProperty(name = "spring.cloud.sentinel.filter.enabled",
-			matchIfMissing = true)
-	public SentinelWebInterceptor sentinelWebInterceptor(
-			SentinelWebMvcConfig sentinelWebMvcConfig) {
+	@ConditionalOnProperty(name = "spring.cloud.sentinel.filter.enabled", matchIfMissing = true)
+	public SentinelWebInterceptor sentinelWebInterceptor(SentinelWebMvcConfig sentinelWebMvcConfig) {
 		return new SentinelWebInterceptor(sentinelWebMvcConfig);
 	}
 
 	@Bean
-	@ConditionalOnProperty(name = "spring.cloud.sentinel.filter.enabled",
-			matchIfMissing = true)
+	@ConditionalOnProperty(name = "spring.cloud.sentinel.filter.enabled", matchIfMissing = true)
 	public SentinelWebMvcConfig sentinelWebMvcConfig() {
 		SentinelWebMvcConfig sentinelWebMvcConfig = new SentinelWebMvcConfig();
 		sentinelWebMvcConfig.setHttpMethodSpecify(properties.getHttpMethodSpecify());
 		sentinelWebMvcConfig.setWebContextUnify(properties.getWebContextUnify());
 
 		if (blockExceptionHandlerOptional.isPresent()) {
-			blockExceptionHandlerOptional
-					.ifPresent(sentinelWebMvcConfig::setBlockExceptionHandler);
+			blockExceptionHandlerOptional.ifPresent(sentinelWebMvcConfig::setBlockExceptionHandler);
 		}
 		else {
 			if (StringUtils.hasText(properties.getBlockPage())) {
-				sentinelWebMvcConfig.setBlockExceptionHandler(((request, response,
-						e) -> response.sendRedirect(properties.getBlockPage())));
+				sentinelWebMvcConfig.setBlockExceptionHandler(
+						((request, response, e) -> response.sendRedirect(properties.getBlockPage())));
 			}
 			else {
-				sentinelWebMvcConfig
-						.setBlockExceptionHandler(new DefaultBlockExceptionHandler());
+				sentinelWebMvcConfig.setBlockExceptionHandler(new DefaultBlockExceptionHandler());
 			}
 		}
 
@@ -101,8 +95,7 @@ public class SentinelWebAutoConfiguration implements WebMvcConfigurer {
 	}
 
 	@Bean
-	@ConditionalOnProperty(name = "spring.cloud.sentinel.filter.enabled",
-			matchIfMissing = true)
+	@ConditionalOnProperty(name = "spring.cloud.sentinel.filter.enabled", matchIfMissing = true)
 	public SentinelWebMvcConfigurer sentinelWebMvcConfigurer() {
 		return new SentinelWebMvcConfigurer();
 	}
