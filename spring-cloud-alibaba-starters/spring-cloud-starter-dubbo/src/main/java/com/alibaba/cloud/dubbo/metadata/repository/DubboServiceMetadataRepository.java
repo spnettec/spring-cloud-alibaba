@@ -371,7 +371,7 @@ public class DubboServiceMetadataRepository implements SmartInitializingSingleto
 		String ipAddress = hostInfo.getIpAddress();
 		// To use InetUtils to set IP if they are different
 		// issue :
-		// https://github.com/spring-cloud-incubator/spring-cloud-alibaba/issues/589
+		// https://github.com/alibaba/spring-cloud-alibaba/issues/589
 		if (!Objects.equals(url.getHost(), ipAddress)) {
 			actualURL = url.setHost(ipAddress);
 		}
@@ -381,7 +381,7 @@ public class DubboServiceMetadataRepository implements SmartInitializingSingleto
 	public void unexportURL(URL url) {
 		String key = url.getServiceKey();
 		// NPE issue :
-		// https://github.com/spring-cloud-incubator/spring-cloud-alibaba/issues/591
+		// https://github.com/alibaba/spring-cloud-alibaba/issues/591
 		List<URL> urls = allExportedURLs.get(key);
 		if (!isEmpty(urls)) {
 			urls.remove(url);
