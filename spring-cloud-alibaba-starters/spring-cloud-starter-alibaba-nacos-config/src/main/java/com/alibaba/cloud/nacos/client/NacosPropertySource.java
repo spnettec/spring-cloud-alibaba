@@ -55,8 +55,8 @@ public class NacosPropertySource extends MapPropertySource {
 	 */
 	private final boolean isRefreshable;
 
-	NacosPropertySource(String group, String dataId, Map<String, Object> source,
-			Date timestamp, boolean isRefreshable) {
+	NacosPropertySource(String group, String dataId, Map<String, Object> source, Date timestamp,
+			boolean isRefreshable) {
 		super(String.join(NacosConfigProperties.COMMAS, dataId, group), source);
 		this.group = group;
 		this.dataId = dataId;
@@ -64,10 +64,9 @@ public class NacosPropertySource extends MapPropertySource {
 		this.isRefreshable = isRefreshable;
 	}
 
-	NacosPropertySource(List<PropertySource<?>> propertySources, String group,
-                        String dataId, Date timestamp, boolean isRefreshable) {
-		this(group, dataId, getSourceMap(group, dataId, propertySources), timestamp,
-				isRefreshable);
+	NacosPropertySource(List<PropertySource<?>> propertySources, String group, String dataId, Date timestamp,
+			boolean isRefreshable) {
+		this(group, dataId, getSourceMap(group, dataId, propertySources), timestamp, isRefreshable);
 	}
 
 	private static Map<String, Object> getSourceMap(String group, String dataId,
@@ -83,31 +82,34 @@ public class NacosPropertySource extends MapPropertySource {
 			}
 		}
 
-        Map<String, Object> sourceMap = new LinkedHashMap<>();
-        List<PropertySource<?>> otherTypePropertySources = new ArrayList<>();
-        for (PropertySource<?> propertySource : propertySources) {
-            if (propertySource == null) {
-                continue;
-            }
-            if (propertySource instanceof MapPropertySource) {
-                // If the Nacos configuration file uses "---" to separate property name,
-                // propertySources will be multiple documents, and every document is a map.
-                // see org.springframework.boot.env.YamlPropertySourceLoader#load
-                MapPropertySource mapPropertySource = (MapPropertySource) propertySource;
-                Map<String, Object> source = mapPropertySource.getSource();
-                sourceMap.putAll(source);
-            } else {
-                otherTypePropertySources.add(propertySource);
-            }
-        }
+		Map<String, Object> sourceMap = new LinkedHashMap<>();
+		List<PropertySource<?>> otherTypePropertySources = new ArrayList<>();
+		for (PropertySource<?> propertySource : propertySources) {
+			if (propertySource == null) {
+				continue;
+			}
+			if (propertySource instanceof MapPropertySource) {
+				// If the Nacos configuration file uses "---" to separate property name,
+				// propertySources will be multiple documents, and every document is a
+				// map.
+				// see org.springframework.boot.env.YamlPropertySourceLoader#load
+				MapPropertySource mapPropertySource = (MapPropertySource) propertySource;
+				Map<String, Object> source = mapPropertySource.getSource();
+				sourceMap.putAll(source);
+			}
+			else {
+				otherTypePropertySources.add(propertySource);
+			}
+		}
 
-        // Other property sources which is not instanceof MapPropertySource will be put as it is,
-        // and the internal elements cannot be directly retrieved,
-        // so the user needs to implement the retrieval logic by himself
-        if (!otherTypePropertySources.isEmpty()) {
-            sourceMap.put(String.join(NacosConfigProperties.COMMAS, dataId, group), otherTypePropertySources);
-        }
-        return sourceMap;
+		// Other property sources which is not instanceof MapPropertySource will be put as
+		// it is,
+		// and the internal elements cannot be directly retrieved,
+		// so the user needs to implement the retrieval logic by himself
+		if (!otherTypePropertySources.isEmpty()) {
+			sourceMap.put(String.join(NacosConfigProperties.COMMAS, dataId, group), otherTypePropertySources);
+		}
+		return sourceMap;
 	}
 
 	public String getGroup() {
