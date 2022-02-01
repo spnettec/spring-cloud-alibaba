@@ -53,4 +53,24 @@ public class SeataFeignClientAutoConfiguration {
 		return SeataFeignBuilder.builder(beanFactory);
 	}
 
+	@Configuration(proxyBeanMethods = false)
+	protected static class FeignBeanPostProcessorConfiguration {
+
+		@Bean
+		SeataBeanPostProcessor seataBeanPostProcessor(SeataFeignObjectWrapper seataFeignObjectWrapper) {
+			return new SeataBeanPostProcessor(seataFeignObjectWrapper);
+		}
+
+		@Bean
+		SeataContextBeanPostProcessor seataContextBeanPostProcessor(BeanFactory beanFactory) {
+			return new SeataContextBeanPostProcessor(beanFactory);
+		}
+
+		@Bean
+		SeataFeignObjectWrapper seataFeignObjectWrapper(BeanFactory beanFactory) {
+			return new SeataFeignObjectWrapper(beanFactory);
+		}
+
+	}
+
 }

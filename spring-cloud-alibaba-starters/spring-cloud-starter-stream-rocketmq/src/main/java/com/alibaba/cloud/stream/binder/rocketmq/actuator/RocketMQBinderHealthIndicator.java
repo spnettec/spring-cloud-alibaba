@@ -19,6 +19,7 @@ package com.alibaba.cloud.stream.binder.rocketmq.actuator;
 import com.alibaba.cloud.stream.binder.rocketmq.metrics.Instrumentation;
 import com.alibaba.cloud.stream.binder.rocketmq.metrics.InstrumentationManager;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.health.AbstractHealthIndicator;
 import org.springframework.boot.actuate.health.Health;
 
@@ -28,18 +29,21 @@ import org.springframework.boot.actuate.health.Health;
  */
 public class RocketMQBinderHealthIndicator extends AbstractHealthIndicator {
 
+	@Autowired
+	private InstrumentationManager instrumentationManager;
+
 	@Override
 	protected void doHealthCheck(Health.Builder builder) throws Exception {
-		if (InstrumentationManager.getHealthInstrumentations().stream().allMatch(Instrumentation::isUp)) {
+		if (instrumentationManager.getHealthInstrumentations().stream().allMatch(Instrumentation::isUp)) {
 			builder.up();
 			return;
 		}
-		if (InstrumentationManager.getHealthInstrumentations().stream().allMatch(Instrumentation::isOutOfService)) {
+		if (instrumentationManager.getHealthInstrumentations().stream().allMatch(Instrumentation::isOutOfService)) {
 			builder.outOfService();
 			return;
 		}
 		builder.down();
-		InstrumentationManager.getHealthInstrumentations().stream()
+		instrumentationManager.getHealthInstrumentations().stream()
 				.filter(instrumentation -> !instrumentation.isStarted())
 				.forEach(instrumentation1 -> builder.withException(instrumentation1.getStartException()));
 	}

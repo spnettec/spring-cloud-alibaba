@@ -16,7 +16,9 @@
 
 package com.alibaba.cloud.stream.binder.rocketmq;
 
-import com.alibaba.cloud.stream.binder.rocketmq.autoconfigurate.RocketMQBinderAutoConfiguration;
+import java.util.Arrays;
+
+import com.alibaba.cloud.stream.binder.rocketmq.config.RocketMQBinderAutoConfiguration;
 import com.alibaba.cloud.stream.binder.rocketmq.properties.RocketMQBinderConfigurationProperties;
 import com.alibaba.cloud.stream.binder.rocketmq.properties.RocketMQExtendedBindingProperties;
 import org.junit.Test;
@@ -33,32 +35,33 @@ public class RocketMQAutoConfigurationTests {
 
 	private ApplicationContextRunner contextRunner = new ApplicationContextRunner()
 			.withConfiguration(AutoConfigurations.of(RocketMQBinderAutoConfiguration.class))
-			.withPropertyValues("spring.cloud.stream.rocketmq.binder.name-server=127.0.0.1:9876,127.0.0.1:9877",
+			.withPropertyValues("spring.cloud.stream.rocketmq.binder.name-server[0]=127.0.0.1:9876",
+					"spring.cloud.stream.rocketmq.binder.name-server[1]=127.0.0.1:9877",
 					"spring.cloud.stream.bindings.output.destination=TopicOrderTest",
 					"spring.cloud.stream.bindings.output.content-type=application/json",
-
 					"spring.cloud.stream.bindings.input1.destination=TopicOrderTest",
 					"spring.cloud.stream.bindings.input1.content-type=application/json",
 					"spring.cloud.stream.bindings.input1.group=test-group1",
-					"spring.cloud.stream.rocketmq.bindings.input1.consumer.push.orderly=true",
+					"spring.cloud.stream.rocketmq.bindings.input1.consumer.orderly=true",
 					"spring.cloud.stream.bindings.input1.consumer.maxAttempts=1",
 					"spring.cloud.stream.bindings.input2.destination=TopicOrderTest",
 					"spring.cloud.stream.bindings.input2.content-type=application/json",
 					"spring.cloud.stream.bindings.input2.group=test-group2",
-					"spring.cloud.stream.rocketmq.bindings.input2.consumer.push.orderly=false",
-					"spring.cloud.stream.rocketmq.bindings.input2.consumer.subscription=tag1");
+					"spring.cloud.stream.rocketmq.bindings.input2.consumer.orderly=false",
+					"spring.cloud.stream.rocketmq.bindings.input2.consumer.tags=tag1");
 
 	@Test
 	public void testProperties() {
 		this.contextRunner.run(context -> {
 			RocketMQBinderConfigurationProperties binderConfigurationProperties = context
 					.getBean(RocketMQBinderConfigurationProperties.class);
-			assertThat(binderConfigurationProperties.getNameServer()).isEqualTo("127.0.0.1:9876,127.0.0.1:9877");
+			assertThat(binderConfigurationProperties.getNameServer())
+					.isEqualTo(Arrays.asList("127.0.0.1:9876", "127.0.0.1:9877"));
 			RocketMQExtendedBindingProperties bindingProperties = context
 					.getBean(RocketMQExtendedBindingProperties.class);
-			assertThat(bindingProperties.getExtendedConsumerProperties("input2").getSubscription()).isEqualTo("tag1");
-			assertThat(bindingProperties.getExtendedConsumerProperties("input2").getPush().getOrderly()).isFalse();
-			assertThat(bindingProperties.getExtendedConsumerProperties("input1").getPush().getOrderly()).isTrue();
+			assertThat(bindingProperties.getExtendedConsumerProperties("input2").getTags()).isEqualTo("tag1");
+			assertThat(bindingProperties.getExtendedConsumerProperties("input2").getOrderly()).isFalse();
+			assertThat(bindingProperties.getExtendedConsumerProperties("input1").getOrderly()).isTrue();
 		});
 	}
 

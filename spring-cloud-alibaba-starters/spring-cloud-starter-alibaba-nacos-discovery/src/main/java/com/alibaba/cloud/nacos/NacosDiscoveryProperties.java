@@ -29,6 +29,7 @@ import java.util.regex.Pattern;
 
 import javax.annotation.PostConstruct;
 
+import com.alibaba.cloud.commons.lang.StringUtils;
 import com.alibaba.cloud.nacos.event.NacosDiscoveryInfoChangedEvent;
 import com.alibaba.nacos.api.naming.NamingService;
 import com.alibaba.nacos.api.naming.PreservedMetadataKeys;
@@ -44,7 +45,6 @@ import org.springframework.cloud.commons.util.InetUtils;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.Environment;
-import org.springframework.util.StringUtils;
 
 import static com.alibaba.nacos.api.PropertyKeyConst.ACCESS_KEY;
 import static com.alibaba.nacos.api.PropertyKeyConst.CLUSTER_NAME;
@@ -63,6 +63,7 @@ import static com.alibaba.nacos.api.PropertyKeyConst.USERNAME;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @author <a href="mailto:lyuzb@lyuzb.com">lyuzb</a>
  * @author <a href="mailto:78552423@qq.com">eshun</a>
+ * @author freeman
  */
 @ConfigurationProperties("spring.cloud.nacos.discovery")
 public class NacosDiscoveryProperties {
@@ -207,10 +208,10 @@ public class NacosDiscoveryProperties {
 	private boolean ephemeral = true;
 
 	/**
-	 * Throw exceptions during service registration if true, otherwise, log error
-	 * (defaults to true).
+	 * Whether to enable nacos failure tolerance. If enabled, nacos will return cached
+	 * values when exceptions occur.
 	 */
-	private boolean failFast = true;
+	private boolean failureToleranceEnabled;
 
 	@Autowired
 	private InetUtils inetUtils;
@@ -487,12 +488,12 @@ public class NacosDiscoveryProperties {
 		this.ephemeral = ephemeral;
 	}
 
-	public boolean isFailFast() {
-		return failFast;
+	public boolean isFailureToleranceEnabled() {
+		return failureToleranceEnabled;
 	}
 
-	public void setFailFast(boolean failFast) {
-		this.failFast = failFast;
+	public void setFailureToleranceEnabled(boolean failureToleranceEnabled) {
+		this.failureToleranceEnabled = failureToleranceEnabled;
 	}
 
 	@Override
@@ -504,37 +505,45 @@ public class NacosDiscoveryProperties {
 			return false;
 		}
 		NacosDiscoveryProperties that = (NacosDiscoveryProperties) o;
-		return Objects.equals(serverAddr, that.serverAddr) && Objects.equals(username, that.username)
+		return watchDelay == that.watchDelay && Float.compare(that.weight, weight) == 0
+				&& registerEnabled == that.registerEnabled && port == that.port && secure == that.secure
+				&& instanceEnabled == that.instanceEnabled && ephemeral == that.ephemeral
+				&& failureToleranceEnabled == that.failureToleranceEnabled
+				&& Objects.equals(serverAddr, that.serverAddr) && Objects.equals(username, that.username)
 				&& Objects.equals(password, that.password) && Objects.equals(endpoint, that.endpoint)
 				&& Objects.equals(namespace, that.namespace) && Objects.equals(logName, that.logName)
 				&& Objects.equals(service, that.service) && Objects.equals(clusterName, that.clusterName)
-				&& Objects.equals(group, that.group) && Objects.equals(ip, that.ip) && Objects.equals(port, that.port)
+				&& Objects.equals(group, that.group)
+				&& Objects.equals(namingLoadCacheAtStart, that.namingLoadCacheAtStart)
+				&& Objects.equals(metadata, that.metadata) && Objects.equals(ip, that.ip)
 				&& Objects.equals(networkInterface, that.networkInterface) && Objects.equals(accessKey, that.accessKey)
 				&& Objects.equals(secretKey, that.secretKey)
 				&& Objects.equals(heartBeatInterval, that.heartBeatInterval)
-				&& Objects.equals(heartBeatTimeout, that.heartBeatTimeout) && Objects.equals(failFast, that.failFast)
+				&& Objects.equals(heartBeatTimeout, that.heartBeatTimeout)
 				&& Objects.equals(ipDeleteTimeout, that.ipDeleteTimeout);
 	}
 
 	@Override
 	public int hashCode() {
 		return Objects.hash(serverAddr, username, password, endpoint, namespace, watchDelay, logName, service, weight,
-				clusterName, group, namingLoadCacheAtStart, registerEnabled, ip, networkInterface, port, secure,
-				accessKey, secretKey, heartBeatInterval, heartBeatTimeout, ipDeleteTimeout, instanceEnabled, ephemeral,
-				failFast);
+				clusterName, group, namingLoadCacheAtStart, metadata, registerEnabled, ip, networkInterface, port,
+				secure, accessKey, secretKey, heartBeatInterval, heartBeatTimeout, ipDeleteTimeout, instanceEnabled,
+				ephemeral, failureToleranceEnabled);
 	}
 
 	@Override
 	public String toString() {
-		return "NacosDiscoveryProperties{" + "serverAddr='" + serverAddr + '\'' + ", endpoint='" + endpoint + '\''
-				+ ", namespace='" + namespace + '\'' + ", watchDelay=" + watchDelay + ", logName='" + logName + '\''
-				+ ", service='" + service + '\'' + ", weight=" + weight + ", clusterName='" + clusterName + '\''
-				+ ", group='" + group + '\'' + ", namingLoadCacheAtStart='" + namingLoadCacheAtStart + '\''
-				+ ", metadata=" + metadata + ", registerEnabled=" + registerEnabled + ", ip='" + ip + '\''
-				+ ", networkInterface='" + networkInterface + '\'' + ", port=" + port + ", secure=" + secure
-				+ ", accessKey='" + accessKey + '\'' + ", secretKey='" + secretKey + '\'' + ", heartBeatInterval="
-				+ heartBeatInterval + ", heartBeatTimeout=" + heartBeatTimeout + ", ipDeleteTimeout=" + ipDeleteTimeout
-				+ ", failFast=" + failFast + '}';
+		return "NacosDiscoveryProperties{" + "serverAddr='" + serverAddr + '\'' + ", username='" + username + '\''
+				+ ", password='" + password + '\'' + ", endpoint='" + endpoint + '\'' + ", namespace='" + namespace
+				+ '\'' + ", watchDelay=" + watchDelay + ", logName='" + logName + '\'' + ", service='" + service + '\''
+				+ ", weight=" + weight + ", clusterName='" + clusterName + '\'' + ", group='" + group + '\''
+				+ ", namingLoadCacheAtStart='" + namingLoadCacheAtStart + '\'' + ", metadata=" + metadata
+				+ ", registerEnabled=" + registerEnabled + ", ip='" + ip + '\'' + ", networkInterface='"
+				+ networkInterface + '\'' + ", port=" + port + ", secure=" + secure + ", accessKey='" + accessKey + '\''
+				+ ", secretKey='" + secretKey + '\'' + ", heartBeatInterval=" + heartBeatInterval
+				+ ", heartBeatTimeout=" + heartBeatTimeout + ", ipDeleteTimeout=" + ipDeleteTimeout
+				+ ", instanceEnabled=" + instanceEnabled + ", ephemeral=" + ephemeral + ", failureToleranceEnabled="
+				+ failureToleranceEnabled + '}';
 	}
 
 	public void overrideFromEnv(Environment env) {

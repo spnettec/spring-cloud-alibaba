@@ -82,7 +82,7 @@
         <!-- Project revision -->
         <revision>2.2.7.B</revision>
         <nacos.version>2.1.0.B</nacos.version>
-        <spring-boot.version>2.6.2</spring-boot.version>
+        <spring-boot.version>2.6.3</spring-boot.version>
 
         <!-- Spring Cloud -->
         <spring.cloud.version>2021.0.0</spring.cloud.version>
@@ -206,62 +206,14 @@
                 </exclusions>
             </dependency>
 
-<!--            <dependency>-->
-<!--                <groupId>org.apache.rocketmq</groupId>-->
-<!--                <artifactId>rocketmq-spring-boot-starter</artifactId>-->
-<!--                <version>${rocketmq.starter.version}</version>-->
-<!--            </dependency>-->
             <dependency>
                 <groupId>org.apache.rocketmq</groupId>
-                <artifactId>rocketmq-client</artifactId>
-                <version>${rocketmq.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.rocketmq</groupId>
-                <artifactId>rocketmq-acl</artifactId>
-                <version>${rocketmq.version}</version>
+                <artifactId>rocketmq-spring-boot-starter</artifactId>
+                <version>${rocketmq.starter.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
-    <repositories>
-        <repository>
-            <id>central-repos1</id>
-            <name>Central Repository 2</name>
-            <url>https://repo1.maven.org/maven2/</url>
-        </repository>
-        <!--阿里云主仓库，代理了maven central和jcenter仓库-->
-        <repository>
-            <id>aliyun</id>
-            <name>aliyun</name>
-            <url>https://maven.aliyun.com/repository/public</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>fis-release</id>
-            <url>http://10.70.19.94:8081/repository/yofc-release/</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>fis-snapshot</id>
-            <url>http://10.70.19.94:8081/repository/yofc-snapshot/</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
+
     <build>
         <pluginManagement>
             <plugins>
@@ -269,6 +221,21 @@
                     <groupId>org.jacoco</groupId>
                     <artifactId>jacoco-maven-plugin</artifactId>
                     <version>${jacoco.version}</version>
+                </plugin>
+
+                <!-- disable auto format from parent -->
+                <plugin>
+                    <groupId>io.spring.javaformat</groupId>
+                    <artifactId>spring-javaformat-maven-plugin</artifactId>
+                    <version>${spring-javaformat.version}</version>
+                    <executions>
+                        <execution>
+                            <phase>validate</phase>
+                            <configuration>
+                                <skip>true</skip>
+                            </configuration>
+                        </execution>
+                    </executions>
                 </plugin>
             </plugins>
         </pluginManagement>

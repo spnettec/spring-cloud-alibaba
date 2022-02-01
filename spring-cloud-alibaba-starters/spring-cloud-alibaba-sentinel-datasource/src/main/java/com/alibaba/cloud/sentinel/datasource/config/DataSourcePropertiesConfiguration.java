@@ -132,6 +132,7 @@ public class DataSourcePropertiesConfiguration {
 				if (!ObjectUtils.isEmpty(field.get(this))) {
 					return field.getName();
 				}
+				return null;
 			}
 			catch (IllegalAccessException e) {
 				// won't happen

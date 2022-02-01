@@ -81,23 +81,13 @@ public class SentinelProtectInterceptor implements ClientHttpRequestInterceptor 
 			if (this.restTemplate.getErrorHandler().hasError(response)) {
 				Tracer.trace(new IllegalStateException("RestTemplate ErrorHandler has error"));
 			}
-			return response;
 		}
 		catch (Throwable e) {
-			if (BlockException.isBlockException(e)) {
-				return handleBlockException(request, body, execution, (BlockException) e);
+			if (!BlockException.isBlockException(e)) {
+				Tracer.trace(e);
 			}
 			else {
-				Tracer.traceEntry(e, hostEntry);
-				if (e instanceof IOException) {
-					throw (IOException) e;
-				}
-				else if (e instanceof RuntimeException) {
-					throw (RuntimeException) e;
-				}
-				else {
-					throw new IOException(e);
-				}
+				return handleBlockException(request, body, execution, (BlockException) e);
 			}
 		}
 		finally {
@@ -108,6 +98,7 @@ public class SentinelProtectInterceptor implements ClientHttpRequestInterceptor 
 				hostEntry.exit();
 			}
 		}
+		return response;
 	}
 
 	private ClientHttpResponse handleBlockException(HttpRequest request, byte[] body,

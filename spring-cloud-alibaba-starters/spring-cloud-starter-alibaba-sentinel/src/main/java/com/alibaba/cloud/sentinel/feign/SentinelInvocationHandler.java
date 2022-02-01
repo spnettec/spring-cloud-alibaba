@@ -106,7 +106,7 @@ public class SentinelInvocationHandler implements InvocationHandler {
 				catch (Throwable ex) {
 					// fallback handle
 					if (!BlockException.isBlockException(ex)) {
-						Tracer.traceEntry(ex, entry);
+						Tracer.trace(ex);
 					}
 					if (fallbackFactory != null) {
 						try {

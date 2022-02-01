@@ -83,8 +83,9 @@ public abstract class SentinelConverter<T extends Object> implements Converter<S
 			});
 
 			for (Object obj : sourceArray) {
+				String item = null;
 				try {
-					String item = objectMapper.writeValueAsString(obj);
+					item = objectMapper.writeValueAsString(obj);
 					Optional.ofNullable(convertRule(item)).ifPresent(convertRule -> ruleCollection.add(convertRule));
 				}
 				catch (IOException e) {

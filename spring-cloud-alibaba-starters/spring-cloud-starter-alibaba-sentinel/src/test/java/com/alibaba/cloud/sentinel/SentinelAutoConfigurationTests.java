@@ -33,6 +33,7 @@ import com.alibaba.csp.sentinel.slots.block.flow.FlowRuleManager;
 import com.alibaba.csp.sentinel.transport.config.TransportConfig;
 import com.alibaba.csp.sentinel.transport.endpoint.Endpoint;
 import com.alibaba.csp.sentinel.transport.endpoint.Protocol;
+import com.alibaba.csp.sentinel.util.function.Tuple2;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

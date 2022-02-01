@@ -18,7 +18,6 @@ package com.alibaba.cloud.dubbo.autoconfigure;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -51,7 +50,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.serviceregistry.Registration;
 import org.springframework.cloud.client.serviceregistry.ServiceRegistry;
-import org.springframework.cloud.consul.discovery.ConsulDiscoveryProperties;
 import org.springframework.cloud.consul.serviceregistry.ConsulRegistration;
 import org.springframework.cloud.netflix.eureka.EurekaInstanceConfigBean;
 import org.springframework.cloud.netflix.eureka.serviceregistry.EurekaAutoServiceRegistration;
@@ -63,7 +61,6 @@ import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.event.EventListener;
-import org.springframework.util.StringUtils;
 
 import static com.alibaba.cloud.dubbo.autoconfigure.DubboServiceRegistrationAutoConfiguration.CONSUL_AUTO_SERVICE_AUTO_CONFIGURATION_CLASS_NAME;
 import static com.alibaba.cloud.dubbo.autoconfigure.DubboServiceRegistrationAutoConfiguration.EUREKA_CLIENT_AUTO_CONFIGURATION_CLASS_NAME;
@@ -133,7 +130,7 @@ public class DubboServiceRegistrationAutoConfiguration {
 	@EventListener(ServiceInstancePreRegisteredEvent.class)
 	public void onServiceInstancePreRegistered(ServiceInstancePreRegisteredEvent event) {
 		Registration registration = event.getSource();
-		if (!DubboBootstrap.getInstance().isInitialized() || !DubboBootstrap.getInstance().isStarted()) {
+		if (!DubboBootstrap.getInstance().isReady() || !DubboBootstrap.getInstance().isStarted()) {
 			ServiceRegistry<Registration> registry = event.getRegistry();
 			synchronized (registry) {
 				registrations.putIfAbsent(registry, new HashSet<>());
@@ -206,7 +203,7 @@ public class DubboServiceRegistrationAutoConfiguration {
 				return;
 			}
 
-			if (DubboBootstrap.getInstance().isInitialized() && DubboBootstrap.getInstance().isStarted()) {
+			if (DubboBootstrap.getInstance().isReady() && DubboBootstrap.getInstance().isStarted()) {
 				EurekaRegistration eurekaRegistration = (EurekaRegistration) registration;
 				InstanceInfo instanceInfo = eurekaRegistration.getApplicationInfoManager().getInfo();
 
@@ -245,9 +242,6 @@ public class DubboServiceRegistrationAutoConfiguration {
 	@AutoConfigureOrder
 	class ConsulConfiguration {
 
-		@Autowired
-		private ConsulDiscoveryProperties consulDiscoveryProperties;
-
 		@EventListener(DubboBootstrapStartedEvent.class)
 		public void attachURLsIntoMetadataBeforeReRegist(DubboBootstrapStartedEvent event) {
 			if (!event.getSource().isReady()) {
@@ -269,31 +263,15 @@ public class DubboServiceRegistrationAutoConfiguration {
 			}));
 		}
 
-		@EventListener(ServiceInstancePreRegisteredEvent.class)
-		public void onServiceInstancePreRegistered(ServiceInstancePreRegisteredEvent event) {
-			Registration registration = event.getSource();
-			attachURLsIntoMetadata((ConsulRegistration) registration);
-		}
-
 		private void attachURLsIntoMetadata(ConsulRegistration consulRegistration) {
-			Map<String, String> serviceMetadata = dubboServiceMetadataRepository.getDubboMetadataServiceMetadata();
-			if (isEmpty(serviceMetadata)) {
-				return;
-			}
 			NewService newService = consulRegistration.getService();
-			newService.getMeta().putAll(serviceMetadata);
-		}
-
-		private void attAsTag(List<String> tags, String key, String value) {
-			Iterator<String> iter = tags.iterator();
-			while (iter.hasNext()) {
-				String tag = iter.next();
-				String[] tmp = tag.split("=");
-				if (StringUtils.pathEquals(tmp[0], key)) {
-					iter.remove();
+			Map<String, String> serviceMetadata = dubboServiceMetadataRepository.getDubboMetadataServiceMetadata();
+			if (!isEmpty(serviceMetadata)) {
+				List<String> tags = newService.getTags();
+				for (Map.Entry<String, String> entry : serviceMetadata.entrySet()) {
+					tags.add(entry.getKey() + "=" + entry.getValue());
 				}
 			}
-			tags.add(key + "=" + value);
 		}
 
 	}
