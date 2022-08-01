@@ -17,11 +17,13 @@
 package com.alibaba.cloud.nacos.discovery;
 
 import com.alibaba.cloud.nacos.NacosServiceAutoConfiguration;
+import com.alibaba.cloud.nacos.registry.NacosServiceRegistryAutoConfiguration;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
+import org.springframework.cloud.client.serviceregistry.AutoServiceRegistrationConfiguration;
 import org.springframework.cloud.commons.util.UtilAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.TaskScheduler;
@@ -35,8 +37,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class NacosDiscoveryClientConfigurationTest {
 
 	private ApplicationContextRunner contextRunner = new ApplicationContextRunner()
-			.withConfiguration(AutoConfigurations.of(UtilAutoConfiguration.class, NacosDiscoveryAutoConfiguration.class,
-					NacosDiscoveryClientConfiguration.class, NacosServiceAutoConfiguration.class, this.getClass()));
+			.withConfiguration(AutoConfigurations.of(
+					AutoServiceRegistrationConfiguration.class,
+					NacosServiceRegistryAutoConfiguration.class,
+					UtilAutoConfiguration.class,
+					NacosServiceAutoConfiguration.class,
+					NacosDiscoveryAutoConfiguration.class,
+					NacosDiscoveryClientConfiguration.class, this.getClass()));
 
 	@Bean
 	public TaskScheduler taskScheduler() {
@@ -53,10 +60,11 @@ public class NacosDiscoveryClientConfigurationTest {
 
 	@Test
 	public void testDiscoveryBlockingDisabled() {
-		contextRunner.withPropertyValues("spring.cloud.discovery.blocking.enabled=false").run(context -> {
-			assertThat(context).doesNotHaveBean(DiscoveryClient.class);
-			assertThat(context).doesNotHaveBean(NacosWatch.class);
-		});
+		contextRunner.withPropertyValues("spring.cloud.discovery.blocking.enabled=false")
+				.run(context -> {
+					assertThat(context).doesNotHaveBean(DiscoveryClient.class);
+					assertThat(context).doesNotHaveBean(NacosWatch.class);
+				});
 	}
 
 }

@@ -37,10 +37,12 @@ import org.springframework.web.servlet.HandlerInterceptor;
  */
 public class SeataHandlerInterceptor implements HandlerInterceptor {
 
-	private static final Logger log = LoggerFactory.getLogger(SeataHandlerInterceptor.class);
+	private static final Logger log = LoggerFactory
+			.getLogger(SeataHandlerInterceptor.class);
 
 	@Override
-	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
+	public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
+			Object handler) {
 		String xid = RootContext.getXID();
 		String rpcXid = request.getHeader(RootContext.KEY_XID);
 		if (log.isDebugEnabled()) {
@@ -58,7 +60,8 @@ public class SeataHandlerInterceptor implements HandlerInterceptor {
 	}
 
 	@Override
-	public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception e) {
+	public void afterCompletion(HttpServletRequest request, HttpServletResponse response,
+			Object handler, Exception e) {
 		if (StringUtils.isNotBlank(RootContext.getXID())) {
 			String rpcXid = request.getHeader(RootContext.KEY_XID);
 

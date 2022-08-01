@@ -30,12 +30,11 @@ import static com.alibaba.cloud.circuitbreaker.sentinel.feign.CircuitBreakerRule
 /**
  * Feign client circuit breaker name resolver.
  *
- * <p>
- * <strong>note:</strong> spring cloud openfeign version need greater than 3.0.4.
- *
  * @author freeman
+ * @since 2021.0.1.0
  * @see CircuitBreakerNameResolver
  */
+@SuppressWarnings("rawtypes")
 public class FeignClientCircuitNameResolver implements CircuitBreakerNameResolver {
 
 	private final Map configurations;
@@ -45,7 +44,8 @@ public class FeignClientCircuitNameResolver implements CircuitBreakerNameResolve
 	}
 
 	@Override
-	public String resolveCircuitBreakerName(String feignClientName, Target<?> target, Method method) {
+	public String resolveCircuitBreakerName(String feignClientName, Target<?> target,
+			Method method) {
 		String key = getKey(feignClientName, target, method);
 
 		if (configurations != null && configurations.containsKey(key)) {

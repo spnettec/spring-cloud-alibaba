@@ -29,6 +29,7 @@ import java.util.stream.Stream;
 
 import javax.annotation.PostConstruct;
 
+import com.alibaba.cloud.commons.lang.StringUtils;
 import com.alibaba.nacos.api.config.ConfigService;
 import com.alibaba.spring.util.PropertySourcesUtils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -40,7 +41,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.DeprecatedConfigurationProperty;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.Environment;
-import org.springframework.util.StringUtils;
 
 import static com.alibaba.nacos.api.PropertyKeyConst.ACCESS_KEY;
 import static com.alibaba.nacos.api.PropertyKeyConst.CLUSTER_NAME;
@@ -53,6 +53,7 @@ import static com.alibaba.nacos.api.PropertyKeyConst.ENDPOINT_PORT;
 import static com.alibaba.nacos.api.PropertyKeyConst.MAX_RETRY;
 import static com.alibaba.nacos.api.PropertyKeyConst.NAMESPACE;
 import static com.alibaba.nacos.api.PropertyKeyConst.PASSWORD;
+import static com.alibaba.nacos.api.PropertyKeyConst.RAM_ROLE_NAME;
 import static com.alibaba.nacos.api.PropertyKeyConst.SECRET_KEY;
 import static com.alibaba.nacos.api.PropertyKeyConst.SERVER_ADDR;
 import static com.alibaba.nacos.api.PropertyKeyConst.USERNAME;
@@ -85,7 +86,8 @@ public class NacosConfigProperties {
 
 	private static final Pattern PATTERN = Pattern.compile("-(\\w)");
 
-	private static final Logger log = LoggerFactory.getLogger(NacosConfigProperties.class);
+	private static final Logger log = LoggerFactory
+			.getLogger(NacosConfigProperties.class);
 
 	@Autowired
 	@JsonIgnore
@@ -101,17 +103,21 @@ public class NacosConfigProperties {
 			return;
 		}
 		if (StringUtils.isEmpty(this.getServerAddr())) {
-			String serverAddr = environment.resolvePlaceholders("${spring.cloud.nacos.config.server-addr:}");
+			String serverAddr = environment
+					.resolvePlaceholders("${spring.cloud.nacos.config.server-addr:}");
 			if (StringUtils.isEmpty(serverAddr)) {
-				serverAddr = environment.resolvePlaceholders("${spring.cloud.nacos.server-addr:localhost:8848}");
+				serverAddr = environment.resolvePlaceholders(
+						"${spring.cloud.nacos.server-addr:127.0.0.1:8848}");
 			}
 			this.setServerAddr(serverAddr);
 		}
 		if (StringUtils.isEmpty(this.getUsername())) {
-			this.setUsername(environment.resolvePlaceholders("${spring.cloud.nacos.username:}"));
+			this.setUsername(
+					environment.resolvePlaceholders("${spring.cloud.nacos.username:}"));
 		}
 		if (StringUtils.isEmpty(this.getPassword())) {
-			this.setPassword(environment.resolvePlaceholders("${spring.cloud.nacos.password:}"));
+			this.setPassword(
+					environment.resolvePlaceholders("${spring.cloud.nacos.password:}"));
 		}
 	}
 
@@ -199,6 +205,11 @@ public class NacosConfigProperties {
 	 * secret key for namespace.
 	 */
 	private String secretKey;
+
+	/**
+	 * role name for aliyun ram.
+	 */
+	private String ramRoleName;
 
 	/**
 	 * context path for nacos config server.
@@ -354,6 +365,14 @@ public class NacosConfigProperties {
 		this.secretKey = secretKey;
 	}
 
+	public String getRamRoleName() {
+		return ramRoleName;
+	}
+
+	public void setRamRoleName(String ramRoleName) {
+		this.ramRoleName = ramRoleName;
+	}
+
 	public String getEncode() {
 		return encode;
 	}
@@ -423,25 +442,26 @@ public class NacosConfigProperties {
 	 * @return string
 	 */
 	@Deprecated
-	@DeprecatedConfigurationProperty(
-			reason = "replaced to NacosConfigProperties#sharedConfigs and not use it at the same time.",
-			replacement = PREFIX + ".shared-configs[x]")
+	@DeprecatedConfigurationProperty(reason = "replaced to NacosConfigProperties#sharedConfigs and not use it at the same time.", replacement = PREFIX
+			+ ".shared-configs[x]")
 	public String getSharedDataids() {
 		return null == getSharedConfigs() ? null
-				: getSharedConfigs().stream().map(Config::getDataId).collect(Collectors.joining(COMMAS));
+				: getSharedConfigs().stream().map(Config::getDataId)
+						.collect(Collectors.joining(COMMAS));
 	}
 
 	/**
 	 * recommend to use {@link NacosConfigProperties#sharedConfigs} and not use it at the
 	 * same time .
 	 * @param sharedDataids the dataids for configurable multiple shared configurations ,
-	 * multiple separated by commas .
+	 *     multiple separated by commas .
 	 */
 	@Deprecated
 	public void setSharedDataids(String sharedDataids) {
 		if (null != sharedDataids && sharedDataids.trim().length() > 0) {
 			List<Config> list = new ArrayList<>();
-			Stream.of(sharedDataids.split(SEPARATOR)).forEach(dataId -> list.add(new Config(dataId.trim())));
+			Stream.of(sharedDataids.split(SEPARATOR))
+					.forEach(dataId -> list.add(new Config(dataId.trim())));
 			this.compatibleSharedConfigs(list);
 		}
 	}
@@ -452,12 +472,12 @@ public class NacosConfigProperties {
 	 * @return string
 	 */
 	@Deprecated
-	@DeprecatedConfigurationProperty(
-			reason = "replaced to NacosConfigProperties#sharedConfigs and not use it at the same time.",
-			replacement = PREFIX + ".shared-configs[x].refresh")
+	@DeprecatedConfigurationProperty(reason = "replaced to NacosConfigProperties#sharedConfigs and not use it at the same time.", replacement = PREFIX
+			+ ".shared-configs[x].refresh")
 	public String getRefreshableDataids() {
-		return null == getSharedConfigs() ? null : getSharedConfigs().stream().filter(Config::isRefresh)
-				.map(Config::getDataId).collect(Collectors.joining(COMMAS));
+		return null == getSharedConfigs() ? null
+				: getSharedConfigs().stream().filter(Config::isRefresh)
+						.map(Config::getDataId).collect(Collectors.joining(COMMAS));
 	}
 
 	/**
@@ -469,8 +489,8 @@ public class NacosConfigProperties {
 	public void setRefreshableDataids(String refreshableDataids) {
 		if (null != refreshableDataids && refreshableDataids.trim().length() > 0) {
 			List<Config> list = new ArrayList<>();
-			Stream.of(refreshableDataids.split(SEPARATOR))
-					.forEach(dataId -> list.add(new Config(dataId.trim()).setRefresh(true)));
+			Stream.of(refreshableDataids.split(SEPARATOR)).forEach(
+					dataId -> list.add(new Config(dataId.trim()).setRefresh(true)));
 			this.compatibleSharedConfigs(list);
 		}
 	}
@@ -480,10 +500,14 @@ public class NacosConfigProperties {
 			configList.addAll(this.getSharedConfigs());
 		}
 		List<Config> result = new ArrayList<>();
-		configList.stream().collect(Collectors.groupingBy(cfg -> (cfg.getGroup() + cfg.getDataId()), LinkedHashMap::new,
-				Collectors.toList())).forEach((key, list) -> {
-					list.stream().reduce((a, b) -> new Config(a.getDataId(), a.getGroup(),
-							a.isRefresh() || (b != null && b.isRefresh()))).ifPresent(result::add);
+		configList.stream()
+				.collect(Collectors.groupingBy(cfg -> (cfg.getGroup() + cfg.getDataId()),
+						LinkedHashMap::new, Collectors.toList()))
+				.forEach((key, list) -> {
+					list.stream()
+							.reduce((a, b) -> new Config(a.getDataId(), a.getGroup(),
+									a.isRefresh() || (b != null && b.isRefresh())))
+							.ifPresent(result::add);
 				});
 		this.setSharedConfigs(result);
 	}
@@ -495,9 +519,8 @@ public class NacosConfigProperties {
 	 * @return extensionConfigs
 	 */
 	@Deprecated
-	@DeprecatedConfigurationProperty(
-			reason = "replaced to NacosConfigProperties#extensionConfigs and not use it at the same time .",
-			replacement = PREFIX + ".extension-configs[x]")
+	@DeprecatedConfigurationProperty(reason = "replaced to NacosConfigProperties#extensionConfigs and not use it at the same time .", replacement = PREFIX
+			+ ".extension-configs[x]")
 	public List<Config> getExtConfig() {
 		return this.getExtensionConfigs();
 	}
@@ -540,11 +563,14 @@ public class NacosConfigProperties {
 		properties.put(NAMESPACE, Objects.toString(this.namespace, ""));
 		properties.put(ACCESS_KEY, Objects.toString(this.accessKey, ""));
 		properties.put(SECRET_KEY, Objects.toString(this.secretKey, ""));
+		properties.put(RAM_ROLE_NAME, Objects.toString(this.ramRoleName, ""));
 		properties.put(CLUSTER_NAME, Objects.toString(this.clusterName, ""));
 		properties.put(MAX_RETRY, Objects.toString(this.maxRetry, ""));
-		properties.put(CONFIG_LONG_POLL_TIMEOUT, Objects.toString(this.configLongPollTimeout, ""));
+		properties.put(CONFIG_LONG_POLL_TIMEOUT,
+				Objects.toString(this.configLongPollTimeout, ""));
 		properties.put(CONFIG_RETRY_TIME, Objects.toString(this.configRetryTime, ""));
-		properties.put(ENABLE_REMOTE_SYNC_CONFIG, Objects.toString(this.enableRemoteSyncConfig, ""));
+		properties.put(ENABLE_REMOTE_SYNC_CONFIG,
+				Objects.toString(this.enableRemoteSyncConfig, ""));
 		String endpoint = Objects.toString(this.endpoint, "");
 		if (endpoint.contains(":")) {
 			int index = endpoint.indexOf(":");
@@ -563,9 +589,10 @@ public class NacosConfigProperties {
 		if (environment == null) {
 			return;
 		}
-		Map<String, Object> properties = PropertySourcesUtils.getSubProperties((ConfigurableEnvironment) environment,
-				PREFIX);
-		properties.forEach((k, v) -> nacosConfigProperties.putIfAbsent(resolveKey(k), String.valueOf(v)));
+		Map<String, Object> properties = PropertySourcesUtils
+				.getSubProperties((ConfigurableEnvironment) environment, PREFIX);
+		properties.forEach((k, v) -> nacosConfigProperties.putIfAbsent(resolveKey(k),
+				String.valueOf(v)));
 	}
 
 	private String resolveKey(String key) {
@@ -580,14 +607,18 @@ public class NacosConfigProperties {
 
 	@Override
 	public String toString() {
-		return "NacosConfigProperties{" + "serverAddr='" + serverAddr + '\'' + ", encode='" + encode + '\''
-				+ ", group='" + group + '\'' + ", prefix='" + prefix + '\'' + ", fileExtension='" + fileExtension + '\''
-				+ ", timeout=" + timeout + ", maxRetry='" + maxRetry + '\'' + ", configLongPollTimeout='"
-				+ configLongPollTimeout + '\'' + ", configRetryTime='" + configRetryTime + '\''
-				+ ", enableRemoteSyncConfig=" + enableRemoteSyncConfig + ", endpoint='" + endpoint + '\''
-				+ ", namespace='" + namespace + '\'' + ", accessKey='" + accessKey + '\'' + ", secretKey='" + secretKey
-				+ '\'' + ", contextPath='" + contextPath + '\'' + ", clusterName='" + clusterName + '\'' + ", name='"
-				+ name + '\'' + '\'' + ", shares=" + sharedConfigs + ", extensions=" + extensionConfigs
+		return "NacosConfigProperties{" + "serverAddr='" + serverAddr + '\''
+				+ ", encode='" + encode + '\'' + ", group='" + group + '\'' + ", prefix='"
+				+ prefix + '\'' + ", fileExtension='" + fileExtension + '\''
+				+ ", timeout=" + timeout + ", maxRetry='" + maxRetry + '\''
+				+ ", configLongPollTimeout='" + configLongPollTimeout + '\''
+				+ ", configRetryTime='" + configRetryTime + '\''
+				+ ", enableRemoteSyncConfig=" + enableRemoteSyncConfig + ", endpoint='"
+				+ endpoint + '\'' + ", namespace='" + namespace + '\'' + ", accessKey='"
+				+ accessKey + '\'' + ", secretKey='" + secretKey + '\''
+				+ ", ramRoleName='" + ramRoleName + '\'' + ", contextPath='" + contextPath
+				+ '\'' + ", clusterName='" + clusterName + '\'' + ", name='" + name + '\''
+				+ '\'' + ", shares=" + sharedConfigs + ", extensions=" + extensionConfigs
 				+ ", refreshEnabled=" + refreshEnabled + '}';
 	}
 
@@ -659,7 +690,8 @@ public class NacosConfigProperties {
 
 		@Override
 		public String toString() {
-			return "Config{" + "dataId='" + dataId + '\'' + ", group='" + group + '\'' + ", refresh=" + refresh + '}';
+			return "Config{" + "dataId='" + dataId + '\'' + ", group='" + group + '\''
+					+ ", refresh=" + refresh + '}';
 		}
 
 		@Override

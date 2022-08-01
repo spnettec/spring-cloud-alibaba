@@ -40,7 +40,8 @@ import org.springframework.boot.actuate.endpoint.annotation.ReadOperation;
 @Endpoint(id = "nacosdiscovery")
 public class NacosDiscoveryEndpoint {
 
-	private static final Logger log = LoggerFactory.getLogger(NacosDiscoveryEndpoint.class);
+	private static final Logger log = LoggerFactory
+			.getLogger(NacosDiscoveryEndpoint.class);
 
 	private NacosServiceManager nacosServiceManager;
 
@@ -60,15 +61,14 @@ public class NacosDiscoveryEndpoint {
 		Map<String, Object> result = new HashMap<>();
 		result.put("NacosDiscoveryProperties", nacosDiscoveryProperties);
 
-		NamingService namingService = nacosServiceManager
-				.getNamingService(nacosDiscoveryProperties.getNacosProperties());
+		NamingService namingService = nacosServiceManager.getNamingService();
 		List<ServiceInfo> subscribe = Collections.emptyList();
 
 		try {
 			subscribe = namingService.getSubscribeServices();
 			for (ServiceInfo serviceInfo : subscribe) {
-				List<Instance> instances = namingService.getAllInstances(serviceInfo.getName(),
-						serviceInfo.getGroupName());
+				List<Instance> instances = namingService.getAllInstances(
+						serviceInfo.getName(), serviceInfo.getGroupName());
 				serviceInfo.setHosts(instances);
 			}
 		}

@@ -30,6 +30,9 @@ import com.alibaba.cloud.circuitbreaker.sentinel.SentinelConfigBuilder;
 import com.alibaba.csp.sentinel.EntryType;
 import com.alibaba.csp.sentinel.slots.block.degrade.DegradeRule;
 import com.alibaba.csp.sentinel.slots.block.degrade.DegradeRuleManager;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,22 +50,21 @@ import org.springframework.core.annotation.AnnotationUtils;
  * Sentinel circuit breaker config change listener.
  *
  * @author freeman
+ * @since 2021.0.1.0
  */
+@SuppressWarnings({ "unchecked", "rawtypes" })
 public class CircuitBreakerRuleChangeListener implements ApplicationContextAware,
 		ApplicationListener<RefreshScopeRefreshedEvent>, SmartInitializingSingleton {
-
-	private static final Logger LOGGER = LoggerFactory.getLogger(CircuitBreakerRuleChangeListener.class);
+	private static final Logger LOGGER = LoggerFactory
+			.getLogger(CircuitBreakerRuleChangeListener.class);
 
 	private SentinelFeignClientProperties properties;
-
 	/**
 	 * properties backup, prevent rules from being updated every time the container is
 	 * refreshed.
 	 */
 	private SentinelFeignClientProperties propertiesBackup;
-
 	private AbstractCircuitBreakerFactory circuitBreakerFactory;
-
 	private ApplicationContext applicationContext;
 
 	@Override
@@ -82,17 +84,20 @@ public class CircuitBreakerRuleChangeListener implements ApplicationContextAware
 
 		updateBackup();
 
-		LOGGER.info("sentinel circuit beaker rules refreshed.");
+		LOGGER.info("Sentinel circuit beaker rules refreshed: \n"
+				+ prettyPrint(properties.getRules()));
 	}
 
 	@Override
-	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+	public void setApplicationContext(ApplicationContext applicationContext)
+			throws BeansException {
 		this.applicationContext = applicationContext;
 	}
 
 	@Override
 	public void afterSingletonsInstantiated() {
-		this.propertiesBackup = applicationContext.getBean(SentinelFeignClientProperties.class).copy();
+		this.propertiesBackup = applicationContext
+				.getBean(SentinelFeignClientProperties.class).copy();
 	}
 
 	private void ensureReady() {
@@ -100,13 +105,16 @@ public class CircuitBreakerRuleChangeListener implements ApplicationContextAware
 		// as it will cause the bean to be initialized prematurely,
 		// and we don't want to change the initialization order of the beans
 		if (circuitBreakerFactory == null) {
-			String[] names = applicationContext.getBeanNamesForType(AbstractCircuitBreakerFactory.class);
+			String[] names = applicationContext
+					.getBeanNamesForType(AbstractCircuitBreakerFactory.class);
 			if (names.length >= 1) {
-				this.circuitBreakerFactory = applicationContext.getBean(names[0], AbstractCircuitBreakerFactory.class);
+				this.circuitBreakerFactory = applicationContext.getBean(names[0],
+						AbstractCircuitBreakerFactory.class);
 			}
 		}
 		if (properties == null) {
-			this.properties = applicationContext.getBean(SentinelFeignClientProperties.class);
+			this.properties = applicationContext
+					.getBean(SentinelFeignClientProperties.class);
 		}
 	}
 
@@ -124,14 +132,17 @@ public class CircuitBreakerRuleChangeListener implements ApplicationContextAware
 	}
 
 	private void clearCircuitBreakerFactory() {
-		Optional.ofNullable(getConfigurations(circuitBreakerFactory)).ifPresent(Map::clear);
+		Optional.ofNullable(getConfigurations(circuitBreakerFactory))
+				.ifPresent(Map::clear);
 	}
 
 	private void clearFeignClientRulesInDegradeManager() {
 		// first, clear all manually configured feign clients and methods.
 		propertiesBackup.getRules().keySet().stream()
-				.filter(key -> !Objects.equals(key, propertiesBackup.getDefaultRule())).forEach(resource -> Optional
-						.ofNullable(DegradeRuleManager.getRulesOfResource(resource)).ifPresent(Set::clear));
+				.filter(key -> !Objects.equals(key, propertiesBackup.getDefaultRule()))
+				.forEach(resource -> Optional
+						.ofNullable(DegradeRuleManager.getRulesOfResource(resource))
+						.ifPresent(Set::clear));
 
 		// Find all feign clients, clear the corresponding rules
 		// NOTE: feign client name cannot be the same as the general resource name !!!
@@ -152,12 +163,25 @@ public class CircuitBreakerRuleChangeListener implements ApplicationContextAware
 						return;
 					}
 					String feignClientName = AnnotationUtils.getValue(anno).toString();
-					Optional.ofNullable(DegradeRuleManager.getRulesOfResource(feignClientName)).ifPresent(Set::clear);
+					Optional.ofNullable(
+							DegradeRuleManager.getRulesOfResource(feignClientName))
+							.ifPresent(Set::clear);
 				});
 	}
 
 	private void updateBackup() {
 		this.propertiesBackup = this.properties.copy();
+	}
+
+	private String prettyPrint(Object o) {
+		try {
+			return new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT)
+					.writeValueAsString(o);
+		}
+		catch (JsonProcessingException e) {
+			LOGGER.error("JSON serialization err.", e);
+			return "__JSON format err__";
+		}
 	}
 
 	// static method
@@ -166,9 +190,9 @@ public class CircuitBreakerRuleChangeListener implements ApplicationContextAware
 			AbstractCircuitBreakerFactory factory) {
 		properties.getRules().forEach((resourceName, degradeRules) -> {
 			if (!Objects.equals(properties.getDefaultRule(), resourceName)) {
-				factory.configure(
-						builder -> ((SentinelConfigBuilder) builder)
-								.rules(properties.getRules().getOrDefault(resourceName, new ArrayList<>())),
+				factory.configure(builder -> ((SentinelConfigBuilder) builder)
+						.rules(properties.getRules().getOrDefault(resourceName,
+								new ArrayList<>())),
 						resourceName);
 			}
 		});
@@ -176,15 +200,18 @@ public class CircuitBreakerRuleChangeListener implements ApplicationContextAware
 
 	public static void configureDefault(SentinelFeignClientProperties properties,
 			AbstractCircuitBreakerFactory factory) {
-		List<DegradeRule> defaultConfigurations = properties.getRules().getOrDefault(properties.getDefaultRule(),
-				new ArrayList<>());
-		factory.configureDefault(resourceName -> new SentinelConfigBuilder(resourceName.toString())
-				.entryType(EntryType.OUT).rules(defaultConfigurations).build());
+		List<DegradeRule> defaultConfigurations = properties.getRules()
+				.getOrDefault(properties.getDefaultRule(), new ArrayList<>());
+		factory.configureDefault(
+				resourceName -> new SentinelConfigBuilder(resourceName.toString())
+						.entryType(EntryType.OUT).rules(defaultConfigurations).build());
 	}
 
-	public static Map getConfigurations(AbstractCircuitBreakerFactory circuitBreakerFactory) {
+	public static Map getConfigurations(
+			AbstractCircuitBreakerFactory circuitBreakerFactory) {
 		try {
-			Method method = AbstractCircuitBreakerFactory.class.getDeclaredMethod("getConfigurations");
+			Method method = AbstractCircuitBreakerFactory.class
+					.getDeclaredMethod("getConfigurations");
 			method.setAccessible(true);
 			return (Map) method.invoke(circuitBreakerFactory);
 		}

@@ -44,7 +44,8 @@ public class SentinelEndpointAutoConfiguration {
 	@Bean
 	@ConditionalOnMissingBean
 	@ConditionalOnEnabledHealthIndicator("sentinel")
-	public SentinelHealthIndicator sentinelHealthIndicator(DefaultListableBeanFactory beanFactory,
+	public SentinelHealthIndicator sentinelHealthIndicator(
+			DefaultListableBeanFactory beanFactory,
 			SentinelProperties sentinelProperties) {
 		return new SentinelHealthIndicator(beanFactory, sentinelProperties);
 	}

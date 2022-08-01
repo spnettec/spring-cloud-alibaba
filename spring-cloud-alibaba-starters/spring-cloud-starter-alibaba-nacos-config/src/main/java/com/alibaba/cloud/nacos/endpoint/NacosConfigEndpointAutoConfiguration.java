@@ -47,7 +47,8 @@ public class NacosConfigEndpointAutoConfiguration {
 	@ConditionalOnAvailableEndpoint
 	@Bean
 	public NacosConfigEndpoint nacosConfigEndpoint() {
-		return new NacosConfigEndpoint(nacosConfigManager.getNacosConfigProperties(), nacosRefreshHistory);
+		return new NacosConfigEndpoint(nacosConfigManager.getNacosConfigProperties(),
+				nacosRefreshHistory);
 	}
 
 	@Bean

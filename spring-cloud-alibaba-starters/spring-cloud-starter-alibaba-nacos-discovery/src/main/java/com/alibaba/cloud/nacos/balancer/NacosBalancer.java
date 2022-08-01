@@ -46,7 +46,8 @@ public class NacosBalancer extends Balancer {
 	 * @param serviceInstances Instance List
 	 * @return the chosen instance
 	 */
-	public static ServiceInstance getHostByRandomWeight3(List<ServiceInstance> serviceInstances) {
+	public static ServiceInstance getHostByRandomWeight3(
+			List<ServiceInstance> serviceInstances) {
 		Map<Instance, ServiceInstance> instanceMap = new HashMap<>();
 		List<Instance> nacosInstance = serviceInstances.stream().map(serviceInstance -> {
 			Map<String, String> metadata = serviceInstance.getMetadata();

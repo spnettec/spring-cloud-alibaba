@@ -54,7 +54,8 @@ public class NacosLoadBalancer implements ReactorServiceInstanceLoadBalancer {
 
 	private final NacosDiscoveryProperties nacosDiscoveryProperties;
 
-	public NacosLoadBalancer(ObjectProvider<ServiceInstanceListSupplier> serviceInstanceListSupplierProvider,
+	public NacosLoadBalancer(
+			ObjectProvider<ServiceInstanceListSupplier> serviceInstanceListSupplierProvider,
 			String serviceId, NacosDiscoveryProperties nacosDiscoveryProperties) {
 		this.serviceId = serviceId;
 		this.serviceInstanceListSupplierProvider = serviceInstanceListSupplierProvider;
@@ -68,7 +69,8 @@ public class NacosLoadBalancer implements ReactorServiceInstanceLoadBalancer {
 		return supplier.get().next().map(this::getInstanceResponse);
 	}
 
-	private Response<ServiceInstance> getInstanceResponse(List<ServiceInstance> serviceInstances) {
+	private Response<ServiceInstance> getInstanceResponse(
+			List<ServiceInstance> serviceInstances) {
 		if (serviceInstances.isEmpty()) {
 			log.warn("No servers available for service: " + this.serviceId);
 			return new EmptyResponse();
@@ -79,20 +81,24 @@ public class NacosLoadBalancer implements ReactorServiceInstanceLoadBalancer {
 
 			List<ServiceInstance> instancesToChoose = serviceInstances;
 			if (StringUtils.isNotBlank(clusterName)) {
-				List<ServiceInstance> sameClusterInstances = serviceInstances.stream().filter(serviceInstance -> {
-					String cluster = serviceInstance.getMetadata().get("nacos.cluster");
-					return StringUtils.equals(cluster, clusterName);
-				}).collect(Collectors.toList());
+				List<ServiceInstance> sameClusterInstances = serviceInstances.stream()
+						.filter(serviceInstance -> {
+							String cluster = serviceInstance.getMetadata()
+									.get("nacos.cluster");
+							return StringUtils.equals(cluster, clusterName);
+						}).collect(Collectors.toList());
 				if (!CollectionUtils.isEmpty(sameClusterInstances)) {
 					instancesToChoose = sameClusterInstances;
 				}
 			}
 			else {
-				log.warn("A cross-cluster call occurs，name = {}, clusterName = {}, instance = {}", serviceId,
-						clusterName, serviceInstances);
+				log.warn(
+						"A cross-cluster call occurs，name = {}, clusterName = {}, instance = {}",
+						serviceId, clusterName, serviceInstances);
 			}
 
-			ServiceInstance instance = NacosBalancer.getHostByRandomWeight3(instancesToChoose);
+			ServiceInstance instance = NacosBalancer
+					.getHostByRandomWeight3(instancesToChoose);
 
 			return new DefaultResponse(instance);
 		}

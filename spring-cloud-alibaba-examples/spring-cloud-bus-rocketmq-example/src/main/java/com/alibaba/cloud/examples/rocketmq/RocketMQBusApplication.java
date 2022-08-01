@@ -43,9 +43,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class RocketMQBusApplication {
 
 	public static void main(String[] args) {
-		new SpringApplicationBuilder(RocketMQBusApplication.class).properties("server.port=0") // Random
-																								// server
-																								// port
+		new SpringApplicationBuilder(RocketMQBusApplication.class)
+				.properties("server.port=0") // Random server port
 				.properties("management.endpoints.web.exposure.include=*") // exposure
 																			// includes
 																			// all
@@ -72,11 +71,13 @@ public class RocketMQBusApplication {
 	 * @return If published
 	 */
 	@GetMapping("/bus/event/publish/user")
-	public boolean publish(@RequestParam String name, @RequestParam(required = false) String destination) {
+	public boolean publish(@RequestParam String name,
+			@RequestParam(required = false) String destination) {
 		User user = new User();
 		user.setId(System.currentTimeMillis());
 		user.setName(name);
-		publisher.publishEvent(new UserRemoteApplicationEvent(this, user, originService, destination));
+		publisher.publishEvent(
+				new UserRemoteApplicationEvent(this, user, originService, destination));
 		return true;
 	}
 
@@ -86,11 +87,13 @@ public class RocketMQBusApplication {
 	 */
 	@EventListener
 	public void onEvent(UserRemoteApplicationEvent event) {
-		System.out.printf("Server [port : %d] listeners on %s\n", localServerPort, event.getUser());
+		System.out.printf("Server [port : %d] listeners on %s\n", localServerPort,
+				event.getUser());
 	}
 
 	@EventListener
-	public void onAckEvent(AckRemoteApplicationEvent event) throws JsonProcessingException {
+	public void onAckEvent(AckRemoteApplicationEvent event)
+			throws JsonProcessingException {
 		System.out.printf("Server [port : %d] listeners on %s\n", localServerPort,
 				objectMapper.writeValueAsString(event));
 	}

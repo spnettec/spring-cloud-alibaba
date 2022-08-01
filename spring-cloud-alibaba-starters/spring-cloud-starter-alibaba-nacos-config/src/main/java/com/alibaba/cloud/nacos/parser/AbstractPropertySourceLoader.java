@@ -25,10 +25,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import com.alibaba.cloud.commons.lang.StringUtils;
+
 import org.springframework.boot.env.PropertySourceLoader;
 import org.springframework.core.env.PropertySource;
 import org.springframework.core.io.Resource;
-import org.springframework.util.StringUtils;
 
 /**
  * Nacos-specific loader, If need to support other methods of parsing,you need to do the
@@ -73,7 +74,8 @@ public abstract class AbstractPropertySourceLoader implements PropertySourceLoad
 	 * @throws IOException if the source cannot be loaded
 	 */
 	@Override
-	public List<PropertySource<?>> load(String name, Resource resource) throws IOException {
+	public List<PropertySource<?>> load(String name, Resource resource)
+			throws IOException {
 		if (!canLoad(name, resource)) {
 			return Collections.emptyList();
 		}
@@ -90,20 +92,23 @@ public abstract class AbstractPropertySourceLoader implements PropertySourceLoad
 	 * @return a list property sources
 	 * @throws IOException if the source cannot be loaded
 	 */
-	protected abstract List<PropertySource<?>> doLoad(String name, Resource resource) throws IOException;
+	protected abstract List<PropertySource<?>> doLoad(String name, Resource resource)
+			throws IOException;
 
-	protected void flattenedMap(Map<String, Object> result, Map<String, Object> dataMap, String parentKey) {
+	protected void flattenedMap(Map<String, Object> result, Map<String, Object> dataMap,
+			String parentKey) {
 		if (dataMap == null || dataMap.isEmpty()) {
 			return;
 		}
 		Set<Entry<String, Object>> entries = dataMap.entrySet();
-		for (Iterator<Entry<String, Object>> iterator = entries.iterator(); iterator.hasNext();) {
+		for (Iterator<Entry<String, Object>> iterator = entries.iterator(); iterator
+				.hasNext();) {
 			Map.Entry<String, Object> entry = iterator.next();
 			String key = entry.getKey();
 			Object value = entry.getValue();
 
-			String fullKey = StringUtils.isEmpty(parentKey) ? key
-					: key.startsWith("[") ? parentKey.concat(key) : parentKey.concat(DOT).concat(key);
+			String fullKey = StringUtils.isEmpty(parentKey) ? key : key.startsWith("[")
+					? parentKey.concat(key) : parentKey.concat(DOT).concat(key);
 
 			if (value instanceof Map) {
 				Map<String, Object> map = (Map<String, Object>) value;
@@ -114,7 +119,9 @@ public abstract class AbstractPropertySourceLoader implements PropertySourceLoad
 				int count = 0;
 				Collection<Object> collection = (Collection<Object>) value;
 				for (Object object : collection) {
-					flattenedMap(result, Collections.singletonMap("[" + (count++) + "]", object), fullKey);
+					flattenedMap(result,
+							Collections.singletonMap("[" + (count++) + "]", object),
+							fullKey);
 				}
 				continue;
 			}

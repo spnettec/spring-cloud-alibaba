@@ -37,14 +37,16 @@ public class RocketMQTopicProvisioner implements
 
 	@Override
 	public ProducerDestination provisionProducerDestination(String name,
-			ExtendedProducerProperties<RocketMQProducerProperties> properties) throws ProvisioningException {
+			ExtendedProducerProperties<RocketMQProducerProperties> properties)
+			throws ProvisioningException {
 		checkTopic(name);
 		return new RocketProducerDestination(name);
 	}
 
 	@Override
 	public ConsumerDestination provisionConsumerDestination(String name, String group,
-			ExtendedConsumerProperties<RocketMQConsumerProperties> properties) throws ProvisioningException {
+			ExtendedConsumerProperties<RocketMQConsumerProperties> properties)
+			throws ProvisioningException {
 		checkTopic(name);
 		return new RocketConsumerDestination(name);
 	}

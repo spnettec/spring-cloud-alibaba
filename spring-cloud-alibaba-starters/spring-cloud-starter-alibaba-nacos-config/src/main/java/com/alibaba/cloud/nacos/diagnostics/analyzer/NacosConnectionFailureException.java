@@ -31,7 +31,8 @@ public class NacosConnectionFailureException extends RuntimeException {
 		this.serverAddr = serverAddr;
 	}
 
-	public NacosConnectionFailureException(String serverAddr, String message, Throwable cause) {
+	public NacosConnectionFailureException(String serverAddr, String message,
+			Throwable cause) {
 		super(message, cause);
 		this.serverAddr = serverAddr;
 	}

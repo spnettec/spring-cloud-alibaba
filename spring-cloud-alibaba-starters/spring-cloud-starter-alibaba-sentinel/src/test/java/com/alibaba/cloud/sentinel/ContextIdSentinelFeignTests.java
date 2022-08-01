@@ -70,7 +70,8 @@ public class ContextIdSentinelFeignTests {
 
 	}
 
-	@FeignClient(contextId = "echoService", name = "service-provider", fallback = EchoServiceFallback.class,
+	@FeignClient(contextId = "echoService", name = "service-provider",
+			fallback = EchoServiceFallback.class,
 			configuration = FeignConfiguration.class)
 	public interface EchoService {
 
@@ -79,7 +80,8 @@ public class ContextIdSentinelFeignTests {
 
 	}
 
-	@FeignClient(contextId = "fooService", value = "foo-service", fallbackFactory = CustomFallbackFactory.class,
+	@FeignClient(contextId = "fooService", value = "foo-service",
+			fallbackFactory = CustomFallbackFactory.class,
 			configuration = FeignConfiguration.class)
 	public interface FooService {
 
@@ -120,7 +122,8 @@ public class ContextIdSentinelFeignTests {
 
 	}
 
-	public static class CustomFallbackFactory implements FallbackFactory<FooService> {
+	public static class CustomFallbackFactory
+			implements FallbackFactory<FooService> {
 
 		private FooService fooService = new FooServiceFallback();
 

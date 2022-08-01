@@ -21,8 +21,8 @@ import java.util.Collections;
 
 import com.alibaba.csp.sentinel.slots.block.degrade.DegradeRule;
 import com.alibaba.csp.sentinel.slots.block.degrade.DegradeRuleManager;
-import org.junit.After;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.cloud.client.circuitbreaker.CircuitBreaker;
 
@@ -33,7 +33,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class SentinelCircuitBreakerTest {
 
-	@After
+	@AfterEach
 	public void tearDown() {
 		// Clear the rules.
 		DegradeRuleManager.loadRules(new ArrayList<>());
@@ -42,20 +42,27 @@ public class SentinelCircuitBreakerTest {
 	@Test
 	public void testCreateDirectlyThenRun() {
 		// Create a circuit breaker without any circuit breaking rules.
-		CircuitBreaker cb = new SentinelCircuitBreaker("testSentinelCreateDirectlyThenRunA");
+		CircuitBreaker cb = new SentinelCircuitBreaker(
+				"testSentinelCreateDirectlyThenRunA");
 		assertThat(cb.run(() -> "Sentinel")).isEqualTo("Sentinel");
-		assertThat(DegradeRuleManager.hasConfig("testSentinelCreateDirectlyThenRunA")).isFalse();
+		assertThat(DegradeRuleManager.hasConfig("testSentinelCreateDirectlyThenRunA"))
+				.isFalse();
 
-		CircuitBreaker cb2 = new SentinelCircuitBreaker("testSentinelCreateDirectlyThenRunB", Collections
-				.singletonList(new DegradeRule("testSentinelCreateDirectlyThenRunB").setCount(100).setTimeWindow(10)));
+		CircuitBreaker cb2 = new SentinelCircuitBreaker(
+				"testSentinelCreateDirectlyThenRunB",
+				Collections.singletonList(
+						new DegradeRule("testSentinelCreateDirectlyThenRunB")
+								.setCount(100).setTimeWindow(10)));
 		assertThat(cb2.run(() -> "Sentinel")).isEqualTo("Sentinel");
-		assertThat(DegradeRuleManager.hasConfig("testSentinelCreateDirectlyThenRunB")).isTrue();
+		assertThat(DegradeRuleManager.hasConfig("testSentinelCreateDirectlyThenRunB"))
+				.isTrue();
 	}
 
 	@Test
 	public void testCreateWithNullRule() {
 		String id = "testCreateCbWithNullRule";
-		CircuitBreaker cb = new SentinelCircuitBreaker(id, Collections.singletonList(null));
+		CircuitBreaker cb = new SentinelCircuitBreaker(id,
+				Collections.singletonList(null));
 		assertThat(cb.run(() -> "Sentinel")).isEqualTo("Sentinel");
 		assertThat(DegradeRuleManager.hasConfig(id)).isFalse();
 	}
@@ -68,7 +75,8 @@ public class SentinelCircuitBreakerTest {
 
 	@Test
 	public void testRunWithFallback() {
-		CircuitBreaker cb = new SentinelCircuitBreakerFactory().create("testSentinelRunWithFallback");
+		CircuitBreaker cb = new SentinelCircuitBreakerFactory()
+				.create("testSentinelRunWithFallback");
 		assertThat(cb.<String>run(() -> {
 			throw new RuntimeException("boom");
 		}, t -> "fallback")).isEqualTo("fallback");

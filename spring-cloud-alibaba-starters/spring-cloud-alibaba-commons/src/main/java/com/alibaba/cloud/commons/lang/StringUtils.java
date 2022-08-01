@@ -203,7 +203,8 @@ public final class StringUtils {
 		if (cs1 instanceof String && cs2 instanceof String) {
 			return cs1.equals(cs2);
 		}
-		return StringUtils.regionMatches(cs1, false, 0, cs2, 0, Math.max(cs1.length(), cs2.length()));
+		return StringUtils.regionMatches(cs1, false, 0, cs2, 0,
+				Math.max(cs1.length(), cs2.length()));
 	}
 
 	/**
@@ -216,10 +217,12 @@ public final class StringUtils {
 	 * @param length character length of the region
 	 * @return whether the region matched
 	 */
-	public static boolean regionMatches(final CharSequence cs, final boolean ignoreCase, final int thisStart,
-			final CharSequence substring, final int start, final int length) {
+	public static boolean regionMatches(final CharSequence cs, final boolean ignoreCase,
+			final int thisStart, final CharSequence substring, final int start,
+			final int length) {
 		if (cs instanceof String && substring instanceof String) {
-			return ((String) cs).regionMatches(ignoreCase, thisStart, (String) substring, start, length);
+			return ((String) cs).regionMatches(ignoreCase, thisStart, (String) substring,
+					start, length);
 		}
 		int index1 = thisStart;
 		int index2 = start;

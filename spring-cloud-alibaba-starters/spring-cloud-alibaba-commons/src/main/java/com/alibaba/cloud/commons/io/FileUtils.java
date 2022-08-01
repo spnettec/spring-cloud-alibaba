@@ -74,7 +74,8 @@ public final class FileUtils {
 	 * @return the file contents, never {@code null}
 	 * @throws IOException in case of an I/O error
 	 */
-	public static String readFileToString(final File file, final Charset encoding) throws IOException {
+	public static String readFileToString(final File file, final Charset encoding)
+			throws IOException {
 		try (InputStream in = openInputStream(file)) {
 			return IOUtils.toString(in, Charsets.toCharset(encoding));
 		}
@@ -90,7 +91,8 @@ public final class FileUtils {
 	 * {@link java.io .UnsupportedEncodingException} in version 2.2 if the encoding is not
 	 * supported.
 	 */
-	public static String readFileToString(final File file, final String encoding) throws IOException {
+	public static String readFileToString(final File file, final String encoding)
+			throws IOException {
 		return readFileToString(file, Charsets.toCharset(encoding));
 	}
 

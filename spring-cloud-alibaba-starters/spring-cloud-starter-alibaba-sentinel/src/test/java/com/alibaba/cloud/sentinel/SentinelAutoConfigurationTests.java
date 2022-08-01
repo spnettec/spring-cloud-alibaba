@@ -33,7 +33,6 @@ import com.alibaba.csp.sentinel.slots.block.flow.FlowRuleManager;
 import com.alibaba.csp.sentinel.transport.config.TransportConfig;
 import com.alibaba.csp.sentinel.transport.endpoint.Endpoint;
 import com.alibaba.csp.sentinel.transport.endpoint.Protocol;
-import com.alibaba.csp.sentinel.util.function.Tuple2;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -66,12 +65,17 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = { SentinelAutoConfigurationTests.TestConfig.class },
-		properties = { "spring.cloud.sentinel.filter.order=123", "spring.cloud.sentinel.filter.urlPatterns=/*,/test",
-				"spring.cloud.sentinel.metric.fileSingleSize=9999", "spring.cloud.sentinel.metric.fileTotalCount=100",
-				"spring.cloud.sentinel.blockPage=/error", "spring.cloud.sentinel.flow.coldFactor=3",
-				"spring.cloud.sentinel.eager=true", "spring.cloud.sentinel.log.switchPid=true",
+		properties = { "spring.cloud.sentinel.filter.order=123",
+				"spring.cloud.sentinel.filter.urlPatterns=/*,/test",
+				"spring.cloud.sentinel.metric.fileSingleSize=9999",
+				"spring.cloud.sentinel.metric.fileTotalCount=100",
+				"spring.cloud.sentinel.blockPage=/error",
+				"spring.cloud.sentinel.flow.coldFactor=3",
+				"spring.cloud.sentinel.eager=true",
+				"spring.cloud.sentinel.log.switchPid=true",
 				"spring.cloud.sentinel.transport.dashboard=http://localhost:8080,http://localhost:8081",
-				"spring.cloud.sentinel.transport.port=9999", "spring.cloud.sentinel.transport.clientIp=1.1.1.1",
+				"spring.cloud.sentinel.transport.port=9999",
+				"spring.cloud.sentinel.transport.clientIp=1.1.1.1",
 				"spring.cloud.sentinel.transport.heartbeatIntervalMs=20000" },
 		webEnvironment = RANDOM_PORT)
 public class SentinelAutoConfigurationTests {
@@ -131,9 +135,11 @@ public class SentinelAutoConfigurationTests {
 		Map<String, Object> map = sentinelEndpoint.invoke();
 
 		assertThat(map.get("logUsePid")).isEqualTo(Boolean.TRUE);
-		assertThat(map.get("consoleServer").toString()).isEqualTo(Arrays
-				.asList(new Endpoint(Protocol.HTTP, "localhost", 8080), new Endpoint(Protocol.HTTP, "localhost", 8081))
-				.toString());
+		assertThat(map.get("consoleServer").toString())
+				.isEqualTo(Arrays
+						.asList(new Endpoint(Protocol.HTTP, "localhost", 8080),
+								new Endpoint(Protocol.HTTP, "localhost", 8081))
+						.toString());
 		assertThat(map.get("clientPort")).isEqualTo("9999");
 		assertThat(map.get("heartbeatIntervalMs")).isEqualTo(20000L);
 		assertThat(map.get("clientIp")).isEqualTo("1.1.1.1");
@@ -146,8 +152,10 @@ public class SentinelAutoConfigurationTests {
 	private void checkSentinelFilter() {
 		assertThat(sentinelProperties.getFilter().getOrder()).isEqualTo(123);
 		assertThat(sentinelProperties.getFilter().getUrlPatterns().size()).isEqualTo(2);
-		assertThat(sentinelProperties.getFilter().getUrlPatterns().get(0)).isEqualTo("/*");
-		assertThat(sentinelProperties.getFilter().getUrlPatterns().get(1)).isEqualTo("/test");
+		assertThat(sentinelProperties.getFilter().getUrlPatterns().get(0))
+				.isEqualTo("/*");
+		assertThat(sentinelProperties.getFilter().getUrlPatterns().get(1))
+				.isEqualTo("/test");
 	}
 
 	private void checkSentinelMetric() {
@@ -165,7 +173,8 @@ public class SentinelAutoConfigurationTests {
 		assertThat(sentinelProperties.getTransport().getDashboard())
 				.isEqualTo("http://localhost:8080,http://localhost:8081");
 		assertThat(sentinelProperties.getTransport().getClientIp()).isEqualTo("1.1.1.1");
-		assertThat(sentinelProperties.getTransport().getHeartbeatIntervalMs()).isEqualTo("20000");
+		assertThat(sentinelProperties.getTransport().getHeartbeatIntervalMs())
+				.isEqualTo("20000");
 	}
 
 	private void checkSentinelEager() {
@@ -179,11 +188,14 @@ public class SentinelAutoConfigurationTests {
 	@Test
 	public void testSentinelSystemProperties() {
 		assertThat(LogBase.isLogNameUsePid()).isEqualTo(true);
-		assertThat(TransportConfig.getConsoleServerList().toString()).isEqualTo(Arrays
-				.asList(new Endpoint(Protocol.HTTP, "localhost", 8080), new Endpoint(Protocol.HTTP, "localhost", 8081))
-				.toString());
+		assertThat(TransportConfig.getConsoleServerList().toString())
+				.isEqualTo(Arrays
+						.asList(new Endpoint(Protocol.HTTP, "localhost", 8080),
+								new Endpoint(Protocol.HTTP, "localhost", 8081))
+						.toString());
 		assertThat(TransportConfig.getPort()).isEqualTo("9999");
-		assertThat(TransportConfig.getHeartbeatIntervalMs().longValue()).isEqualTo(20000L);
+		assertThat(TransportConfig.getHeartbeatIntervalMs().longValue())
+				.isEqualTo(20000L);
 		assertThat(TransportConfig.getHeartbeatClientIp()).isEqualTo("1.1.1.1");
 		assertThat(SentinelConfig.singleMetricFileSize()).isEqualTo(9999);
 		assertThat(SentinelConfig.totalMetricFileCount()).isEqualTo(100);
@@ -197,14 +209,17 @@ public class SentinelAutoConfigurationTests {
 		assertThat(restTemplate.getInterceptors().size()).isEqualTo(2);
 		assertThat(restTemplateWithBlockClass.getInterceptors().size()).isEqualTo(1);
 
-		ResponseEntity responseEntityBlock = restTemplateWithBlockClass.getForEntity(flowUrl, String.class);
+		ResponseEntity responseEntityBlock = restTemplateWithBlockClass
+				.getForEntity(flowUrl, String.class);
 
 		assertThat(responseEntityBlock.getBody()).isEqualTo("Oops");
 		assertThat(responseEntityBlock.getStatusCode()).isEqualTo(HttpStatus.OK);
 
-		ResponseEntity responseEntityRaw = restTemplate.getForEntity(flowUrl, String.class);
+		ResponseEntity responseEntityRaw = restTemplate.getForEntity(flowUrl,
+				String.class);
 
-		assertThat(responseEntityRaw.getBody()).isEqualTo("RestTemplate request block by sentinel");
+		assertThat(responseEntityRaw.getBody())
+				.isEqualTo("RestTemplate request block by sentinel");
 		assertThat(responseEntityRaw.getStatusCode()).isEqualTo(HttpStatus.OK);
 	}
 
@@ -229,13 +244,15 @@ public class SentinelAutoConfigurationTests {
 		}
 
 		@Bean
-		@SentinelRestTemplate(blockHandlerClass = ExceptionUtil.class, blockHandler = "handleException")
+		@SentinelRestTemplate(blockHandlerClass = ExceptionUtil.class,
+				blockHandler = "handleException")
 		RestTemplate restTemplateWithBlockClass() {
 			return new RestTemplate();
 		}
 
 		@Bean
-		@SentinelRestTemplate(fallbackClass = ExceptionUtil.class, fallback = "fallbackException")
+		@SentinelRestTemplate(fallbackClass = ExceptionUtil.class,
+				fallback = "fallbackException")
 		RestTemplate restTemplateWithFallbackClass() {
 			return new RestTemplate();
 		}
@@ -249,14 +266,14 @@ public class SentinelAutoConfigurationTests {
 
 	public static class ExceptionUtil {
 
-		public static SentinelClientHttpResponse handleException(HttpRequest request, byte[] body,
-				ClientHttpRequestExecution execution, BlockException ex) {
+		public static SentinelClientHttpResponse handleException(HttpRequest request,
+				byte[] body, ClientHttpRequestExecution execution, BlockException ex) {
 			System.out.println("Oops: " + ex.getClass().getCanonicalName());
 			return new SentinelClientHttpResponse("Oops");
 		}
 
-		public static SentinelClientHttpResponse fallbackException(HttpRequest request, byte[] body,
-				ClientHttpRequestExecution execution, BlockException ex) {
+		public static SentinelClientHttpResponse fallbackException(HttpRequest request,
+				byte[] body, ClientHttpRequestExecution execution, BlockException ex) {
 			System.out.println("Oops: " + ex.getClass().getCanonicalName());
 			return new SentinelClientHttpResponse("Oops fallback");
 		}
@@ -265,8 +282,8 @@ public class SentinelAutoConfigurationTests {
 
 	@Configuration
 	@EnableAutoConfiguration
-	@ImportAutoConfiguration({ SentinelAutoConfiguration.class, SentinelWebAutoConfiguration.class,
-			SentinelTestConfiguration.class })
+	@ImportAutoConfiguration({ SentinelAutoConfiguration.class,
+			SentinelWebAutoConfiguration.class, SentinelTestConfiguration.class })
 	public static class TestConfig {
 
 	}

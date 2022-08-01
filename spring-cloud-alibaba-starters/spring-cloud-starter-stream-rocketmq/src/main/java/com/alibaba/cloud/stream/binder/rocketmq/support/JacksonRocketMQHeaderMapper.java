@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -33,7 +34,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.springframework.lang.Nullable;
 import org.springframework.messaging.MessageHeaders;
 import org.springframework.util.ClassUtils;
 
@@ -46,10 +46,11 @@ import org.springframework.util.ClassUtils;
  */
 public class JacksonRocketMQHeaderMapper extends AbstractRocketMQHeaderMapper {
 
-	private final static Logger log = LoggerFactory.getLogger(JacksonRocketMQHeaderMapper.class);
+	private final static Logger log = LoggerFactory
+			.getLogger(JacksonRocketMQHeaderMapper.class);
 
-	private static final List<String> DEFAULT_TRUSTED_PACKAGES = Arrays.asList("java.lang", "java.net", "java.util",
-			"org.springframework.util");
+	private static final List<String> DEFAULT_TRUSTED_PACKAGES = Arrays
+			.asList("java.lang", "java.net", "java.util", "org.springframework.util");
 
 	/**
 	 * Header name for java types of other headers.
@@ -58,7 +59,8 @@ public class JacksonRocketMQHeaderMapper extends AbstractRocketMQHeaderMapper {
 
 	private final ObjectMapper objectMapper;
 
-	private final Set<String> trustedPackages = new LinkedHashSet<>(DEFAULT_TRUSTED_PACKAGES);
+	private final Set<String> trustedPackages = new LinkedHashSet<>(
+			DEFAULT_TRUSTED_PACKAGES);
 
 	public JacksonRocketMQHeaderMapper(ObjectMapper objectMapper) {
 		this.objectMapper = objectMapper;
@@ -85,7 +87,8 @@ public class JacksonRocketMQHeaderMapper extends AbstractRocketMQHeaderMapper {
 						jsonHeaders.put(key, className);
 					}
 					catch (Exception e) {
-						log.debug("Could not map " + key + " with type " + value.getClass().getName(), e);
+						log.debug("Could not map " + key + " with type "
+								+ value.getClass().getName(), e);
 					}
 				}
 			}
@@ -107,7 +110,7 @@ public class JacksonRocketMQHeaderMapper extends AbstractRocketMQHeaderMapper {
 		final Map<String, String> jsonTypes = decodeJsonTypes(source);
 		source.forEach((key, value) -> {
 			if (matches(key) && !(key.equals(JSON_TYPES))) {
-				if (jsonTypes != null && jsonTypes.containsKey(key)) {
+				if (jsonTypes.containsKey(key)) {
 					Class<?> type = Object.class;
 					String requestedType = jsonTypes.get(key);
 					boolean trusted = trusted(requestedType);
@@ -126,7 +129,8 @@ public class JacksonRocketMQHeaderMapper extends AbstractRocketMQHeaderMapper {
 							target.put(key, val);
 						}
 						catch (IOException e) {
-							log.error("Could not decode json type: " + value + " for key: " + key, e);
+							log.error("Could not decode json type: " + value
+									+ " for key: " + key, e);
 							target.put(key, value);
 						}
 					}
@@ -182,7 +186,8 @@ public class JacksonRocketMQHeaderMapper extends AbstractRocketMQHeaderMapper {
 		return objectMapper;
 	}
 
-	private Object decodeValue(String jsonString, Class<?> type) throws IOException, LinkageError {
+	private Object decodeValue(String jsonString, Class<?> type)
+			throws IOException, LinkageError {
 		Object value = objectMapper.readValue(jsonString, type);
 		if (type.equals(NonTrustedHeaderType.class)) {
 			// Upstream NTHT propagated; may be trusted here...
@@ -200,19 +205,19 @@ public class JacksonRocketMQHeaderMapper extends AbstractRocketMQHeaderMapper {
 		return value;
 	}
 
-	@Nullable
 	private Map<String, String> decodeJsonTypes(Map<String, String> source) {
 		if (source.containsKey(JSON_TYPES)) {
 			String value = source.get(JSON_TYPES);
 			try {
-				return objectMapper.readValue(value, new TypeReference<Map<String, String>>() {
-				});
+				return objectMapper.readValue(value,
+						new TypeReference<Map<String, String>>() {
+						});
 			}
 			catch (IOException e) {
 				log.error("Could not decode json types: " + value, e);
 			}
 		}
-		return null;
+		return Collections.emptyMap();
 	}
 
 	protected boolean trusted(String requestedType) {
@@ -226,7 +231,8 @@ public class JacksonRocketMQHeaderMapper extends AbstractRocketMQHeaderMapper {
 			}
 			String packageName = requestedType.substring(0, lastDot);
 			for (String trustedPackage : this.trustedPackages) {
-				if (packageName.equals(trustedPackage) || packageName.startsWith(trustedPackage + ".")) {
+				if (packageName.equals(trustedPackage)
+						|| packageName.startsWith(trustedPackage + ".")) {
 					return true;
 				}
 			}
@@ -271,7 +277,8 @@ public class JacksonRocketMQHeaderMapper extends AbstractRocketMQHeaderMapper {
 
 		@Override
 		public String toString() {
-			return "NonTrustedHeaderType [headerValue=" + headerValue + ", untrustedType=" + this.untrustedType + "]";
+			return "NonTrustedHeaderType [headerValue=" + headerValue + ", untrustedType="
+					+ this.untrustedType + "]";
 		}
 
 	}

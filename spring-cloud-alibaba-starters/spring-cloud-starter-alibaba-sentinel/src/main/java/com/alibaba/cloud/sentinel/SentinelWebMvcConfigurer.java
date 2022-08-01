@@ -31,7 +31,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  */
 public class SentinelWebMvcConfigurer implements WebMvcConfigurer {
 
-	private static final Logger log = LoggerFactory.getLogger(SentinelWebMvcConfigurer.class);
+	private static final Logger log = LoggerFactory
+			.getLogger(SentinelWebMvcConfigurer.class);
 
 	@Autowired
 	private SentinelProperties sentinelProperties;
@@ -45,9 +46,11 @@ public class SentinelWebMvcConfigurer implements WebMvcConfigurer {
 			return;
 		}
 		SentinelProperties.Filter filterConfig = sentinelProperties.getFilter();
-		registry.addInterceptor(sentinelWebInterceptorOptional.get()).order(filterConfig.getOrder())
+		registry.addInterceptor(sentinelWebInterceptorOptional.get())
+				.order(filterConfig.getOrder())
 				.addPathPatterns(filterConfig.getUrlPatterns());
-		log.info("[Sentinel Starter] register SentinelWebInterceptor with urlPatterns: {}.",
+		log.info(
+				"[Sentinel Starter] register SentinelWebInterceptor with urlPatterns: {}.",
 				filterConfig.getUrlPatterns());
 	}
 

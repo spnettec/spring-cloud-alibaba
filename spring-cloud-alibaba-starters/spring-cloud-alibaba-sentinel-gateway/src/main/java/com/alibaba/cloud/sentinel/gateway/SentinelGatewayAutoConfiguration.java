@@ -56,7 +56,8 @@ public class SentinelGatewayAutoConfiguration {
 	@Configuration(proxyBeanMethods = false)
 	protected static class SentinelConverterConfiguration {
 
-		static class ApiPredicateItemDeserializer extends StdDeserializer<ApiPredicateItem> {
+		static class ApiPredicateItemDeserializer
+				extends StdDeserializer<ApiPredicateItem> {
 
 			private Map<String, Class<? extends ApiPredicateItem>> registry = new HashMap<String, Class<? extends ApiPredicateItem>>();
 
@@ -70,7 +71,8 @@ public class SentinelGatewayAutoConfiguration {
 			}
 
 			@Override
-			public ApiPredicateItem deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException {
+			public ApiPredicateItem deserialize(JsonParser jp,
+					DeserializationContext ctxt) throws IOException {
 				ObjectMapper mapper = (ObjectMapper) jp.getCodec();
 				ObjectNode root = mapper.readTree(jp);
 				Class<? extends ApiPredicateItem> apiPredicateItemClass = null;
@@ -97,13 +99,17 @@ public class SentinelGatewayAutoConfiguration {
 			private ObjectMapper objectMapper = new ObjectMapper();
 
 			public SentinelJsonConfiguration() {
-				objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+				objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,
+						false);
 
 				ApiPredicateItemDeserializer deserializer = new ApiPredicateItemDeserializer();
-				deserializer.registerApiPredicateItem("pattern", ApiPathPredicateItem.class);
-				deserializer.registerApiPredicateItem("items", ApiPredicateGroupItem.class);
-				SimpleModule module = new SimpleModule("PolymorphicApiPredicateItemDeserializerModule",
-						new Version(1, 0, 0, null));
+				deserializer.registerApiPredicateItem("pattern",
+						ApiPathPredicateItem.class);
+				deserializer.registerApiPredicateItem("items",
+						ApiPredicateGroupItem.class);
+				SimpleModule module = new SimpleModule(
+						"PolymorphicApiPredicateItemDeserializerModule",
+						new Version(1, 0, 0, null, null, null));
 				module.addDeserializer(ApiPredicateItem.class, deserializer);
 				objectMapper.registerModule(module);
 			}
@@ -127,12 +133,16 @@ public class SentinelGatewayAutoConfiguration {
 			private XmlMapper xmlMapper = new XmlMapper();
 
 			public SentinelXmlConfiguration() {
-				xmlMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+				xmlMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,
+						false);
 				ApiPredicateItemDeserializer deserializer = new ApiPredicateItemDeserializer();
-				deserializer.registerApiPredicateItem("pattern", ApiPathPredicateItem.class);
-				deserializer.registerApiPredicateItem("items", ApiPredicateGroupItem.class);
-				SimpleModule module = new SimpleModule("PolymorphicGatewayDeserializerModule",
-						new Version(1, 0, 0, null));
+				deserializer.registerApiPredicateItem("pattern",
+						ApiPathPredicateItem.class);
+				deserializer.registerApiPredicateItem("items",
+						ApiPredicateGroupItem.class);
+				SimpleModule module = new SimpleModule(
+						"PolymorphicGatewayDeserializerModule",
+						new Version(1, 0, 0, null, null, null));
 				module.addDeserializer(ApiPredicateItem.class, deserializer);
 				xmlMapper.registerModule(module);
 			}

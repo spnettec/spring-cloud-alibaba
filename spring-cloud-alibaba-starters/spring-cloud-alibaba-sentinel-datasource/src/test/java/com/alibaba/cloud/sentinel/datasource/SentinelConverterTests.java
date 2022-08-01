@@ -17,6 +17,7 @@
 package com.alibaba.cloud.sentinel.datasource;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.List;
 
 import com.alibaba.cloud.commons.io.FileUtils;
@@ -26,12 +27,13 @@ import com.alibaba.csp.sentinel.slots.block.RuleConstant;
 import com.alibaba.csp.sentinel.slots.block.flow.FlowRule;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.util.ResourceUtils;
 import org.springframework.util.StringUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 /**
  * @author <a href="mailto:fangjian0423@gmail.com">Jim</a>
@@ -45,14 +47,17 @@ public class SentinelConverterTests {
 	@Test
 	public void testJsonConverter() {
 		JsonConverter jsonConverter = new JsonConverter(objectMapper, FlowRule.class);
-		List<FlowRule> flowRules = (List<FlowRule>) jsonConverter.convert(readFileContent("classpath: flowrule.json"));
+		List<FlowRule> flowRules = (List<FlowRule>) jsonConverter
+				.convert(readFileContent("classpath: flowrule.json"));
 
 		assertThat(flowRules.size()).isEqualTo(1);
 		assertThat(flowRules.get(0).getResource()).isEqualTo("resource");
 		assertThat(flowRules.get(0).getLimitApp()).isEqualTo("default");
 		assertThat(String.valueOf(flowRules.get(0).getCount())).isEqualTo("1.0");
-		assertThat(flowRules.get(0).getControlBehavior()).isEqualTo(RuleConstant.CONTROL_BEHAVIOR_DEFAULT);
-		assertThat(flowRules.get(0).getStrategy()).isEqualTo(RuleConstant.STRATEGY_DIRECT);
+		assertThat(flowRules.get(0).getControlBehavior())
+				.isEqualTo(RuleConstant.CONTROL_BEHAVIOR_DEFAULT);
+		assertThat(flowRules.get(0).getStrategy())
+				.isEqualTo(RuleConstant.STRATEGY_DIRECT);
 		assertThat(flowRules.get(0).getGrade()).isEqualTo(RuleConstant.FLOW_GRADE_QPS);
 	}
 
@@ -63,42 +68,55 @@ public class SentinelConverterTests {
 		assertThat(flowRules.size()).isEqualTo(0);
 	}
 
-	@Test(expected = RuntimeException.class)
+	@Test
 	public void testConverterErrorFormat() {
-		JsonConverter jsonConverter = new JsonConverter(objectMapper, FlowRule.class);
-		jsonConverter.convert(readFileContent("classpath: flowrule-errorformat.json"));
+		assertThatExceptionOfType(RuntimeException.class).isThrownBy(() -> {
+			JsonConverter jsonConverter = new JsonConverter(objectMapper, FlowRule.class);
+			jsonConverter
+					.convert(readFileContent("classpath: flowrule-errorformat.json"));
+		});
 	}
 
-	@Test(expected = RuntimeException.class)
+	@Test
 	public void testConverterErrorContent() {
-		JsonConverter jsonConverter = new JsonConverter(objectMapper, FlowRule.class);
-		jsonConverter.convert(readFileContent("classpath: flowrule-errorcontent.json"));
+		assertThatExceptionOfType(RuntimeException.class).isThrownBy(() -> {
+			JsonConverter jsonConverter = new JsonConverter(objectMapper, FlowRule.class);
+			jsonConverter
+					.convert(readFileContent("classpath: flowrule-errorcontent.json"));
+		});
 	}
 
 	@Test
 	public void testXmlConverter() {
 		XmlConverter jsonConverter = new XmlConverter(xmlMapper, FlowRule.class);
-		List<FlowRule> flowRules = (List<FlowRule>) jsonConverter.convert(readFileContent("classpath: flowrule.xml"));
+		List<FlowRule> flowRules = (List<FlowRule>) jsonConverter
+				.convert(readFileContent("classpath: flowrule.xml"));
 
 		assertThat(flowRules.size()).isEqualTo(2);
 		assertThat(flowRules.get(0).getResource()).isEqualTo("resource");
 		assertThat(flowRules.get(0).getLimitApp()).isEqualTo("default");
 		assertThat(String.valueOf(flowRules.get(0).getCount())).isEqualTo("1.0");
-		assertThat(flowRules.get(0).getControlBehavior()).isEqualTo(RuleConstant.CONTROL_BEHAVIOR_DEFAULT);
-		assertThat(flowRules.get(0).getStrategy()).isEqualTo(RuleConstant.STRATEGY_DIRECT);
+		assertThat(flowRules.get(0).getControlBehavior())
+				.isEqualTo(RuleConstant.CONTROL_BEHAVIOR_DEFAULT);
+		assertThat(flowRules.get(0).getStrategy())
+				.isEqualTo(RuleConstant.STRATEGY_DIRECT);
 		assertThat(flowRules.get(0).getGrade()).isEqualTo(RuleConstant.FLOW_GRADE_QPS);
 
 		assertThat(flowRules.get(1).getResource()).isEqualTo("test");
 		assertThat(flowRules.get(1).getLimitApp()).isEqualTo("default");
 		assertThat(String.valueOf(flowRules.get(1).getCount())).isEqualTo("1.0");
-		assertThat(flowRules.get(1).getControlBehavior()).isEqualTo(RuleConstant.CONTROL_BEHAVIOR_DEFAULT);
-		assertThat(flowRules.get(1).getStrategy()).isEqualTo(RuleConstant.STRATEGY_DIRECT);
+		assertThat(flowRules.get(1).getControlBehavior())
+				.isEqualTo(RuleConstant.CONTROL_BEHAVIOR_DEFAULT);
+		assertThat(flowRules.get(1).getStrategy())
+				.isEqualTo(RuleConstant.STRATEGY_DIRECT);
 		assertThat(flowRules.get(1).getGrade()).isEqualTo(RuleConstant.FLOW_GRADE_QPS);
 	}
 
 	private String readFileContent(String file) {
 		try {
-			return FileUtils.readFileToString(ResourceUtils.getFile(StringUtils.trimAllWhitespace(file)));
+			return FileUtils.readFileToString(
+					ResourceUtils.getFile(StringUtils.trimAllWhitespace(file)),
+					Charset.defaultCharset());
 		}
 		catch (IOException e) {
 			return "";

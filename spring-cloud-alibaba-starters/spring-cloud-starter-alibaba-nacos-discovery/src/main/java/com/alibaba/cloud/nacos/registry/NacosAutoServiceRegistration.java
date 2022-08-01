@@ -16,6 +16,7 @@
 
 package com.alibaba.cloud.nacos.registry;
 
+import com.alibaba.cloud.commons.lang.StringUtils;
 import com.alibaba.cloud.nacos.event.NacosDiscoveryInfoChangedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,20 +27,22 @@ import org.springframework.cloud.client.serviceregistry.Registration;
 import org.springframework.cloud.client.serviceregistry.ServiceRegistry;
 import org.springframework.context.event.EventListener;
 import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
 
 /**
  * @author xiaojing
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  */
-public class NacosAutoServiceRegistration extends AbstractAutoServiceRegistration<Registration> {
+public class NacosAutoServiceRegistration
+		extends AbstractAutoServiceRegistration<Registration> {
 
-	private static final Logger log = LoggerFactory.getLogger(NacosAutoServiceRegistration.class);
+	private static final Logger log = LoggerFactory
+			.getLogger(NacosAutoServiceRegistration.class);
 
 	private NacosRegistration registration;
 
 	public NacosAutoServiceRegistration(ServiceRegistry<Registration> serviceRegistry,
-			AutoServiceRegistrationProperties autoServiceRegistrationProperties, NacosRegistration registration) {
+			AutoServiceRegistrationProperties autoServiceRegistrationProperties,
+			NacosRegistration registration) {
 		super(serviceRegistry, autoServiceRegistrationProperties);
 		this.registration = registration;
 	}

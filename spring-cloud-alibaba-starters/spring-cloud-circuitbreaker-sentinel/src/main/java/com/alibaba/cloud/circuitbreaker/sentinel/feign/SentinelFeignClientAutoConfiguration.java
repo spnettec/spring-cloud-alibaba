@@ -42,16 +42,16 @@ import static com.alibaba.cloud.circuitbreaker.sentinel.feign.CircuitBreakerRule
  * Auto configuration for feign client circuit breaker rules.
  *
  * @author freeman
+ * @since 2021.0.1.0
  */
 @Configuration(proxyBeanMethods = false)
 @ConditionalOnClass({ Feign.class, FeignClientFactoryBean.class })
-@ConditionalOnProperty(name = "spring.cloud.circuitbreaker.sentinel.enabled", havingValue = "true",
-		matchIfMissing = true)
+@ConditionalOnProperty(name = "spring.cloud.circuitbreaker.sentinel.enabled", havingValue = "true", matchIfMissing = true)
 @EnableConfigurationProperties(SentinelFeignClientProperties.class)
 public class SentinelFeignClientAutoConfiguration {
 
 	@Configuration(proxyBeanMethods = false)
-	@ConditionalOnProperty(name = "feign.sentinel.refresh-rules", havingValue = "true", matchIfMissing = true)
+	@ConditionalOnProperty(name = "feign.sentinel.enable-refresh-rules", havingValue = "true", matchIfMissing = true)
 	public static class CircuitBreakerListenerConfiguration {
 
 		@Bean
@@ -62,14 +62,14 @@ public class SentinelFeignClientAutoConfiguration {
 	}
 
 	@Configuration(proxyBeanMethods = false)
-	@ConditionalOnClass(CircuitBreakerNameResolver.class)
 	public static class CircuitBreakerNameResolverConfiguration {
 
 		@Bean
 		@ConditionalOnMissingBean(CircuitBreakerNameResolver.class)
 		public CircuitBreakerNameResolver feignClientCircuitNameResolver(
 				ObjectProvider<List<AbstractCircuitBreakerFactory>> provider) {
-			List<AbstractCircuitBreakerFactory> factories = provider.getIfAvailable(Collections::emptyList);
+			List<AbstractCircuitBreakerFactory> factories = provider
+					.getIfAvailable(Collections::emptyList);
 			if (factories.size() >= 1) {
 				return new FeignClientCircuitNameResolver(factories.get(0));
 			}
@@ -94,7 +94,8 @@ public class SentinelFeignClientAutoConfiguration {
 	}
 
 	@Configuration(proxyBeanMethods = false)
-	@ConditionalOnClass(name = { "reactor.core.publisher.Mono", "reactor.core.publisher.Flux" })
+	@ConditionalOnClass(name = { "reactor.core.publisher.Mono",
+			"reactor.core.publisher.Flux" })
 	public static class ReactiveSentinelCustomizerConfiguration {
 
 		@Bean

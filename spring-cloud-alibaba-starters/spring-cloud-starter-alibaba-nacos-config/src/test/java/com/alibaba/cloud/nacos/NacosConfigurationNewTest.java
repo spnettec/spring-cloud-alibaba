@@ -16,8 +16,6 @@
 
 package com.alibaba.cloud.nacos;
 
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
 import java.util.Map;
 
 import com.alibaba.cloud.nacos.NacosConfigProperties.Config;
@@ -26,14 +24,10 @@ import com.alibaba.cloud.nacos.endpoint.NacosConfigEndpoint;
 import com.alibaba.cloud.nacos.endpoint.NacosConfigEndpointAutoConfiguration;
 import com.alibaba.cloud.nacos.refresh.NacosRefreshHistory;
 import com.alibaba.nacos.client.config.NacosConfigService;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.api.support.MethodProxy;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-import org.powermock.modules.junit4.PowerMockRunnerDelegate;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -41,75 +35,92 @@ import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.when;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.NONE;
 
 /**
+ *
  * @author xiaojing
+ * @author freeman
  */
-@RunWith(PowerMockRunner.class)
-@PowerMockIgnore({ "com.sun.org.apache.*", "javax.xml.*", "org.xml.*", "javax.management.*" })
-@PowerMockRunnerDelegate(SpringRunner.class)
-@PrepareForTest({ NacosConfigService.class })
-@SpringBootTest(classes = NacosConfigurationNewTest.TestConfig.class, properties = {
+@SpringBootTest(classes = NacosConfigurationNewTest.TestConfig.class, webEnvironment = NONE, properties = {
 		"spring.application.name=myTestService1", "spring.profiles.active=dev,test",
-		"spring.cloud.nacos.config.server-addr=127.0.0.1:8848", "spring.cloud.nacos.config.namespace=test-namespace",
-		"spring.cloud.nacos.config.encode=utf-8", "spring.cloud.nacos.config.timeout=1000",
-		"spring.cloud.nacos.config.group=test-group", "spring.cloud.nacos.config.name=test-name",
-		"spring.cloud.nacos.config.cluster-name=test-cluster", "spring.cloud.nacos.config.file-extension=properties",
+		"spring.cloud.nacos.config.server-addr=127.0.0.1:8848",
+		"spring.cloud.nacos.config.namespace=test-namespace",
+		"spring.cloud.nacos.config.encode=utf-8",
+		"spring.cloud.nacos.config.timeout=1000",
+		"spring.cloud.nacos.config.group=test-group",
+		"spring.cloud.nacos.config.name=test-name",
+		"spring.cloud.nacos.config.cluster-name=test-cluster",
+		"spring.cloud.nacos.config.file-extension=properties",
 		"spring.cloud.nacos.config.contextPath=test-contextpath",
 		"spring.cloud.nacos.config.extension-configs[0].data-id=ext-config-common01.properties",
 		"spring.cloud.nacos.config.extension-configs[1].data-id=ext-config-common02.properties",
 		"spring.cloud.nacos.config.extension-configs[1].group=GLOBAL_GROUP",
 		"spring.cloud.nacos.config.shared-configs[0]=common1.properties",
 		"spring.cloud.nacos.config.shared-configs[1]=common2.properties",
-		"spring.cloud.nacos.config.accessKey=test-accessKey", "spring.cloud.nacos.config.secretKey=test-secretKey" },
-		webEnvironment = NONE)
+		"spring.cloud.nacos.config.accessKey=test-accessKey",
+		"spring.cloud.nacos.config.secretKey=test-secretKey",
+		"spring.cloud.bootstrap.enabled=true" })
 public class NacosConfigurationNewTest {
 
 	static {
 
 		try {
+			NacosConfigService mockedNacosConfigService = Mockito
+					.mock(NacosConfigService.class);
+			when(mockedNacosConfigService.getConfig(any(), any(), anyLong()))
+					.thenAnswer(new Answer<String>() {
+						@Override
+						public String answer(InvocationOnMock invocationOnMock)
+								throws Throwable {
+							String dataId = invocationOnMock.getArgument(0, String.class);
+							String group = invocationOnMock.getArgument(1, String.class);
+							if ("test-name.properties".equals(dataId)
+									&& "test-group".equals(group)) {
+								return "user.name=hello\nuser.age=12";
+							}
 
-			Method method = PowerMockito.method(NacosConfigService.class, "getConfig", String.class, String.class,
-					long.class);
-			MethodProxy.proxy(method, new InvocationHandler() {
-				@Override
-				public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+							if ("test-name-dev.properties".equals(dataId)
+									&& "test-group".equals(group)) {
+								return "user.name=dev";
+							}
 
-					if ("test-name.properties".equals(args[0]) && "test-group".equals(args[1])) {
-						return "user.name=hello\nuser.age=12";
-					}
+							if ("ext-config-common01.properties".equals(dataId)
+									&& "DEFAULT_GROUP".equals(group)) {
+								return "test-ext-config1=config1\ntest-ext-config2=config1";
+							}
+							if ("ext-config-common02.properties".equals(dataId)
+									&& "GLOBAL_GROUP".equals(group)) {
+								return "test-ext-config2=config2";
+							}
 
-					if ("test-name-dev.properties".equals(args[0]) && "test-group".equals(args[1])) {
-						return "user.name=dev";
-					}
+							if ("common1.properties".equals(dataId)
+									&& "DEFAULT_GROUP".equals(group)) {
+								return "test-common1=common1\ntest-common2=common1";
+							}
 
-					if ("ext-config-common01.properties".equals(args[0]) && "DEFAULT_GROUP".equals(args[1])) {
-						return "test-ext-config1=config1\ntest-ext-config2=config1";
-					}
-					if ("ext-config-common02.properties".equals(args[0]) && "GLOBAL_GROUP".equals(args[1])) {
-						return "test-ext-config2=config2";
-					}
+							if ("common2.properties".equals(dataId)
+									&& "DEFAULT_GROUP".equals(group)) {
+								return "test-common2=common2";
+							}
 
-					if ("common1.properties".equals(args[0]) && "DEFAULT_GROUP".equals(args[1])) {
-						return "test-common1=common1\ntest-common2=common1";
-					}
+							return "";
+						}
 
-					if ("common2.properties".equals(args[0]) && "DEFAULT_GROUP".equals(args[1])) {
-						return "test-common2=common2";
-					}
+					});
 
-					return "";
-				}
-			});
+			ReflectionTestUtils.setField(NacosConfigManager.class, "service",
+					mockedNacosConfigService);
 
 		}
 		catch (Exception ignore) {
 			ignore.printStackTrace();
-
 		}
 	}
 
@@ -200,7 +211,8 @@ public class NacosConfigurationNewTest {
 	}
 
 	private void checkoutEndpoint() throws Exception {
-		NacosConfigEndpoint nacosConfigEndpoint = new NacosConfigEndpoint(properties, refreshHistory);
+		NacosConfigEndpoint nacosConfigEndpoint = new NacosConfigEndpoint(properties,
+				refreshHistory);
 		Map<String, Object> map = nacosConfigEndpoint.invoke();
 		assertThat(map.get("NacosConfigProperties")).isEqualTo(properties);
 		assertThat(map.get("RefreshHistory")).isEqualTo(refreshHistory.getRecords());
@@ -208,20 +220,21 @@ public class NacosConfigurationNewTest {
 
 	private void checkShareConfigs() throws Exception {
 		assertThat(properties.getSharedConfigs() != null);
-		assertThat(properties.getSharedConfigs()).contains(new Config("common1.properties"),
-				new Config("common2.properties"));
+		assertThat(properties.getSharedConfigs()).contains(
+				new Config("common1.properties"), new Config("common2.properties"));
 	}
 
 	private void checkExtensionConfigs() throws Exception {
 		assertThat(properties.getExtensionConfigs() != null);
-		assertThat(properties.getExtensionConfigs()).contains(new Config("ext-config-common01.properties"),
+		assertThat(properties.getExtensionConfigs()).contains(
+				new Config("ext-config-common01.properties"),
 				new Config("ext-config-common02.properties", "GLOBAL_GROUP"));
 	}
 
 	@Configuration
 	@EnableAutoConfiguration
-	@ImportAutoConfiguration({ NacosConfigEndpointAutoConfiguration.class, NacosConfigAutoConfiguration.class,
-			NacosConfigBootstrapConfiguration.class })
+	@ImportAutoConfiguration({ NacosConfigEndpointAutoConfiguration.class,
+			NacosConfigAutoConfiguration.class, NacosConfigBootstrapConfiguration.class })
 	public static class TestConfig {
 
 	}

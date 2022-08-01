@@ -49,7 +49,8 @@ public class BusinessApplication {
 	public interface StorageService {
 
 		@GetMapping(path = "/storage/{commodityCode}/{count}")
-		String storage(@PathVariable("commodityCode") String commodityCode, @PathVariable("count") int count);
+		String storage(@PathVariable("commodityCode") String commodityCode,
+				@PathVariable("count") int count);
 
 	}
 
@@ -57,7 +58,8 @@ public class BusinessApplication {
 	public interface OrderService {
 
 		@PostMapping(path = "/order")
-		String order(@RequestParam("userId") String userId, @RequestParam("commodityCode") String commodityCode,
+		String order(@RequestParam("userId") String userId,
+				@RequestParam("commodityCode") String commodityCode,
 				@RequestParam("orderCount") int orderCount);
 
 	}

@@ -61,7 +61,8 @@ public class TestController {
 
 	@GetMapping("/echo-rest/{str}")
 	public String rest(@PathVariable String str) {
-		return restTemplate.getForObject("http://service-provider/echo/" + str, String.class);
+		return restTemplate.getForObject("http://service-provider/echo/" + str,
+				String.class);
 	}
 
 	@GetMapping("/index")

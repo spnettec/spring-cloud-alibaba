@@ -35,7 +35,8 @@ public class SidecarHealthIndicator extends AbstractHealthIndicator {
 
 	private final RestTemplate restTemplate;
 
-	public SidecarHealthIndicator(SidecarProperties sidecarProperties, RestTemplate restTemplate) {
+	public SidecarHealthIndicator(SidecarProperties sidecarProperties,
+			RestTemplate restTemplate) {
 		this.sidecarProperties = sidecarProperties;
 		this.restTemplate = restTemplate;
 	}
@@ -49,7 +50,8 @@ public class SidecarHealthIndicator extends AbstractHealthIndicator {
 				return;
 			}
 
-			ResponseEntity<Map<String, Object>> exchange = this.restTemplate.exchange(uri, HttpMethod.GET, null,
+			ResponseEntity<Map<String, Object>> exchange = this.restTemplate.exchange(uri,
+					HttpMethod.GET, null,
 					new ParameterizedTypeReference<Map<String, Object>>() {
 					});
 

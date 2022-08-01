@@ -8,7 +8,7 @@ This project demonstrates how to use Sentinel starter to complete the Spring Clo
 
 [OpenFeign](https://github.com/spring-cloud/spring-cloud-openfeign) is a declarative, templated HTTP client, Feign can help us faster and gracefully HTTP API calls.
 
-By focusing on this project, the integration of Sentinel and Feign more characteristics about Sentinel can view [Sentinel - core - example](https://github.com/alibaba/spring-cloud-alibaba/tree/master/spring-cloud-alibaba-examples/sentinel-example/sentinel-core-example).
+By focusing on this project, the integration of Sentinel and Feign more characteristics about Sentinel can view [Sentinel - core - example](https://github.com/alibaba/spring-cloud-alibaba/tree/2021.x/spring-cloud-alibaba-examples/sentinel-example/sentinel-core-example).
 
 ## sample
 
@@ -16,7 +16,7 @@ Service consumer
 Before launching the example, let's see how Feign can access Sentinel.
 ** note that this section is for your convenience only. The access has been completed in this sample code and you do not need to modify it. * *
 
-First, modify the pom.xml file to introduce Sentinel starter and Dubbo starter.
+First, modify the pom.xml file to introduce Sentinel starter and Openfeign starter.
 
 ```xml
 <dependency>

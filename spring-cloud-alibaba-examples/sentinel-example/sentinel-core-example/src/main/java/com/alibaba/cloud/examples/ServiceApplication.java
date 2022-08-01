@@ -38,7 +38,8 @@ import org.springframework.web.client.RestTemplate;
 public class ServiceApplication {
 
 	@Bean
-	@SentinelRestTemplate(blockHandler = "handleException", blockHandlerClass = ExceptionUtil.class)
+	@SentinelRestTemplate(blockHandler = "handleException",
+			blockHandlerClass = ExceptionUtil.class)
 	public RestTemplate restTemplate() {
 		return new RestTemplate();
 	}
@@ -56,9 +57,12 @@ public class ServiceApplication {
 	@Bean
 	public Customizer<SentinelCircuitBreakerFactory> defaultConfig() {
 		return factory -> {
-			factory.configureDefault(id -> new SentinelConfigBuilder().resourceName(id).rules(Collections.singletonList(
-					new DegradeRule(id).setGrade(RuleConstant.DEGRADE_GRADE_RT).setCount(100).setTimeWindow(10)))
-					.build());
+			factory.configureDefault(
+					id -> new SentinelConfigBuilder().resourceName(id)
+							.rules(Collections.singletonList(new DegradeRule(id)
+									.setGrade(RuleConstant.DEGRADE_GRADE_RT).setCount(100)
+									.setTimeWindow(10)))
+							.build());
 		};
 	}
 

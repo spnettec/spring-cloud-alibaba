@@ -36,7 +36,8 @@ public class GatewayEnvironmentPostProcessor implements EnvironmentPostProcessor
 	private final static String PROPERTY_SOURCE_NAME = "defaultProperties";
 
 	@Override
-	public void postProcessEnvironment(ConfigurableEnvironment environment, SpringApplication springApplication) {
+	public void postProcessEnvironment(ConfigurableEnvironment environment,
+			SpringApplication springApplication) {
 		addDefaultPropertySource(environment);
 	}
 
@@ -54,7 +55,8 @@ public class GatewayEnvironmentPostProcessor implements EnvironmentPostProcessor
 		source.put(SENTINEL_FILTER_ENABLED, "false");
 	}
 
-	private void addOrReplace(MutablePropertySources propertySources, Map<String, Object> map) {
+	private void addOrReplace(MutablePropertySources propertySources,
+			Map<String, Object> map) {
 		MapPropertySource target = null;
 		if (propertySources.contains(PROPERTY_SOURCE_NAME)) {
 			PropertySource<?> source = propertySources.get(PROPERTY_SOURCE_NAME);

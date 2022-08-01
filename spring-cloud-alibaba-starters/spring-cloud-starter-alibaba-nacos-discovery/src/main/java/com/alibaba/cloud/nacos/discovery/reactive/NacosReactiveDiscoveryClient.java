@@ -38,7 +38,8 @@ import org.springframework.cloud.client.discovery.ReactiveDiscoveryClient;
  **/
 public class NacosReactiveDiscoveryClient implements ReactiveDiscoveryClient {
 
-	private static final Logger log = LoggerFactory.getLogger(NacosReactiveDiscoveryClient.class);
+	private static final Logger log = LoggerFactory
+			.getLogger(NacosReactiveDiscoveryClient.class);
 
 	private NacosServiceDiscovery serviceDiscovery;
 
@@ -64,14 +65,17 @@ public class NacosReactiveDiscoveryClient implements ReactiveDiscoveryClient {
 	private Function<String, Publisher<ServiceInstance>> loadInstancesFromNacos() {
 		return serviceId -> {
 			try {
-				return Mono.justOrEmpty(serviceDiscovery.getInstances(serviceId)).flatMapMany(instances -> {
-					ServiceCache.setInstances(serviceId, instances);
-					return Flux.fromIterable(instances);
-				});
+				return Mono.justOrEmpty(serviceDiscovery.getInstances(serviceId))
+						.flatMapMany(instances -> {
+							ServiceCache.setInstances(serviceId, instances);
+							return Flux.fromIterable(instances);
+						});
 			}
 			catch (NacosException e) {
 				log.error("get service instance[{}] from nacos error!", serviceId, e);
-				return failureToleranceEnabled ? Flux.fromIterable(ServiceCache.getInstances(serviceId)) : Flux.empty();
+				return failureToleranceEnabled
+						? Flux.fromIterable(ServiceCache.getInstances(serviceId))
+						: Flux.empty();
 			}
 		};
 	}
@@ -80,14 +84,17 @@ public class NacosReactiveDiscoveryClient implements ReactiveDiscoveryClient {
 	public Flux<String> getServices() {
 		return Flux.defer(() -> {
 			try {
-				return Mono.justOrEmpty(serviceDiscovery.getServices()).flatMapMany(services -> {
-					ServiceCache.set(services);
-					return Flux.fromIterable(services);
-				});
+				return Mono.justOrEmpty(serviceDiscovery.getServices())
+						.flatMapMany(services -> {
+							ServiceCache.setServiceIds(services);
+							return Flux.fromIterable(services);
+						});
 			}
 			catch (Exception e) {
 				log.error("get services from nacos server fail,", e);
-				return failureToleranceEnabled ? Flux.fromIterable(ServiceCache.get()) : Flux.empty();
+				return failureToleranceEnabled
+						? Flux.fromIterable(ServiceCache.getServiceIds())
+						: Flux.empty();
 			}
 		}).subscribeOn(Schedulers.boundedElastic());
 	}

@@ -83,7 +83,8 @@ public class RedisDataSourceFactoryBean implements FactoryBean<RedisDataSource> 
 					builder.withRedisSentinel(parts[0], Integer.parseInt(parts[1]));
 				}
 				catch (RuntimeException ex) {
-					throw new IllegalStateException("Invalid redis sentinel property " + node, ex);
+					throw new IllegalStateException(
+							"Invalid redis sentinel property " + node, ex);
 				}
 			});
 			builder.withSentinelMasterId(masterId);
@@ -97,7 +98,8 @@ public class RedisDataSourceFactoryBean implements FactoryBean<RedisDataSource> 
 			builder.withPassword(password);
 		}
 
-		return new RedisDataSource<List<FlowRule>>(builder.build(), ruleKey, channel, converter);
+		return new RedisDataSource<List<FlowRule>>(builder.build(), ruleKey, channel,
+				converter);
 	}
 
 	@Override

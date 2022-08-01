@@ -37,7 +37,8 @@ public class MySCGConfiguration {
 	public BlockRequestHandler blockRequestHandler() {
 		return new BlockRequestHandler() {
 			@Override
-			public Mono<ServerResponse> handleRequest(ServerWebExchange exchange, Throwable t) {
+			public Mono<ServerResponse> handleRequest(ServerWebExchange exchange,
+					Throwable t) {
 				return ServerResponse.status(444).contentType(MediaType.APPLICATION_JSON)
 						.body(fromValue("SCS Sentinel block"));
 			}

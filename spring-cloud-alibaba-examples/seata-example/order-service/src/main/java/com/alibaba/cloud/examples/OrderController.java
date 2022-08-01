@@ -86,7 +86,8 @@ public class OrderController {
 		int result = jdbcTemplate.update(new PreparedStatementCreator() {
 
 			@Override
-			public PreparedStatement createPreparedStatement(Connection con) throws SQLException {
+			public PreparedStatement createPreparedStatement(Connection con)
+					throws SQLException {
 				PreparedStatement pst = con.prepareStatement(
 						"insert into order_tbl (user_id, commodity_code, count, money) values (?, ?, ?, ?)",
 						PreparedStatement.RETURN_GENERATED_KEYS);
@@ -126,9 +127,11 @@ public class OrderController {
 		map.add("userId", USER_ID);
 		map.add("money", orderMoney + "");
 
-		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(map, headers);
+		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(
+				map, headers);
 
-		ResponseEntity<String> response = restTemplate.postForEntity(url, request, String.class);
+		ResponseEntity<String> response = restTemplate.postForEntity(url, request,
+				String.class);
 	}
 
 }

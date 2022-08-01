@@ -16,10 +16,14 @@
 
 package com.alibaba.cloud.nacos;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.BeanFactoryUtils;
+import org.springframework.cloud.context.properties.ConfigurationPropertiesBeans;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -30,21 +34,27 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class NacosConfigAutoConfigurationTest {
 
+	AnnotationConfigApplicationContext context;
+
+	@BeforeEach
+	public void reset() {
+		// compatible with legacy tests
+		System.setProperty("spring.cloud.bootstrap.enabled", "true");
+		context = new AnnotationConfigApplicationContext(
+				NacosConfigAutoConfiguration.class, Config.class);
+	}
+
 	@Test
 	public void noImports_thenCreateProperties() {
-		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(
-				NacosConfigAutoConfiguration.class);
-
-		assertThat(BeanFactoryUtils.beanNamesForTypeIncludingAncestors(context, NacosConfigProperties.class).length)
-				.isEqualTo(1);
-		assertThat(context.getBean(NacosConfigProperties.class).getServerAddr()).isEqualTo("localhost:8848");
+		assertThat(BeanFactoryUtils.beanNamesForTypeIncludingAncestors(context,
+				NacosConfigProperties.class).length).isEqualTo(1);
+		assertThat(context.getBean(NacosConfigProperties.class).getServerAddr())
+				.isEqualTo("127.0.0.1:8848");
 		context.close();
 	}
 
 	@Test
 	public void imports_thenNoCreateProperties() {
-		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(
-				NacosConfigAutoConfiguration.class);
 		// mock import
 		context.registerBean(NacosConfigProperties.class, () -> {
 			NacosConfigProperties properties = new NacosConfigProperties();
@@ -52,10 +62,21 @@ public class NacosConfigAutoConfigurationTest {
 			return properties;
 		});
 
-		assertThat(BeanFactoryUtils.beanNamesForTypeIncludingAncestors(context, NacosConfigProperties.class).length)
-				.isEqualTo(1);
-		assertThat(context.getBean(NacosConfigProperties.class).getServerAddr()).isEqualTo("localhost");
+		assertThat(BeanFactoryUtils.beanNamesForTypeIncludingAncestors(context,
+				NacosConfigProperties.class).length).isEqualTo(1);
+		assertThat(context.getBean(NacosConfigProperties.class).getServerAddr())
+				.isEqualTo("localhost");
 		context.close();
+	}
+
+	@Configuration
+	static class Config {
+
+		@Bean
+		public ConfigurationPropertiesBeans beans() {
+			return new ConfigurationPropertiesBeans();
+		}
+
 	}
 
 }

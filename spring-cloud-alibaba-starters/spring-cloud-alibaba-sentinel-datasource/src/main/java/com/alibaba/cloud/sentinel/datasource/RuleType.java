@@ -19,6 +19,7 @@ package com.alibaba.cloud.sentinel.datasource;
 import java.util.Arrays;
 import java.util.Optional;
 
+import com.alibaba.cloud.commons.lang.StringUtils;
 import com.alibaba.cloud.sentinel.datasource.config.AbstractDataSourceProperties;
 import com.alibaba.csp.sentinel.slots.block.AbstractRule;
 import com.alibaba.csp.sentinel.slots.block.authority.AuthorityRule;
@@ -26,8 +27,6 @@ import com.alibaba.csp.sentinel.slots.block.degrade.DegradeRule;
 import com.alibaba.csp.sentinel.slots.block.flow.FlowRule;
 import com.alibaba.csp.sentinel.slots.block.flow.param.ParamFlowRule;
 import com.alibaba.csp.sentinel.slots.system.SystemRule;
-
-import org.springframework.util.StringUtils;
 
 /**
  * Enum for {@link AbstractRule} class, using in
@@ -60,11 +59,13 @@ public enum RuleType {
 	/**
 	 * gateway flow.
 	 */
-	GW_FLOW("gw-flow", "com.alibaba.csp.sentinel.adapter.gateway.common.rule.GatewayFlowRule"),
+	GW_FLOW("gw-flow",
+			"com.alibaba.csp.sentinel.adapter.gateway.common.rule.GatewayFlowRule"),
 	/**
 	 * api.
 	 */
-	GW_API_GROUP("gw-api-group", "com.alibaba.csp.sentinel.adapter.gateway.common.api.ApiDefinition");
+	GW_API_GROUP("gw-api-group",
+			"com.alibaba.csp.sentinel.adapter.gateway.common.api.ApiDefinition");
 
 	/**
 	 * alias for {@link AbstractRule}.
@@ -113,11 +114,13 @@ public enum RuleType {
 		if (StringUtils.isEmpty(name)) {
 			return Optional.empty();
 		}
-		return Arrays.stream(RuleType.values()).filter(ruleType -> name.equals(ruleType.getName())).findFirst();
+		return Arrays.stream(RuleType.values())
+				.filter(ruleType -> name.equals(ruleType.getName())).findFirst();
 	}
 
 	public static Optional<RuleType> getByClass(Class clazz) {
-		return Arrays.stream(RuleType.values()).filter(ruleType -> clazz == ruleType.getClazz()).findFirst();
+		return Arrays.stream(RuleType.values())
+				.filter(ruleType -> clazz == ruleType.getClazz()).findFirst();
 	}
 
 }

@@ -33,11 +33,12 @@ public class MyLoadBalancerConfiguration {
 
 	@Bean
 	@ConditionalOnMissingBean
-	public ReactorLoadBalancer<ServiceInstance> reactorServiceInstanceLoadBalancer(Environment environment,
+	public ReactorLoadBalancer<ServiceInstance> reactorServiceInstanceLoadBalancer(
+			Environment environment,
 			LoadBalancerClientFactory loadBalancerClientFactory) {
 		String name = environment.getProperty(LoadBalancerClientFactory.PROPERTY_NAME);
-		return new RandomLoadBalancer(
-				loadBalancerClientFactory.getLazyProvider(name, ServiceInstanceListSupplier.class), name);
+		return new RandomLoadBalancer(loadBalancerClientFactory.getLazyProvider(name,
+				ServiceInstanceListSupplier.class), name);
 	}
 
 }

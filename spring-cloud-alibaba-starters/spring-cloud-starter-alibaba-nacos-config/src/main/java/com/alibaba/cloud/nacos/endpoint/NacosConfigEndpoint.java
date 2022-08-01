@@ -46,7 +46,8 @@ public class NacosConfigEndpoint {
 	private ThreadLocal<DateFormat> dateFormat = ThreadLocal
 			.withInitial(() -> new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
 
-	public NacosConfigEndpoint(NacosConfigProperties properties, NacosRefreshHistory refreshHistory) {
+	public NacosConfigEndpoint(NacosConfigProperties properties,
+			NacosRefreshHistory refreshHistory) {
 		this.properties = properties;
 		this.refreshHistory = refreshHistory;
 	}

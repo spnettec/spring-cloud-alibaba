@@ -21,8 +21,8 @@ import java.io.StringReader;
 import java.util.Properties;
 
 import com.alibaba.nacos.config.server.model.ConfigInfo;
-import com.alibaba.nacos.config.server.service.repository.PersistService;
 
+import com.alibaba.nacos.config.server.service.repository.PersistService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.config.environment.Environment;
 import org.springframework.cloud.config.environment.PropertySource;
@@ -47,20 +47,24 @@ public class NacosEnvironmentRepository implements EnvironmentRepository {
 
 		String dataId = application + "-" + profile + ".properties";
 
-		ConfigInfo configInfo = persistService.findConfigInfo(dataId, DEFAULT_GROUP, label);
+		ConfigInfo configInfo = persistService.findConfigInfo(dataId, DEFAULT_GROUP,
+				label);
 
 		return createEnvironment(configInfo, application, profile);
 	}
 
-	private Environment createEnvironment(ConfigInfo configInfo, String application, String profile) {
+	private Environment createEnvironment(ConfigInfo configInfo, String application,
+			String profile) {
 
 		Environment environment = new Environment(application, profile);
 
 		Properties properties = createProperties(configInfo);
 
-		String propertySourceName = String.format("Nacos[application : %s , profile : %s]", application, profile);
+		String propertySourceName = String
+				.format("Nacos[application : %s , profile : %s]", application, profile);
 
-		PropertySource propertySource = new PropertySource(propertySourceName, properties);
+		PropertySource propertySource = new PropertySource(propertySourceName,
+				properties);
 
 		environment.add(propertySource);
 

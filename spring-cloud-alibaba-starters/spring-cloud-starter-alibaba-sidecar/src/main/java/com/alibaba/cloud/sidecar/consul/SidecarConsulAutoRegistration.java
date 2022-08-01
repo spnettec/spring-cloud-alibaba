@@ -41,18 +41,21 @@ import org.springframework.util.StringUtils;
 public class SidecarConsulAutoRegistration extends ConsulAutoRegistration {
 
 	public SidecarConsulAutoRegistration(NewService service,
-			AutoServiceRegistrationProperties autoServiceRegistrationProperties, ConsulDiscoveryProperties properties,
-			ApplicationContext context, HeartbeatProperties heartbeatProperties,
+			AutoServiceRegistrationProperties autoServiceRegistrationProperties,
+			ConsulDiscoveryProperties properties, ApplicationContext context,
+			HeartbeatProperties heartbeatProperties,
 			List<ConsulManagementRegistrationCustomizer> managementRegistrationCustomizers) {
-		super(service, autoServiceRegistrationProperties, properties, context, heartbeatProperties,
-				managementRegistrationCustomizers);
+		super(service, autoServiceRegistrationProperties, properties, context,
+				heartbeatProperties, managementRegistrationCustomizers);
 	}
 
 	public static ConsulAutoRegistration registration(
-			AutoServiceRegistrationProperties autoServiceRegistrationProperties, ConsulDiscoveryProperties properties,
-			ApplicationContext context, List<ConsulRegistrationCustomizer> registrationCustomizers,
+			AutoServiceRegistrationProperties autoServiceRegistrationProperties,
+			ConsulDiscoveryProperties properties, ApplicationContext context,
+			List<ConsulRegistrationCustomizer> registrationCustomizers,
 			List<ConsulManagementRegistrationCustomizer> managementRegistrationCustomizers,
-			HeartbeatProperties heartbeatProperties, SidecarProperties sidecarProperties) {
+			HeartbeatProperties heartbeatProperties,
+			SidecarProperties sidecarProperties) {
 
 		NewService service = new NewService();
 		String appName = getAppName(properties, context.getEnvironment());
@@ -74,16 +77,19 @@ public class SidecarConsulAutoRegistration extends ConsulAutoRegistration {
 		else if (context.getEnvironment().getProperty("server.port") != null) {
 			// set health check, use alibaba sidecar self's port rather than polyglot
 			// app's port.
-			service.setPort(Integer.valueOf(context.getEnvironment().getProperty("server.port")));
+			service.setPort(
+					Integer.valueOf(context.getEnvironment().getProperty("server.port")));
 		}
 
 		if (service.getPort() != null) {
 			// we know the port and can set the check
-			setCheck(service, autoServiceRegistrationProperties, properties, context, heartbeatProperties);
+			setCheck(service, autoServiceRegistrationProperties, properties, context,
+					heartbeatProperties);
 		}
 
-		ConsulAutoRegistration registration = new ConsulAutoRegistration(service, autoServiceRegistrationProperties,
-				properties, context, heartbeatProperties, managementRegistrationCustomizers);
+		ConsulAutoRegistration registration = new ConsulAutoRegistration(service,
+				autoServiceRegistrationProperties, properties, context,
+				heartbeatProperties, managementRegistrationCustomizers);
 		customize(registrationCustomizers, registration);
 		return registration;
 	}
@@ -99,23 +105,27 @@ public class SidecarConsulAutoRegistration extends ConsulAutoRegistration {
 		}
 
 		// add metadata from other properties. See createTags above.
-		if (!StringUtils.isEmpty(properties.getInstanceZone())) {
-			metadata.put(properties.getDefaultZoneMetadataName(), properties.getInstanceZone());
+		if (StringUtils.hasLength(properties.getInstanceZone())) {
+			metadata.put(properties.getDefaultZoneMetadataName(),
+					properties.getInstanceZone());
 		}
-		if (!StringUtils.isEmpty(properties.getInstanceGroup())) {
+		if (StringUtils.hasLength(properties.getInstanceGroup())) {
 			metadata.put("group", properties.getInstanceGroup());
 		}
 
 		// store the secure flag in the tags so that clients will be able to figure
 		// out whether to use http or https automatically
-		metadata.put("secure", Boolean.toString(properties.getScheme().equalsIgnoreCase("https")));
+		metadata.put("secure",
+				Boolean.toString(properties.getScheme().equalsIgnoreCase("https")));
 
 		return metadata;
 	}
 
-	public static String getInstanceId(SidecarProperties sidecarProperties, Environment environment) {
-		return String.format("%s-%s-%s", environment.getProperty("spring.application.name"), sidecarProperties.getIp(),
-				sidecarProperties.getPort());
+	public static String getInstanceId(SidecarProperties sidecarProperties,
+			Environment environment) {
+		return String.format("%s-%s-%s",
+				environment.getProperty("spring.application.name"),
+				sidecarProperties.getIp(), sidecarProperties.getPort());
 	}
 
 }

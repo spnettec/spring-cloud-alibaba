@@ -66,7 +66,8 @@ public class NacosRegistration implements Registration, ServiceInstance {
 	private ApplicationContext context;
 
 	public NacosRegistration(List<NacosRegistrationCustomizer> registrationCustomizers,
-			NacosDiscoveryProperties nacosDiscoveryProperties, ApplicationContext context) {
+			NacosDiscoveryProperties nacosDiscoveryProperties,
+			ApplicationContext context) {
 		this.registrationCustomizers = registrationCustomizers;
 		this.nacosDiscoveryProperties = nacosDiscoveryProperties;
 		this.context = context;
@@ -79,19 +80,20 @@ public class NacosRegistration implements Registration, ServiceInstance {
 		Environment env = context.getEnvironment();
 
 		String endpointBasePath = env.getProperty(MANAGEMENT_ENDPOINT_BASE_PATH);
-		if (!StringUtils.isEmpty(endpointBasePath)) {
+		if (StringUtils.hasLength(endpointBasePath)) {
 			metadata.put(MANAGEMENT_ENDPOINT_BASE_PATH, endpointBasePath);
 		}
 
 		Integer managementPort = ManagementServerPortUtils.getPort(context);
 		if (null != managementPort) {
 			metadata.put(MANAGEMENT_PORT, managementPort.toString());
-			String contextPath = env.getProperty("management.server.servlet.context-path");
+			String contextPath = env
+					.getProperty("management.server.servlet.context-path");
 			String address = env.getProperty("management.server.address");
-			if (!StringUtils.isEmpty(contextPath)) {
+			if (StringUtils.hasLength(contextPath)) {
 				metadata.put(MANAGEMENT_CONTEXT_PATH, contextPath);
 			}
-			if (!StringUtils.isEmpty(address)) {
+			if (StringUtils.hasLength(address)) {
 				metadata.put(MANAGEMENT_ADDRESS, address);
 			}
 		}
@@ -111,7 +113,8 @@ public class NacosRegistration implements Registration, ServiceInstance {
 		customize(registrationCustomizers);
 	}
 
-	protected void customize(List<NacosRegistrationCustomizer> registrationCustomizers) {
+	protected void customize(
+			List<NacosRegistrationCustomizer> registrationCustomizers) {
 		if (registrationCustomizers != null) {
 			for (NacosRegistrationCustomizer customizer : registrationCustomizers) {
 				customizer.customize(this);
@@ -171,7 +174,8 @@ public class NacosRegistration implements Registration, ServiceInstance {
 
 	@Override
 	public String toString() {
-		return "NacosRegistration{" + "nacosDiscoveryProperties=" + nacosDiscoveryProperties + '}';
+		return "NacosRegistration{" + "nacosDiscoveryProperties="
+				+ nacosDiscoveryProperties + '}';
 	}
 
 }

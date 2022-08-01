@@ -20,7 +20,7 @@ import java.util.Arrays;
 import java.util.Collections;
 
 import com.alibaba.csp.sentinel.slots.block.degrade.DegradeRuleManager;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -36,36 +36,45 @@ public class ReactiveSentinelCircuitBreakerTest {
 	@Test
 	public void testCreateWithNullRule() {
 		String id = "testCreateReactiveCbWithNullRule";
-		ReactiveSentinelCircuitBreaker cb = new ReactiveSentinelCircuitBreaker(id, Collections.singletonList(null));
-		assertThat(Mono.just("foobar").transform(it -> cb.run(it)).block()).isEqualTo("foobar");
+		ReactiveSentinelCircuitBreaker cb = new ReactiveSentinelCircuitBreaker(id,
+				Collections.singletonList(null));
+		assertThat(Mono.just("foobar").transform(it -> cb.run(it)).block())
+				.isEqualTo("foobar");
 		assertThat(DegradeRuleManager.hasConfig(id)).isFalse();
 	}
 
 	@Test
 	public void runMono() {
-		ReactiveCircuitBreaker cb = new ReactiveSentinelCircuitBreakerFactory().create("foo");
-		assertThat(Mono.just("foobar").transform(it -> cb.run(it)).block()).isEqualTo("foobar");
+		ReactiveCircuitBreaker cb = new ReactiveSentinelCircuitBreakerFactory()
+				.create("foo");
+		assertThat(Mono.just("foobar").transform(it -> cb.run(it)).block())
+				.isEqualTo("foobar");
 	}
 
 	@Test
 	public void runMonoWithFallback() {
-		ReactiveCircuitBreaker cb = new ReactiveSentinelCircuitBreakerFactory().create("foo");
-		assertThat(Mono.error(new RuntimeException("boom")).transform(it -> cb.run(it, t -> Mono.just("fallback")))
-				.block()).isEqualTo("fallback");
+		ReactiveCircuitBreaker cb = new ReactiveSentinelCircuitBreakerFactory()
+				.create("foo");
+		assertThat(Mono.error(new RuntimeException("boom"))
+				.transform(it -> cb.run(it, t -> Mono.just("fallback"))).block())
+						.isEqualTo("fallback");
 	}
 
 	@Test
 	public void runFlux() {
-		ReactiveCircuitBreaker cb = new ReactiveSentinelCircuitBreakerFactory().create("foo");
-		assertThat(Flux.just("foobar", "hello world").transform(it -> cb.run(it)).collectList().block())
-				.isEqualTo(Arrays.asList("foobar", "hello world"));
+		ReactiveCircuitBreaker cb = new ReactiveSentinelCircuitBreakerFactory()
+				.create("foo");
+		assertThat(Flux.just("foobar", "hello world").transform(it -> cb.run(it))
+				.collectList().block()).isEqualTo(Arrays.asList("foobar", "hello world"));
 	}
 
 	@Test
 	public void runFluxWithFallback() {
-		ReactiveCircuitBreaker cb = new ReactiveSentinelCircuitBreakerFactory().create("foo");
-		assertThat(Flux.error(new RuntimeException("boom")).transform(it -> cb.run(it, t -> Flux.just("fallback")))
-				.collectList().block()).isEqualTo(Arrays.asList("fallback"));
+		ReactiveCircuitBreaker cb = new ReactiveSentinelCircuitBreakerFactory()
+				.create("foo");
+		assertThat(Flux.error(new RuntimeException("boom"))
+				.transform(it -> cb.run(it, t -> Flux.just("fallback"))).collectList()
+				.block()).isEqualTo(Arrays.asList("fallback"));
 	}
 
 }

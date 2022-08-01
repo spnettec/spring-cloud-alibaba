@@ -29,7 +29,8 @@ import org.springframework.util.Assert;
 /**
  * @author Eric Zhao
  */
-public class SentinelConfigBuilder implements ConfigBuilder<SentinelConfigBuilder.SentinelCircuitBreakerConfiguration> {
+public class SentinelConfigBuilder implements
+		ConfigBuilder<SentinelConfigBuilder.SentinelCircuitBreakerConfiguration> {
 
 	private String resourceName;
 
@@ -62,10 +63,12 @@ public class SentinelConfigBuilder implements ConfigBuilder<SentinelConfigBuilde
 	@Override
 	public SentinelCircuitBreakerConfiguration build() {
 		Assert.hasText(resourceName, "resourceName cannot be empty");
-		List<DegradeRule> rules = Optional.ofNullable(this.rules).orElse(new ArrayList<>());
+		List<DegradeRule> rules = Optional.ofNullable(this.rules)
+				.orElse(new ArrayList<>());
 
 		EntryType entryType = Optional.ofNullable(this.entryType).orElse(EntryType.OUT);
-		return new SentinelCircuitBreakerConfiguration().setResourceName(this.resourceName).setEntryType(entryType)
+		return new SentinelCircuitBreakerConfiguration()
+				.setResourceName(this.resourceName).setEntryType(entryType)
 				.setRules(rules);
 	}
 

@@ -22,7 +22,7 @@ import com.alibaba.csp.sentinel.slots.block.degrade.DegradeRule;
 import com.alibaba.csp.sentinel.slots.block.flow.FlowRule;
 import com.alibaba.csp.sentinel.slots.block.flow.param.ParamFlowRule;
 import com.alibaba.csp.sentinel.slots.system.SystemRule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -52,13 +52,20 @@ public class RuleTypeTests {
 
 	@Test
 	public void testGetByClass() {
-		assertThat(RuleType.getByClass(Object.class).isPresent()).isEqualTo(Boolean.FALSE);
-		assertThat(RuleType.getByClass(AbstractRule.class).isPresent()).isEqualTo(Boolean.FALSE);
-		assertThat(RuleType.getByClass(FlowRule.class).isPresent()).isEqualTo(Boolean.TRUE);
-		assertThat(RuleType.getByClass(DegradeRule.class).isPresent()).isEqualTo(Boolean.TRUE);
-		assertThat(RuleType.getByClass(ParamFlowRule.class).isPresent()).isEqualTo(Boolean.TRUE);
-		assertThat(RuleType.getByClass(SystemRule.class).isPresent()).isEqualTo(Boolean.TRUE);
-		assertThat(RuleType.getByClass(AuthorityRule.class).isPresent()).isEqualTo(Boolean.TRUE);
+		assertThat(RuleType.getByClass(Object.class).isPresent())
+				.isEqualTo(Boolean.FALSE);
+		assertThat(RuleType.getByClass(AbstractRule.class).isPresent())
+				.isEqualTo(Boolean.FALSE);
+		assertThat(RuleType.getByClass(FlowRule.class).isPresent())
+				.isEqualTo(Boolean.TRUE);
+		assertThat(RuleType.getByClass(DegradeRule.class).isPresent())
+				.isEqualTo(Boolean.TRUE);
+		assertThat(RuleType.getByClass(ParamFlowRule.class).isPresent())
+				.isEqualTo(Boolean.TRUE);
+		assertThat(RuleType.getByClass(SystemRule.class).isPresent())
+				.isEqualTo(Boolean.TRUE);
+		assertThat(RuleType.getByClass(AuthorityRule.class).isPresent())
+				.isEqualTo(Boolean.TRUE);
 	}
 
 }

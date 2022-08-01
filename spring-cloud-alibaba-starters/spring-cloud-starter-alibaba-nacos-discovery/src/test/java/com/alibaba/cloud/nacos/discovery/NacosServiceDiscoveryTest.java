@@ -59,20 +59,23 @@ public class NacosServiceDiscoveryTest {
 
 		instances.add(serviceInstance(serviceName, true, host, port, map));
 
-		NacosDiscoveryProperties nacosDiscoveryProperties = mock(NacosDiscoveryProperties.class);
+		NacosDiscoveryProperties nacosDiscoveryProperties = mock(
+				NacosDiscoveryProperties.class);
 		NacosServiceManager nacosServiceManager = mock(NacosServiceManager.class);
 
 		NamingService namingService = mock(NamingService.class);
 
-		when(nacosServiceManager.getNamingService(nacosDiscoveryProperties.getNacosProperties()))
-				.thenReturn(namingService);
+		when(nacosServiceManager.getNamingService())
+						.thenReturn(namingService);
 		when(nacosDiscoveryProperties.getGroup()).thenReturn("DEFAULT");
-		when(namingService.selectInstances(eq(serviceName), eq("DEFAULT"), eq(true))).thenReturn(instances);
+		when(namingService.selectInstances(eq(serviceName), eq("DEFAULT"), eq(true)))
+				.thenReturn(instances);
 
-		NacosServiceDiscovery serviceDiscovery = new NacosServiceDiscovery(nacosDiscoveryProperties,
-				nacosServiceManager);
+		NacosServiceDiscovery serviceDiscovery = new NacosServiceDiscovery(
+				nacosDiscoveryProperties, nacosServiceManager);
 
-		List<ServiceInstance> serviceInstances = serviceDiscovery.getInstances(serviceName);
+		List<ServiceInstance> serviceInstances = serviceDiscovery
+				.getInstances(serviceName);
 
 		assertThat(serviceInstances.size()).isEqualTo(1);
 
@@ -82,7 +85,8 @@ public class NacosServiceDiscoveryTest {
 		assertThat(serviceInstance.getHost()).isEqualTo(host);
 		assertThat(serviceInstance.getPort()).isEqualTo(port);
 		assertThat(serviceInstance.isSecure()).isEqualTo(true);
-		assertThat(serviceInstance.getUri().toString()).isEqualTo(getUri(serviceInstance));
+		assertThat(serviceInstance.getUri().toString())
+				.isEqualTo(getUri(serviceInstance));
 		assertThat(serviceInstance.getMetadata().get("test-key")).isEqualTo("test-value");
 	}
 
@@ -96,18 +100,21 @@ public class NacosServiceDiscoveryTest {
 		nacosServices.getData().add(serviceName + "2");
 		nacosServices.getData().add(serviceName + "3");
 
-		NacosDiscoveryProperties nacosDiscoveryProperties = mock(NacosDiscoveryProperties.class);
+		NacosDiscoveryProperties nacosDiscoveryProperties = mock(
+				NacosDiscoveryProperties.class);
 		NacosServiceManager nacosServiceManager = mock(NacosServiceManager.class);
 
 		NamingService namingService = mock(NamingService.class);
 
-		when(nacosServiceManager.getNamingService(nacosDiscoveryProperties.getNacosProperties()))
-				.thenReturn(namingService);
+		when(nacosServiceManager
+				.getNamingService())
+						.thenReturn(namingService);
 		when(nacosDiscoveryProperties.getGroup()).thenReturn("DEFAULT");
-		when(namingService.getServicesOfServer(eq(1), eq(Integer.MAX_VALUE), eq("DEFAULT"))).thenReturn(nacosServices);
+		when(namingService.getServicesOfServer(eq(1), eq(Integer.MAX_VALUE),
+				eq("DEFAULT"))).thenReturn(nacosServices);
 
-		NacosServiceDiscovery serviceDiscovery = new NacosServiceDiscovery(nacosDiscoveryProperties,
-				nacosServiceManager);
+		NacosServiceDiscovery serviceDiscovery = new NacosServiceDiscovery(
+				nacosDiscoveryProperties, nacosServiceManager);
 
 		List<String> services = serviceDiscovery.getServices();
 

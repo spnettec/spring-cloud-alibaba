@@ -20,7 +20,6 @@ import com.alibaba.cloud.nacos.ConditionalOnNacosDiscoveryEnabled;
 import com.alibaba.cloud.nacos.NacosDiscoveryProperties;
 import com.alibaba.cloud.nacos.NacosServiceManager;
 
-import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -32,7 +31,6 @@ import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.cloud.client.discovery.simple.SimpleDiscoveryClientAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
 /**
  * @author xiaojing
@@ -42,12 +40,14 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 @ConditionalOnDiscoveryEnabled
 @ConditionalOnBlockingDiscoveryEnabled
 @ConditionalOnNacosDiscoveryEnabled
-@AutoConfigureBefore({ SimpleDiscoveryClientAutoConfiguration.class, CommonsClientAutoConfiguration.class })
+@AutoConfigureBefore({ SimpleDiscoveryClientAutoConfiguration.class,
+		CommonsClientAutoConfiguration.class })
 @AutoConfigureAfter(NacosDiscoveryAutoConfiguration.class)
 public class NacosDiscoveryClientConfiguration {
 
 	@Bean
-	public DiscoveryClient nacosDiscoveryClient(NacosServiceDiscovery nacosServiceDiscovery) {
+	public DiscoveryClient nacosDiscoveryClient(
+			NacosServiceDiscovery nacosServiceDiscovery) {
 		return new NacosDiscoveryClient(nacosServiceDiscovery);
 	}
 
@@ -55,9 +55,8 @@ public class NacosDiscoveryClientConfiguration {
 	@ConditionalOnMissingBean
 	@ConditionalOnProperty(value = "spring.cloud.nacos.discovery.watch.enabled", matchIfMissing = true)
 	public NacosWatch nacosWatch(NacosServiceManager nacosServiceManager,
-			NacosDiscoveryProperties nacosDiscoveryProperties,
-			ObjectProvider<ThreadPoolTaskScheduler> taskExecutorObjectProvider) {
-		return new NacosWatch(nacosServiceManager, nacosDiscoveryProperties, taskExecutorObjectProvider);
+			NacosDiscoveryProperties nacosDiscoveryProperties) {
+		return new NacosWatch(nacosServiceManager, nacosDiscoveryProperties);
 	}
 
 }

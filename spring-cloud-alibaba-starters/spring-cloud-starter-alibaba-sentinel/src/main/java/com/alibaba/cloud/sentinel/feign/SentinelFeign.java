@@ -52,7 +52,8 @@ public final class SentinelFeign {
 		return new Builder();
 	}
 
-	public static final class Builder extends Feign.Builder implements ApplicationContextAware {
+	public static final class Builder extends Feign.Builder
+			implements ApplicationContextAware {
 
 		private Contract contract = new Contract.Default();
 
@@ -61,7 +62,8 @@ public final class SentinelFeign {
 		private FeignContext feignContext;
 
 		@Override
-		public Feign.Builder invocationHandlerFactory(InvocationHandlerFactory invocationHandlerFactory) {
+		public Feign.Builder invocationHandlerFactory(
+				InvocationHandlerFactory invocationHandlerFactory) {
 			throw new UnsupportedOperationException();
 		}
 
@@ -75,12 +77,12 @@ public final class SentinelFeign {
 		public Feign build() {
 			super.invocationHandlerFactory(new InvocationHandlerFactory() {
 				@Override
-				public InvocationHandler create(Target target, Map<Method, MethodHandler> dispatch) {
-
+				public InvocationHandler create(Target target,
+						Map<Method, MethodHandler> dispatch) {
 					GenericApplicationContext gctx = (GenericApplicationContext) Builder.this.applicationContext;
 					BeanDefinition def = gctx.getBeanDefinition(target.type().getName());
 
-					/**
+					/*
 					 * Due to the change of the initialization sequence,
 					 * BeanFactory.getBean will cause a circular dependency. So
 					 * FeignClientFactoryBean can only be obtained from BeanDefinition
@@ -91,32 +93,38 @@ public final class SentinelFeign {
 					Class fallback = feignClientFactoryBean.getFallback();
 					Class fallbackFactory = feignClientFactoryBean.getFallbackFactory();
 					String beanName = feignClientFactoryBean.getContextId();
-
 					if (!StringUtils.hasText(beanName)) {
-						beanName = feignClientFactoryBean.getName();
+						beanName = (String) getFieldValue(feignClientFactoryBean, "name");
 					}
 
 					Object fallbackInstance;
 					FallbackFactory fallbackFactoryInstance;
 					// check fallback and fallbackFactory properties
 					if (void.class != fallback) {
-						fallbackInstance = getFromContext(beanName, "fallback", fallback, target.type());
+						fallbackInstance = getFromContext(beanName, "fallback", fallback,
+								target.type());
 						return new SentinelInvocationHandler(target, dispatch,
 								new FallbackFactory.Default(fallbackInstance));
 					}
 					if (void.class != fallbackFactory) {
-						fallbackFactoryInstance = (FallbackFactory) getFromContext(beanName, "fallbackFactory",
-								fallbackFactory, FallbackFactory.class);
-						return new SentinelInvocationHandler(target, dispatch, fallbackFactoryInstance);
+						fallbackFactoryInstance = (FallbackFactory) getFromContext(
+								beanName, "fallbackFactory", fallbackFactory,
+								FallbackFactory.class);
+						return new SentinelInvocationHandler(target, dispatch,
+								fallbackFactoryInstance);
 					}
+
 					return new SentinelInvocationHandler(target, dispatch);
 				}
 
-				private Object getFromContext(String name, String type, Class fallbackType, Class targetType) {
-					Object fallbackInstance = feignContext.getInstance(name, fallbackType);
+				private Object getFromContext(String name, String type,
+						Class fallbackType, Class targetType) {
+					Object fallbackInstance = feignContext.getInstance(name,
+							fallbackType);
 					if (fallbackInstance == null) {
 						throw new IllegalStateException(String.format(
-								"No %s instance of type %s found for feign client %s", type, fallbackType, name));
+								"No %s instance of type %s found for feign client %s",
+								type, fallbackType, name));
 					}
 
 					if (!targetType.isAssignableFrom(fallbackType)) {
@@ -145,7 +153,8 @@ public final class SentinelFeign {
 		}
 
 		@Override
-		public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+		public void setApplicationContext(ApplicationContext applicationContext)
+				throws BeansException {
 			this.applicationContext = applicationContext;
 			feignContext = this.applicationContext.getBean(FeignContext.class);
 		}

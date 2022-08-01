@@ -16,22 +16,16 @@
 
 package com.alibaba.cloud.nacos.endpoint;
 
-import java.lang.reflect.Method;
 import java.util.Map;
 
 import com.alibaba.cloud.nacos.NacosConfigAutoConfiguration;
 import com.alibaba.cloud.nacos.NacosConfigBootstrapConfiguration;
+import com.alibaba.cloud.nacos.NacosConfigManager;
 import com.alibaba.cloud.nacos.NacosConfigProperties;
 import com.alibaba.cloud.nacos.refresh.NacosRefreshHistory;
 import com.alibaba.nacos.client.config.NacosConfigService;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.api.support.MethodProxy;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
-import org.powermock.modules.junit4.PowerMockRunnerDelegate;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.health.Health.Builder;
@@ -39,36 +33,22 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.NONE;
 
 /**
+ *
  * @author xiaojing
+ * @author freeman
  */
-@RunWith(PowerMockRunner.class)
-@PowerMockIgnore({ "com.sun.org.apache.*", "javax.xml.*", "org.xml.*", "javax.management.*" })
-@PowerMockRunnerDelegate(SpringRunner.class)
-@PrepareForTest({ NacosConfigService.class })
-@SpringBootTest(classes = NacosConfigEndpointTests.TestConfig.class, properties = { "spring.application.name=test-name",
-		"spring.cloud.nacos.config.server-addr=127.0.0.1:8848", "spring.cloud.nacos.config.file-extension=properties" },
-		webEnvironment = NONE)
+@SpringBootTest(classes = NacosConfigEndpointTests.TestConfig.class, webEnvironment = NONE, properties = {
+		"spring.application.name=test-name",
+		"spring.cloud.nacos.config.server-addr=127.0.0.1:8848",
+		"spring.cloud.nacos.config.file-extension=properties",
+		"spring.cloud.bootstrap.enabled=true" })
 public class NacosConfigEndpointTests {
-
-	static {
-
-		try {
-
-			Method method = PowerMockito.method(NacosConfigService.class, "getServerStatus");
-			MethodProxy.proxy(method, (proxy, method1, args) -> "UP");
-
-		}
-		catch (Exception ignore) {
-			ignore.printStackTrace();
-
-		}
-	}
 
 	@Autowired
 	private NacosConfigProperties properties;
@@ -76,6 +56,19 @@ public class NacosConfigEndpointTests {
 	@Autowired
 	private NacosRefreshHistory refreshHistory;
 
+	static {
+
+		try {
+			NacosConfigService mockedNacosConfigService = Mockito
+					.mock(NacosConfigService.class);
+			Mockito.when(mockedNacosConfigService.getServerStatus()).thenReturn("UP");
+			ReflectionTestUtils.setField(NacosConfigManager.class, "service",
+					mockedNacosConfigService);
+		}
+		catch (Exception ignore) {
+			ignore.printStackTrace();
+		}
+	}
 	@Test
 	public void contextLoads() throws Exception {
 
@@ -104,7 +97,8 @@ public class NacosConfigEndpointTests {
 	}
 
 	private void checkoutEndpoint() throws Exception {
-		NacosConfigEndpoint endpoint = new NacosConfigEndpoint(properties, refreshHistory);
+		NacosConfigEndpoint endpoint = new NacosConfigEndpoint(properties,
+				refreshHistory);
 		Map<String, Object> map = endpoint.invoke();
 
 		assertThat(properties).isEqualTo(map.get("NacosConfigProperties"));
@@ -113,8 +107,8 @@ public class NacosConfigEndpointTests {
 
 	@Configuration
 	@EnableAutoConfiguration
-	@ImportAutoConfiguration({ NacosConfigEndpointAutoConfiguration.class, NacosConfigAutoConfiguration.class,
-			NacosConfigBootstrapConfiguration.class })
+	@ImportAutoConfiguration({ NacosConfigEndpointAutoConfiguration.class,
+			NacosConfigAutoConfiguration.class, NacosConfigBootstrapConfiguration.class })
 	public static class TestConfig {
 
 	}

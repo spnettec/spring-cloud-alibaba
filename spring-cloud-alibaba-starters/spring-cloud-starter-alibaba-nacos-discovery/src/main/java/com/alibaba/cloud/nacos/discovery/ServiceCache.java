@@ -22,15 +22,21 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
+import com.alibaba.cloud.nacos.discovery.reactive.NacosReactiveDiscoveryClient;
+
 import org.springframework.cloud.client.ServiceInstance;
 
 /**
  * Service cache.
  * <p>
  * Cache serviceIds and corresponding instances in Nacos.
+ * <p>
+ * It's very useful to query services and instances on runtime, but it's not real-time,
+ * depends on {@link NacosDiscoveryClient} or {@link NacosReactiveDiscoveryClient}
+ * {@code getServices(), getInstances(..)} invoke.
  *
  * @author freeman
- * @since 2022.0
+ * @since 2021.0.1.0
  */
 public final class ServiceCache {
 
@@ -41,19 +47,60 @@ public final class ServiceCache {
 
 	private static Map<String, List<ServiceInstance>> instancesMap = new ConcurrentHashMap<>();
 
+	/**
+	 * Set instances for specific service.
+	 * @param serviceId service id
+	 * @param instances service instances
+	 */
 	public static void setInstances(String serviceId, List<ServiceInstance> instances) {
 		instancesMap.put(serviceId, Collections.unmodifiableList(instances));
 	}
 
+	/**
+	 * Get instances for specific service.
+	 * @param serviceId service id
+	 * @return service instances
+	 */
 	public static List<ServiceInstance> getInstances(String serviceId) {
-		return Optional.ofNullable(instancesMap.get(serviceId)).orElse(Collections.emptyList());
+		return Optional.ofNullable(instancesMap.get(serviceId))
+				.orElse(Collections.emptyList());
 	}
 
-	public static void set(List<String> newServices) {
-		services = Collections.unmodifiableList(newServices);
+	/**
+	 * Set all services.
+	 * @param serviceIds all services
+	 * @deprecated since 2021.0.1.1, use {@link #setServiceIds(List)} instead.
+	 */
+	@Deprecated
+	public static void set(List<String> serviceIds) {
+		services = Collections.unmodifiableList(serviceIds);
 	}
 
+	/**
+	 * Set all services.
+	 * @param serviceIds all services
+	 * @since 2021.0.1.1
+	 */
+	public static void setServiceIds(List<String> serviceIds) {
+		services = Collections.unmodifiableList(serviceIds);
+	}
+
+	/**
+	 * Get all services.
+	 * @deprecated since 2021.0.1.1, use {@link #getServiceIds()} instead.
+	 * @return all services
+	 */
+	@Deprecated
 	public static List<String> get() {
+		return services;
+	}
+
+	/**
+	 * Get all services.
+	 * @return all services
+	 * @since 2021.0.1.1
+	 */
+	public static List<String> getServiceIds() {
 		return services;
 	}
 

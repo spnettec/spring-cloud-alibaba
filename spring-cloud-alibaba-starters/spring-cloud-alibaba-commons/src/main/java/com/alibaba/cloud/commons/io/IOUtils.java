@@ -62,7 +62,8 @@ public final class IOUtils {
 	 * @throws java.io.IOException if an I/O error occurs
 	 * @since 2.3
 	 */
-	public static String toString(final InputStream input, final Charset encoding) throws IOException {
+	public static String toString(final InputStream input, final Charset encoding)
+			throws IOException {
 		try (StringBuilderWriter sw = new StringBuilderWriter()) {
 			copy(input, sw, encoding);
 			return sw.toString();
@@ -112,9 +113,10 @@ public final class IOUtils {
 	 * @throws IOException if an I/O error occurs
 	 * @since 2.3
 	 */
-	public static void copy(final InputStream input, final Writer output, final Charset inputEncoding)
-			throws IOException {
-		final InputStreamReader in = new InputStreamReader(input, Charsets.toCharset(inputEncoding));
+	public static void copy(final InputStream input, final Writer output,
+			final Charset inputEncoding) throws IOException {
+		final InputStreamReader in = new InputStreamReader(input,
+				Charsets.toCharset(inputEncoding));
 		copy(in, output);
 	}
 
@@ -133,8 +135,8 @@ public final class IOUtils {
 	 * @throws IOException if an I/O error occurs
 	 * @since 2.5
 	 */
-	public static long copy(final InputStream input, final OutputStream output, final int bufferSize)
-			throws IOException {
+	public static long copy(final InputStream input, final OutputStream output,
+			final int bufferSize) throws IOException {
 		return copyLarge(input, output, new byte[bufferSize]);
 	}
 
@@ -152,7 +154,8 @@ public final class IOUtils {
 	 * @throws IOException if an I/O error occurs
 	 * @since 1.3
 	 */
-	public static long copyLarge(final Reader input, final Writer output) throws IOException {
+	public static long copyLarge(final Reader input, final Writer output)
+			throws IOException {
 		return copyLarge(input, output, new char[DEFAULT_BUFFER_SIZE]);
 	}
 
@@ -170,7 +173,8 @@ public final class IOUtils {
 	 * @throws IOException if an I/O error occurs
 	 * @since 2.2
 	 */
-	public static long copyLarge(final Reader input, final Writer output, final char[] buffer) throws IOException {
+	public static long copyLarge(final Reader input, final Writer output,
+			final char[] buffer) throws IOException {
 		long count = 0;
 		int n;
 		while (EOF != (n = input.read(buffer))) {
@@ -195,7 +199,8 @@ public final class IOUtils {
 	 * @throws IOException if an I/O error occurs
 	 * @since 1.3
 	 */
-	public static long copyLarge(final InputStream input, final OutputStream output) throws IOException {
+	public static long copyLarge(final InputStream input, final OutputStream output)
+			throws IOException {
 		return copy(input, output, DEFAULT_BUFFER_SIZE);
 	}
 
@@ -214,8 +219,8 @@ public final class IOUtils {
 	 * @throws IOException if an I/O error occurs
 	 * @since 2.2
 	 */
-	public static long copyLarge(final InputStream input, final OutputStream output, final byte[] buffer)
-			throws IOException {
+	public static long copyLarge(final InputStream input, final OutputStream output,
+			final byte[] buffer) throws IOException {
 		long count = 0;
 		int n;
 		while (EOF != (n = input.read(buffer))) {

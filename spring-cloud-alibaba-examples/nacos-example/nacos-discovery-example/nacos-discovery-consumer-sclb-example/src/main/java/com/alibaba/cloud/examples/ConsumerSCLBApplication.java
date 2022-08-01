@@ -85,7 +85,8 @@ public class ConsumerSCLBApplication {
 
 	static class RandomLoadBalancer implements ReactorServiceInstanceLoadBalancer {
 
-		private static final Logger log = LoggerFactory.getLogger(RandomLoadBalancer.class);
+		private static final Logger log = LoggerFactory
+				.getLogger(RandomLoadBalancer.class);
 
 		private ObjectProvider<ServiceInstanceListSupplier> serviceInstanceListSupplierProvider;
 
@@ -93,7 +94,8 @@ public class ConsumerSCLBApplication {
 
 		private final Random random;
 
-		RandomLoadBalancer(ObjectProvider<ServiceInstanceListSupplier> serviceInstanceListSupplierProvider,
+		RandomLoadBalancer(
+				ObjectProvider<ServiceInstanceListSupplier> serviceInstanceListSupplierProvider,
 				String serviceId) {
 			this.serviceInstanceListSupplierProvider = serviceInstanceListSupplierProvider;
 			this.serviceId = serviceId;
@@ -101,7 +103,8 @@ public class ConsumerSCLBApplication {
 		}
 
 		@Override
-		public Mono<Response<ServiceInstance>> choose(org.springframework.cloud.client.loadbalancer.Request request) {
+		public Mono<Response<ServiceInstance>> choose(
+				org.springframework.cloud.client.loadbalancer.Request request) {
 			ServiceInstanceListSupplier supplier = serviceInstanceListSupplierProvider
 					.getIfAvailable(NoopServiceInstanceListSupplier::new);
 
@@ -115,7 +118,8 @@ public class ConsumerSCLBApplication {
 			return supplier.get().next().map(this::getInstanceResponse);
 		}
 
-		private Response<ServiceInstance> getInstanceResponse(List<ServiceInstance> instances) {
+		private Response<ServiceInstance> getInstanceResponse(
+				List<ServiceInstance> instances) {
 			if (instances.isEmpty()) {
 				return new EmptyResponse();
 			}
@@ -123,11 +127,9 @@ public class ConsumerSCLBApplication {
 
 			return new DefaultResponse(instance);
 		}
-
 	}
 
-	@FeignClient(name = "service-provider", fallback = EchoServiceFallback.class,
-			configuration = FeignConfiguration.class)
+	@FeignClient(name = "service-provider", fallback = EchoServiceFallback.class, configuration = FeignConfiguration.class)
 	public interface EchoService {
 
 		@GetMapping("/echo/{str}")
@@ -165,13 +167,14 @@ public class ConsumerSCLBApplication {
 
 		@GetMapping("/echo-rest/{str}")
 		public String rest(@PathVariable String str) {
-			return restTemplate.getForObject("http://service-provider/echo/" + str, String.class);
+			return restTemplate.getForObject("http://service-provider/echo/" + str,
+					String.class);
 		}
 
 		@GetMapping("/zone")
 		public String zone() {
-			return "consumer zone " + zone + "\n"
-					+ restTemplate.getForObject("http://service-provider/zone", String.class);
+			return "consumer zone " + zone + "\n" + restTemplate
+					.getForObject("http://service-provider/zone", String.class);
 		}
 
 		@GetMapping("/echo-feign/{str}")
@@ -186,12 +189,14 @@ public class ConsumerSCLBApplication {
 
 		@GetMapping("/test")
 		public String test() {
-			return restTemplate1.getForObject("http://service-provider/test", String.class);
+			return restTemplate1.getForObject("http://service-provider/test",
+					String.class);
 		}
 
 		@GetMapping("/sleep")
 		public String sleep() {
-			return restTemplate1.getForObject("http://service-provider/sleep", String.class);
+			return restTemplate1.getForObject("http://service-provider/sleep",
+					String.class);
 		}
 
 		@GetMapping("/notFound-feign")

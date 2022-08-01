@@ -16,9 +16,9 @@
 
 package com.alibaba.cloud.sentinel.datasource.config;
 
+import com.alibaba.cloud.commons.lang.StringUtils;
 import com.alibaba.cloud.sentinel.datasource.factorybean.ZookeeperDataSourceFactoryBean;
 
-import org.springframework.util.StringUtils;
 
 /**
  * Zookeeper Properties class Using by {@link DataSourcePropertiesConfiguration} and
@@ -43,9 +43,11 @@ public class ZookeeperDataSourceProperties extends AbstractDataSourceProperties 
 	@Override
 	public void preCheck(String dataSourceName) {
 		if (StringUtils.isEmpty(serverAddr)) {
-			serverAddr = this.getEnv().getProperty("spring.cloud.sentinel.datasource.zk.server-addr", "");
+			serverAddr = this.getEnv()
+					.getProperty("spring.cloud.sentinel.datasource.zk.server-addr", "");
 			if (StringUtils.isEmpty(serverAddr)) {
-				throw new IllegalArgumentException("ZookeeperDataSource server-addr is empty");
+				throw new IllegalArgumentException(
+						"ZookeeperDataSource server-addr is empty");
 			}
 		}
 	}

@@ -26,10 +26,10 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.Map;
 
+import com.alibaba.cloud.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.springframework.util.StringUtils;
 
 public class NacosRefreshHistory {
 
@@ -61,14 +61,16 @@ public class NacosRefreshHistory {
 	 */
 	@Deprecated
 	public void add(String dataId, String md5) {
-		records.addFirst(new Record(DATE_FORMAT.get().format(new Date()), dataId, "", md5, null));
+		records.addFirst(
+				new Record(DATE_FORMAT.get().format(new Date()), dataId, "", md5, null));
 		if (records.size() > MAX_SIZE) {
 			records.removeLast();
 		}
 	}
 
 	public void addRefreshRecord(String dataId, String group, String data) {
-		records.addFirst(new Record(DATE_FORMAT.get().format(new Date()), dataId, group, md5(data), null));
+		records.addFirst(new Record(DATE_FORMAT.get().format(new Date()), dataId, group,
+				md5(data), null));
 		if (records.size() > MAX_SIZE) {
 			records.removeLast();
 		}
@@ -90,7 +92,8 @@ public class NacosRefreshHistory {
 				return "unable to get md5";
 			}
 		}
-		return new BigInteger(1, md.digest(data.getBytes(StandardCharsets.UTF_8))).toString(16);
+		return new BigInteger(1, md.digest(data.getBytes(StandardCharsets.UTF_8)))
+				.toString(16);
 	}
 
 	static class Record {
@@ -103,7 +106,8 @@ public class NacosRefreshHistory {
 
 		private final String md5;
 
-		Record(String timestamp, String dataId, String group, String md5, Map<String, Object> last) {
+		Record(String timestamp, String dataId, String group, String md5,
+				Map<String, Object> last) {
 			this.timestamp = timestamp;
 			this.dataId = dataId;
 			this.group = group;

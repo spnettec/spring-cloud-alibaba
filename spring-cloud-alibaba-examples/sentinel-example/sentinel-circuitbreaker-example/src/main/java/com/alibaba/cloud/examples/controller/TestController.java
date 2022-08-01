@@ -25,6 +25,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
+ *
+ *
  * @author freeman
  */
 @RestController
@@ -32,7 +34,6 @@ public class TestController {
 
 	@Autowired
 	private UserClient userClient;
-
 	@Autowired
 	private OrderClient orderClient;
 

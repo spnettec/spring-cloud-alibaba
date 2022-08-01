@@ -20,7 +20,7 @@ import com.alibaba.cloud.sentinel.datasource.converter.XmlConverter;
 import com.alibaba.cloud.sentinel.datasource.factorybean.ZookeeperDataSourceFactoryBean;
 import com.alibaba.csp.sentinel.datasource.Converter;
 import com.alibaba.csp.sentinel.datasource.zookeeper.ZookeeperDataSource;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doReturn;
@@ -43,7 +43,8 @@ public class ZookeeperDataSourceFactoryBeanTests {
 
 	@Test
 	public void testZKWithoutPathFactoryBean() throws Exception {
-		ZookeeperDataSourceFactoryBean factoryBean = spy(ZookeeperDataSourceFactoryBean.class);
+		ZookeeperDataSourceFactoryBean factoryBean = spy(
+				ZookeeperDataSourceFactoryBean.class);
 
 		Converter converter = mock(XmlConverter.class);
 
@@ -67,7 +68,8 @@ public class ZookeeperDataSourceFactoryBeanTests {
 
 	@Test
 	public void testZKWithPathFactoryBean() throws Exception {
-		ZookeeperDataSourceFactoryBean factoryBean = spy(ZookeeperDataSourceFactoryBean.class);
+		ZookeeperDataSourceFactoryBean factoryBean = spy(
+				ZookeeperDataSourceFactoryBean.class);
 
 		Converter converter = mock(XmlConverter.class);
 

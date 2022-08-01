@@ -73,6 +73,20 @@ public class NacosConfigApplication {
 }
 ----
 
+NOTE: 注意当您```spring-cloud-alibaba```的版本为 ````2021.1```时,由于```nacos```获取配置时```bootstrap.yml ```文件将先于```application.yml```文件加载.
+根据spring的官方文档中提及 [bootstrap](https://docs.spring.io/spring-cloud-config/docs/current/reference/html/#config-first-bootstrap)
+为解决此问题 我们建议您在项目根```pom.xml```文件中加上如下依赖
+
+[source,xml]
+----
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-bootstrap</artifactId>
+    <version>3.1.1</version>
+</dependency>
+----
+
+
 在运行此 NacosConfigApplication 之前， 必须使用 `bootstrap.properties` 配置文件来配置 Nacos Server 地址，例如：
 
 .bootstrap.properties
@@ -260,7 +274,7 @@ Nacos 内部有 https://nacos.io/zh-cn/docs/concepts.html[Namespace 的概念]:
 [quote]
 用于进行租户粒度的配置隔离。不同的命名空间下，可以存在相同的 Group 或 Data ID 的配置。Namespace 的常用场景之一是不同环境的配置的区分隔离，例如开发测试环境和生产环境的资源（如配置、服务）隔离等。
 
-在没有明确指定 `${spring.cloud.nacos.config.namespace}` 配置的情况下， 默认使用的是 Nacos 上 Public 这个namespae。如果需要使用自定义的命名空间，可以通过以下配置来实现：
+在没有明确指定 `${spring.cloud.nacos.config.namespace}` 配置的情况下， 默认使用的是 Nacos 上 Public 这个namespace。如果需要使用自定义的命名空间，可以通过以下配置来实现：
 [source,properties]
 ----
 spring.cloud.nacos.config.namespace=b3404bc0-d7dc-4855-b519-570ed34b62d7
@@ -281,7 +295,7 @@ NOTE: 该配置必须放在 bootstrap.properties 文件中。并且在添加配�
 
 === 支持自定义扩展的 Data Id 配置
 
-Nacos Config 从 0.2.1 版本后，可支持自定义 Data Id 的配置。关于这部分详细的设计可参考 https://github.com/spring-cloud-incubator/spring-cloud-alibaba/issues/141[这里]。
+Nacos Config 从 0.2.1 版本后，可支持自定义 Data Id 的配置。关于这部分详细的设计可参考 https://github.com/alibaba/spring-cloud-alibaba/issues/141[这里]。
 一个完整的配置案例如下所示：
 
 [source,properties]
@@ -348,7 +362,7 @@ Nacos Config 目前提供了三种配置能力从 Nacos 拉取相关的配置
 * B: 通过 `spring.cloud.nacos.config.ext-config[n].data-id` 的方式支持多个扩展 Data Id 的配置
 * C: 通过内部相关规则(应用名、应用名+ Profile )自动生成相关的 Data Id 配置
 
-当三种方式共同使用时，他们的一个优先级关系是:A < B < C
+当三种方式共同使用时，他们的一个优先级关系是: A < B < C
 
 === Nacos Config 对外暴露的 Endpoint
 

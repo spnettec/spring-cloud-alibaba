@@ -53,7 +53,8 @@ import org.springframework.web.reactive.result.view.ViewResolver;
 @EnableConfigurationProperties(SentinelProperties.class)
 public class SentinelWebFluxAutoConfiguration {
 
-	private static final Logger log = LoggerFactory.getLogger(SentinelWebFluxAutoConfiguration.class);
+	private static final Logger log = LoggerFactory
+			.getLogger(SentinelWebFluxAutoConfiguration.class);
 
 	private final List<ViewResolver> viewResolvers;
 
@@ -62,7 +63,8 @@ public class SentinelWebFluxAutoConfiguration {
 	@Autowired
 	private Optional<BlockRequestHandler> blockRequestHandler;
 
-	public SentinelWebFluxAutoConfiguration(ObjectProvider<List<ViewResolver>> viewResolvers,
+	public SentinelWebFluxAutoConfiguration(
+			ObjectProvider<List<ViewResolver>> viewResolvers,
 			ServerCodecConfigurer serverCodecConfigurer) {
 		this.viewResolvers = viewResolvers.getIfAvailable(Collections::emptyList);
 		this.serverCodecConfigurer = serverCodecConfigurer;
@@ -75,14 +77,16 @@ public class SentinelWebFluxAutoConfiguration {
 
 	@Bean
 	@Order(-2)
-	@ConditionalOnProperty(name = "spring.cloud.sentinel.filter.enabled", matchIfMissing = true)
+	@ConditionalOnProperty(name = "spring.cloud.sentinel.filter.enabled",
+			matchIfMissing = true)
 	public SentinelBlockExceptionHandler sentinelBlockExceptionHandler() {
 		return new SentinelBlockExceptionHandler(viewResolvers, serverCodecConfigurer);
 	}
 
 	@Bean
 	@Order(-1)
-	@ConditionalOnProperty(name = "spring.cloud.sentinel.filter.enabled", matchIfMissing = true)
+	@ConditionalOnProperty(name = "spring.cloud.sentinel.filter.enabled",
+			matchIfMissing = true)
 	public SentinelWebFluxFilter sentinelWebFluxFilter() {
 		log.info("[Sentinel Starter] register Sentinel SentinelWebFluxFilter");
 		return new SentinelWebFluxFilter();

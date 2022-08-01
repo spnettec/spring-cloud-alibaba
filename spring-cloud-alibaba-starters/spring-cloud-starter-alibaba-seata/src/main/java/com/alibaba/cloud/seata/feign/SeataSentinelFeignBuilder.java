@@ -31,7 +31,8 @@ final class SeataSentinelFeignBuilder {
 	}
 
 	static Feign.Builder builder(BeanFactory beanFactory) {
-		return SentinelFeign.builder().retryer(Retryer.NEVER_RETRY).client(new SeataFeignClient(beanFactory));
+		return SentinelFeign.builder().retryer(Retryer.NEVER_RETRY)
+				.client(new SeataFeignClient(beanFactory));
 	}
 
 }

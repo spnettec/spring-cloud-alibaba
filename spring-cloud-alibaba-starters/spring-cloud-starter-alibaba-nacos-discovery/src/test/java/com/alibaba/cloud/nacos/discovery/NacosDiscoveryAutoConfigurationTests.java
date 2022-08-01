@@ -32,8 +32,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class NacosDiscoveryAutoConfigurationTests {
 
 	private ApplicationContextRunner contextRunner = new ApplicationContextRunner()
-			.withConfiguration(AutoConfigurations.of(UtilAutoConfiguration.class, NacosDiscoveryAutoConfiguration.class,
-					NacosServiceAutoConfiguration.class));
+			.withConfiguration(AutoConfigurations.of(UtilAutoConfiguration.class,
+					NacosServiceAutoConfiguration.class,
+					NacosDiscoveryAutoConfiguration.class));
 
 	@Test
 	public void testDefaultInitialization() {

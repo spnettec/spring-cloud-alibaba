@@ -16,9 +16,9 @@
 
 package com.alibaba.cloud.sentinel.datasource.config;
 
+import com.alibaba.cloud.commons.lang.StringUtils;
 import com.alibaba.cloud.sentinel.datasource.factorybean.ConsulDataSourceFactoryBean;
 
-import org.springframework.util.StringUtils;
 
 /**
  * Consul Properties class Using by {@link DataSourcePropertiesConfiguration} and
@@ -58,7 +58,8 @@ public class ConsulDataSourceProperties extends AbstractDataSourceProperties {
 			throw new IllegalArgumentException("ConsulDataSource server-host is empty");
 		}
 		if (StringUtils.isEmpty(ruleKey)) {
-			throw new IllegalArgumentException("ConsulDataSource ruleKey can not be empty");
+			throw new IllegalArgumentException(
+					"ConsulDataSource ruleKey can not be empty");
 		}
 	}
 

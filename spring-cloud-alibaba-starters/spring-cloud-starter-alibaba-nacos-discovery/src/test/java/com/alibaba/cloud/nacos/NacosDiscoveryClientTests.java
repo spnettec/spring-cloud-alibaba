@@ -58,7 +58,8 @@ public class NacosDiscoveryClientTests {
 	@Test
 	public void testGetInstances() throws Exception {
 
-		when(serviceDiscovery.getInstances("service-1")).thenReturn(singletonList(serviceInstance));
+		when(serviceDiscovery.getInstances("service-1"))
+				.thenReturn(singletonList(serviceInstance));
 
 		List<ServiceInstance> serviceInstances = client.getInstances("service-1");
 
@@ -101,7 +102,7 @@ public class NacosDiscoveryClientTests {
 
 	@Test
 	public void testFailureToleranceEnabled() throws NacosException {
-		ServiceCache.set(Arrays.asList("a", "b"));
+		ServiceCache.setServiceIds(Arrays.asList("a", "b"));
 
 		when(serviceDiscovery.getServices()).thenThrow(new NacosException());
 		ReflectionTestUtils.setField(client, "failureToleranceEnabled", true);
@@ -113,7 +114,7 @@ public class NacosDiscoveryClientTests {
 
 	@Test
 	public void testFailureToleranceDisabled() throws NacosException {
-		ServiceCache.set(Arrays.asList("a", "b"));
+		ServiceCache.setServiceIds(Arrays.asList("a", "b"));
 
 		when(serviceDiscovery.getServices()).thenThrow(new NacosException());
 		ReflectionTestUtils.setField(client, "failureToleranceEnabled", false);
@@ -125,7 +126,8 @@ public class NacosDiscoveryClientTests {
 
 	@Test
 	public void testCacheIsOK() throws NacosException {
-		when(serviceDiscovery.getInstances("a")).thenReturn(singletonList(serviceInstance));
+		when(serviceDiscovery.getInstances("a"))
+				.thenReturn(singletonList(serviceInstance));
 		this.client.getInstances("a");
 		assertThat(ServiceCache.getInstances("a")).isEqualTo(singletonList(serviceInstance));
 	}

@@ -47,7 +47,8 @@ public class ReactiveSentinelCircuitBreaker implements ReactiveCircuitBreaker {
 
 	private final List<DegradeRule> rules;
 
-	public ReactiveSentinelCircuitBreaker(String resourceName, EntryType entryType, List<DegradeRule> rules) {
+	public ReactiveSentinelCircuitBreaker(String resourceName, EntryType entryType,
+			List<DegradeRule> rules) {
 		Assert.hasText(resourceName, "resourceName cannot be blank");
 		Assert.notNull(rules, "rules should not be null");
 		this.resourceName = resourceName;
@@ -82,7 +83,8 @@ public class ReactiveSentinelCircuitBreaker implements ReactiveCircuitBreaker {
 
 	@Override
 	public <T> Mono<T> run(Mono<T> toRun, Function<Throwable, Mono<T>> fallback) {
-		Mono<T> toReturn = toRun.transform(new SentinelReactorTransformer<>(new EntryConfig(resourceName, entryType)));
+		Mono<T> toReturn = toRun.transform(new SentinelReactorTransformer<>(
+				new EntryConfig(resourceName, entryType)));
 		if (fallback != null) {
 			toReturn = toReturn.onErrorResume(fallback);
 		}
@@ -91,7 +93,8 @@ public class ReactiveSentinelCircuitBreaker implements ReactiveCircuitBreaker {
 
 	@Override
 	public <T> Flux<T> run(Flux<T> toRun, Function<Throwable, Flux<T>> fallback) {
-		Flux<T> toReturn = toRun.transform(new SentinelReactorTransformer<>(new EntryConfig(resourceName, entryType)));
+		Flux<T> toReturn = toRun.transform(new SentinelReactorTransformer<>(
+				new EntryConfig(resourceName, entryType)));
 		if (fallback != null) {
 			toReturn = toReturn.onErrorResume(fallback);
 		}

@@ -30,7 +30,7 @@ import org.springframework.boot.context.config.ConfigDataLocation;
 import org.springframework.boot.context.config.ConfigDataLocationResolverContext;
 import org.springframework.boot.context.config.Profiles;
 import org.springframework.boot.context.properties.bind.Binder;
-import org.springframework.boot.logging.DeferredLog;
+import org.springframework.boot.logging.DeferredLogs;
 import org.springframework.mock.env.MockEnvironment;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -50,19 +50,21 @@ public class NacosConfigDataLocationResolverTest {
 
 	private NacosConfigDataLocationResolver resolver;
 
-	private ConfigDataLocationResolverContext context = mock(ConfigDataLocationResolverContext.class);
+	private ConfigDataLocationResolverContext context = mock(
+			ConfigDataLocationResolverContext.class);
 
 	private MockEnvironment environment;
 
 	private Binder environmentBinder;
 
-	private ConfigurableBootstrapContext bootstrapContext = mock(ConfigurableBootstrapContext.class);
+	private ConfigurableBootstrapContext bootstrapContext = mock(
+			ConfigurableBootstrapContext.class);
 
 	@BeforeEach
 	void setup() {
 		this.environment = new MockEnvironment();
 		this.environmentBinder = Binder.get(this.environment);
-		this.resolver = new NacosConfigDataLocationResolver(new DeferredLog());
+		this.resolver = new NacosConfigDataLocationResolver(new DeferredLogs());
 		when(bootstrapContext.isRegistered(eq(ConfigService.class))).thenReturn(true);
 		when(context.getBinder()).thenReturn(environmentBinder);
 		when(context.getBootstrapContext()).thenReturn(bootstrapContext);
@@ -70,19 +72,26 @@ public class NacosConfigDataLocationResolverTest {
 
 	@Test
 	void testIsResolvable_givenIncorrectPrefix_thenReturnFalse() {
-		assertThat(this.resolver.isResolvable(this.context, ConfigDataLocation.of("test:"))).isFalse();
+		assertThat(
+				this.resolver.isResolvable(this.context, ConfigDataLocation.of("test:")))
+						.isFalse();
 	}
 
 	@Test
 	void testIsResolvable_givenCorrectPrefix_thenReturnTure() {
-		assertThat(this.resolver.isResolvable(this.context, ConfigDataLocation.of("nacos:"))).isTrue();
-		assertThat(this.resolver.isResolvable(this.context, ConfigDataLocation.of("optional:nacos:"))).isTrue();
+		assertThat(
+				this.resolver.isResolvable(this.context, ConfigDataLocation.of("nacos:")))
+						.isTrue();
+		assertThat(this.resolver.isResolvable(this.context,
+				ConfigDataLocation.of("optional:nacos:"))).isTrue();
 	}
 
 	@Test
 	void testIsResolvable_givenDisable_thenReturnFalse() {
 		this.environment.setProperty(NacosConfigProperties.PREFIX + ".enabled", "false");
-		assertThat(this.resolver.isResolvable(this.context, ConfigDataLocation.of("nacos:"))).isFalse();
+		assertThat(
+				this.resolver.isResolvable(this.context, ConfigDataLocation.of("nacos:")))
+						.isFalse();
 	}
 
 	@Test
@@ -107,7 +116,8 @@ public class NacosConfigDataLocationResolverTest {
 	@Test
 	void testDataIdMustBeSpecified() {
 		String locationUri = "nacos:";
-		assertThatThrownBy(() -> testUri(locationUri)).hasMessage("dataId must be specified");
+		assertThatThrownBy(() -> testUri(locationUri))
+				.hasMessage("dataId must be specified");
 	}
 
 	@Test
@@ -156,7 +166,7 @@ public class NacosConfigDataLocationResolverTest {
 	void testSetCommonPropertiesIsOK() {
 		environment.setProperty("spring.cloud.nacos.username", "root");
 		environment.setProperty("spring.cloud.nacos.password", "root");
-		environment.setProperty("spring.cloud.nacos.server-addr", "localhost:8888");
+		environment.setProperty("spring.cloud.nacos.server-addr", "127.0.0.1:8888");
 		String locationUri = "nacos:test.yml";
 		List<NacosConfigDataResource> resources = testUri(locationUri);
 
@@ -164,7 +174,7 @@ public class NacosConfigDataLocationResolverTest {
 		NacosConfigDataResource resource = resources.get(0);
 		assertThat(resource.getProperties().getUsername()).isEqualTo("root");
 		assertThat(resource.getProperties().getPassword()).isEqualTo("root");
-		assertThat(resource.getProperties().getServerAddr()).isEqualTo("localhost:8888");
+		assertThat(resource.getProperties().getServerAddr()).isEqualTo("127.0.0.1:8888");
 	}
 
 	@Test
@@ -172,8 +182,9 @@ public class NacosConfigDataLocationResolverTest {
 		environment.setProperty("spring.cloud.nacos.username", "root");
 		environment.setProperty("spring.cloud.nacos.password", "root");
 		environment.setProperty("spring.cloud.nacos.config.password", "not_root");
-		environment.setProperty("spring.cloud.nacos.server-addr", "localhost:8888");
-		environment.setProperty("spring.cloud.nacos.config.server-addr", "localhost:9999");
+		environment.setProperty("spring.cloud.nacos.server-addr", "127.0.0.1:8888");
+		environment.setProperty("spring.cloud.nacos.config.server-addr",
+				"127.0.0.1:9999");
 		String locationUri = "nacos:test.yml";
 		List<NacosConfigDataResource> resources = testUri(locationUri);
 
@@ -181,21 +192,25 @@ public class NacosConfigDataLocationResolverTest {
 		NacosConfigDataResource resource = resources.get(0);
 		assertThat(resource.getProperties().getUsername()).isEqualTo("root");
 		assertThat(resource.getProperties().getPassword()).isEqualTo("not_root");
-		assertThat(resource.getProperties().getServerAddr()).isEqualTo("localhost:9999");
+		assertThat(resource.getProperties().getServerAddr()).isEqualTo("127.0.0.1:9999");
 	}
 
-	private List<NacosConfigDataResource> testUri(String locationUri, String... activeProfiles) {
+	private List<NacosConfigDataResource> testUri(String locationUri,
+			String... activeProfiles) {
 		Profiles profiles = mock(Profiles.class);
 		when(profiles.getActive()).thenReturn(Arrays.asList(activeProfiles));
-		return this.resolver.resolveProfileSpecific(context, ConfigDataLocation.of(locationUri), profiles);
+		return this.resolver.resolveProfileSpecific(context,
+				ConfigDataLocation.of(locationUri), profiles);
 	}
 
 	@Test
 	void whenNoneInBootstrapContext_thenCreateNewConfigClientProperties() {
-		when(bootstrapContext.isRegistered(eq(NacosConfigProperties.class))).thenReturn(false);
-		when(bootstrapContext.get(eq(NacosConfigProperties.class))).thenReturn(new NacosConfigProperties());
-		List<NacosConfigDataResource> resources = this.resolver.resolveProfileSpecific(context,
-				ConfigDataLocation.of("nacos:test.yml"), mock(Profiles.class));
+		when(bootstrapContext.isRegistered(eq(NacosConfigProperties.class)))
+				.thenReturn(false);
+		when(bootstrapContext.get(eq(NacosConfigProperties.class)))
+				.thenReturn(new NacosConfigProperties());
+		List<NacosConfigDataResource> resources = this.resolver.resolveProfileSpecific(
+				context, ConfigDataLocation.of("nacos:test.yml"), mock(Profiles.class));
 		assertThat(resources).hasSize(1);
 		verify(bootstrapContext, times(0)).get(eq(NacosConfigProperties.class));
 		NacosConfigDataResource resource = resources.get(0);
@@ -210,12 +225,14 @@ public class NacosConfigDataLocationResolverTest {
 	private NacosConfigDataResource testResolveProfileSpecific(String activeProfile) {
 		Profiles profiles = mock(Profiles.class);
 		if (activeProfile != null) {
-			when(profiles.getActive()).thenReturn(Collections.singletonList(activeProfile));
-			when(profiles.getAccepted()).thenReturn(Collections.singletonList(activeProfile));
+			when(profiles.getActive())
+					.thenReturn(Collections.singletonList(activeProfile));
+			when(profiles.getAccepted())
+					.thenReturn(Collections.singletonList(activeProfile));
 		}
 
-		List<NacosConfigDataResource> resources = this.resolver.resolveProfileSpecific(context,
-				ConfigDataLocation.of("nacos:test.yml"), profiles);
+		List<NacosConfigDataResource> resources = this.resolver.resolveProfileSpecific(
+				context, ConfigDataLocation.of("nacos:test.yml"), profiles);
 		assertThat(resources).hasSize(1);
 		return resources.get(0);
 	}

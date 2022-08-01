@@ -23,9 +23,8 @@ import java.util.List;
 import com.alibaba.csp.sentinel.slots.block.RuleConstant;
 import com.alibaba.csp.sentinel.slots.block.degrade.DegradeRule;
 import com.alibaba.csp.sentinel.slots.block.degrade.DegradeRuleManager;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -36,8 +35,6 @@ import org.springframework.cloud.client.circuitbreaker.Customizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Service;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -48,10 +45,9 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 /**
  * @author Eric Zhao
  */
-@RunWith(SpringRunner.class)
-@SpringBootTest(webEnvironment = RANDOM_PORT, classes = SentinelCircuitBreakerIntegrationTest.Application.class,
+@SpringBootTest(webEnvironment = RANDOM_PORT,
+		classes = SentinelCircuitBreakerIntegrationTest.Application.class,
 		properties = { "spring.cloud.discovery.client.health-indicator.enabled=false" })
-@DirtiesContext
 public class SentinelCircuitBreakerIntegrationTest {
 
 	@Autowired
@@ -84,12 +80,12 @@ public class SentinelCircuitBreakerIntegrationTest {
 		assertThat(service.normal()).isEqualTo("normal");
 	}
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		DegradeRuleManager.loadRules(new ArrayList<>());
 	}
 
-	@Before
+	@BeforeEach
 	public void tearDown() {
 		DegradeRuleManager.loadRules(new ArrayList<>());
 	}
@@ -100,7 +96,8 @@ public class SentinelCircuitBreakerIntegrationTest {
 	protected static class Application {
 
 		@GetMapping("/slow")
-		public String slow(@RequestParam(required = false) Boolean slow) throws InterruptedException {
+		public String slow(@RequestParam(required = false) Boolean slow)
+				throws InterruptedException {
 			if (slow == null || slow) {
 				Thread.sleep(80);
 			}
@@ -116,14 +113,16 @@ public class SentinelCircuitBreakerIntegrationTest {
 		public Customizer<SentinelCircuitBreakerFactory> slowCustomizer() {
 			String slowId = "slow";
 			List<DegradeRule> rules = Collections.singletonList(new DegradeRule(slowId)
-					.setGrade(RuleConstant.DEGRADE_GRADE_RT).setCount(50).setSlowRatioThreshold(0.7)
-					.setMinRequestAmount(5).setStatIntervalMs(30000).setTimeWindow(5));
+					.setGrade(RuleConstant.DEGRADE_GRADE_RT).setCount(50)
+					.setSlowRatioThreshold(0.7).setMinRequestAmount(5)
+					.setStatIntervalMs(30000).setTimeWindow(5));
 			return factory -> {
 				factory.configure(builder -> builder.rules(rules), slowId);
-				factory.configureDefault(id -> new SentinelConfigBuilder().resourceName(id)
-						.rules(Collections
-								.singletonList(new DegradeRule(id).setGrade(RuleConstant.DEGRADE_GRADE_EXCEPTION_COUNT)
-										.setCount(10).setStatIntervalMs(10000).setTimeWindow(10)))
+				factory.configureDefault(id -> new SentinelConfigBuilder()
+						.resourceName(id)
+						.rules(Collections.singletonList(new DegradeRule(id)
+								.setGrade(RuleConstant.DEGRADE_GRADE_EXCEPTION_COUNT)
+								.setCount(10).setStatIntervalMs(10000).setTimeWindow(10)))
 						.build());
 			};
 		}
@@ -135,18 +134,21 @@ public class SentinelCircuitBreakerIntegrationTest {
 
 			private CircuitBreakerFactory cbFactory;
 
-			DemoControllerService(TestRestTemplate rest, CircuitBreakerFactory cbFactory) {
+			DemoControllerService(TestRestTemplate rest,
+					CircuitBreakerFactory cbFactory) {
 				this.rest = rest;
 				this.cbFactory = cbFactory;
 			}
 
 			public String slow(boolean slow) {
-				return cbFactory.create("slow").run(() -> rest.getForObject("/slow?slow=" + slow, String.class),
+				return cbFactory.create("slow").run(
+						() -> rest.getForObject("/slow?slow=" + slow, String.class),
 						t -> "fallback");
 			}
 
 			public String normal() {
-				return cbFactory.create("normal").run(() -> rest.getForObject("/normal", String.class),
+				return cbFactory.create("normal").run(
+						() -> rest.getForObject("/normal", String.class),
 						t -> "fallback");
 			}
 

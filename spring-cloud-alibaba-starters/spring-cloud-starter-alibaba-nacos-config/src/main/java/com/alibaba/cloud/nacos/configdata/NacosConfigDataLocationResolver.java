@@ -24,9 +24,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.alibaba.cloud.commons.lang.StringUtils;
 import com.alibaba.cloud.nacos.NacosConfigManager;
 import com.alibaba.cloud.nacos.NacosConfigProperties;
-import com.alibaba.nacos.common.utils.StringUtils;
 import org.apache.commons.logging.Log;
 
 import org.springframework.boot.BootstrapRegistry.InstanceSupplier;
@@ -41,6 +41,7 @@ import org.springframework.boot.context.config.Profiles;
 import org.springframework.boot.context.properties.bind.BindHandler;
 import org.springframework.boot.context.properties.bind.Bindable;
 import org.springframework.boot.context.properties.bind.Binder;
+import org.springframework.boot.logging.DeferredLogFactory;
 import org.springframework.core.Ordered;
 
 import static com.alibaba.cloud.nacos.configdata.NacosConfigDataResource.NacosItemConfig;
@@ -50,9 +51,10 @@ import static com.alibaba.cloud.nacos.configdata.NacosConfigDataResource.NacosIt
  * {@link ConfigDataResource}.
  *
  * @author freeman
+ * @since 2021.0.1.0
  */
-public class NacosConfigDataLocationResolver implements ConfigDataLocationResolver<NacosConfigDataResource>, Ordered {
-
+public class NacosConfigDataLocationResolver
+		implements ConfigDataLocationResolver<NacosConfigDataResource>, Ordered {
 	/**
 	 * Prefix for Config Server imports.
 	 */
@@ -66,8 +68,10 @@ public class NacosConfigDataLocationResolver implements ConfigDataLocationResolv
 
 	private static final String REFRESH_ENABLED = "refreshEnabled";
 
-	public NacosConfigDataLocationResolver(Log log) {
-		this.log = log;
+	private static final String PREFERENCE = "preference";
+
+	public NacosConfigDataLocationResolver(DeferredLogFactory logFactory) {
+		this.log = logFactory.getLog(getClass());
 	}
 
 	@Override
@@ -75,22 +79,27 @@ public class NacosConfigDataLocationResolver implements ConfigDataLocationResolv
 		return -1;
 	}
 
-	protected NacosConfigProperties loadProperties(ConfigDataLocationResolverContext context) {
+	protected NacosConfigProperties loadProperties(
+			ConfigDataLocationResolverContext context) {
 		Binder binder = context.getBinder();
 		BindHandler bindHandler = getBindHandler(context);
 
 		NacosConfigProperties nacosConfigProperties;
 		if (context.getBootstrapContext().isRegistered(NacosConfigProperties.class)) {
-			nacosConfigProperties = context.getBootstrapContext().get(NacosConfigProperties.class);
+			nacosConfigProperties = context.getBootstrapContext()
+					.get(NacosConfigProperties.class);
 		}
 		else {
 			nacosConfigProperties = binder
-					.bind("spring.cloud.nacos", Bindable.of(NacosConfigProperties.class), bindHandler)
+					.bind("spring.cloud.nacos", Bindable.of(NacosConfigProperties.class),
+							bindHandler)
 					.map(properties -> binder
-							.bind(NacosConfigProperties.PREFIX, Bindable.ofInstance(properties), bindHandler)
+							.bind(NacosConfigProperties.PREFIX,
+									Bindable.ofInstance(properties), bindHandler)
 							.orElse(properties))
 					.orElseGet(() -> binder
-							.bind(NacosConfigProperties.PREFIX, Bindable.of(NacosConfigProperties.class), bindHandler)
+							.bind(NacosConfigProperties.PREFIX,
+									Bindable.of(NacosConfigProperties.class), bindHandler)
 							.orElseGet(NacosConfigProperties::new));
 		}
 
@@ -106,11 +115,14 @@ public class NacosConfigDataLocationResolver implements ConfigDataLocationResolv
 	}
 
 	@Override
-	public boolean isResolvable(ConfigDataLocationResolverContext context, ConfigDataLocation location) {
+	public boolean isResolvable(ConfigDataLocationResolverContext context,
+			ConfigDataLocation location) {
 		if (!location.hasPrefix(getPrefix())) {
 			return false;
 		}
-		return context.getBinder().bind(NacosConfigProperties.PREFIX + ".enabled", Boolean.class).orElse(true);
+		return context.getBinder()
+				.bind(NacosConfigProperties.PREFIX + ".enabled", Boolean.class)
+				.orElse(true);
 	}
 
 	protected String getPrefix() {
@@ -118,26 +130,33 @@ public class NacosConfigDataLocationResolver implements ConfigDataLocationResolv
 	}
 
 	@Override
-	public List<NacosConfigDataResource> resolve(ConfigDataLocationResolverContext context, ConfigDataLocation location)
-			throws ConfigDataLocationNotFoundException, ConfigDataResourceNotFoundException {
+	public List<NacosConfigDataResource> resolve(
+			ConfigDataLocationResolverContext context, ConfigDataLocation location)
+			throws ConfigDataLocationNotFoundException,
+			ConfigDataResourceNotFoundException {
 		return Collections.emptyList();
 	}
 
 	@Override
-	public List<NacosConfigDataResource> resolveProfileSpecific(ConfigDataLocationResolverContext resolverContext,
-			ConfigDataLocation location, Profiles profiles) throws ConfigDataLocationNotFoundException {
+	public List<NacosConfigDataResource> resolveProfileSpecific(
+			ConfigDataLocationResolverContext resolverContext,
+			ConfigDataLocation location, Profiles profiles)
+			throws ConfigDataLocationNotFoundException {
 		NacosConfigProperties properties = loadProperties(resolverContext);
 
-		ConfigurableBootstrapContext bootstrapContext = resolverContext.getBootstrapContext();
+		ConfigurableBootstrapContext bootstrapContext = resolverContext
+				.getBootstrapContext();
 
-		bootstrapContext.registerIfAbsent(NacosConfigProperties.class, InstanceSupplier.of(properties));
+		bootstrapContext.registerIfAbsent(NacosConfigProperties.class,
+				InstanceSupplier.of(properties));
 
 		registerConfigManager(properties, bootstrapContext);
 
 		return loadConfigDataResources(location, profiles, properties);
 	}
 
-	private List<NacosConfigDataResource> loadConfigDataResources(ConfigDataLocation location, Profiles profiles,
+	private List<NacosConfigDataResource> loadConfigDataResources(
+			ConfigDataLocation location, Profiles profiles,
 			NacosConfigProperties properties) {
 		List<NacosConfigDataResource> result = new ArrayList<>();
 		URI uri = getUri(location, properties);
@@ -146,12 +165,19 @@ public class NacosConfigDataLocationResolver implements ConfigDataLocationResolv
 			throw new IllegalArgumentException("dataId must be specified");
 		}
 
-		NacosConfigDataResource resource = new NacosConfigDataResource(properties, location.isOptional(), profiles, log,
-				new NacosItemConfig().setGroup(groupFor(uri, properties)).setDataId(dataIdFor(uri))
-						.setSuffix(suffixFor(uri, properties)).setRefreshEnabled(refreshEnabledFor(uri, properties)));
+		NacosConfigDataResource resource = new NacosConfigDataResource(properties,
+				location.isOptional(), profiles, log,
+				new NacosItemConfig().setGroup(groupFor(uri, properties))
+						.setDataId(dataIdFor(uri)).setSuffix(suffixFor(uri, properties))
+						.setRefreshEnabled(refreshEnabledFor(uri, properties))
+						.setPreference(preferenceFor(uri)));
 		result.add(resource);
 
 		return result;
+	}
+
+	private String preferenceFor(URI uri) {
+		return getQueryMap(uri).get(PREFERENCE);
 	}
 
 	private URI getUri(ConfigDataLocation location, NacosConfigProperties properties) {
@@ -218,7 +244,8 @@ public class NacosConfigDataLocationResolver implements ConfigDataLocationResolv
 
 	private boolean refreshEnabledFor(URI uri, NacosConfigProperties properties) {
 		Map<String, String> queryMap = getQueryMap(uri);
-		return queryMap.containsKey(REFRESH_ENABLED) ? Boolean.parseBoolean(queryMap.get(REFRESH_ENABLED))
+		return queryMap.containsKey(REFRESH_ENABLED)
+				? Boolean.parseBoolean(queryMap.get(REFRESH_ENABLED))
 				: properties.isRefreshEnabled();
 	}
 

@@ -3,7 +3,7 @@
     {
       "name": "spring.cloud.nacos.server-addr",
       "type": "java.lang.String",
-      "defaultValue": "localhost:8848",
+      "defaultValue": "127.0.0.1:8848",
       "description": "nacos server address."
     },
     {
@@ -74,6 +74,12 @@
       "description": "nacos config service's userName to authenticate."
     },
     {
+      "name": "spring.cloud.nacos.config.import-check.enabled",
+      "type": "java.lang.Boolean",
+      "defaultValue": true,
+      "description": "Whether to enable import-check."
+    },
+    {
       "name": "spring.cloud.nacos.config.password",
       "type": "java.lang.String",
       "defaultValue": "${spring.cloud.nacos.password}",
@@ -88,6 +94,18 @@
       "name": "spring.cloud.nacos.password",
       "type": "java.lang.String",
       "description": "nacos password to authenticate."
+    },
+    {
+      "name": "spring.cloud.nacos.config.refresh-behavior",
+      "type": "com.alibaba.cloud.nacos.refresh.RefreshBehavior",
+      "defaultValue": "all_beans",
+      "description": "ConfigurationPropertiesBean refresh behavior."
+    },
+    {
+      "name": "spring.cloud.nacos.config.preference",
+      "type": "com.alibaba.cloud.nacos.configdata.ConfigPreference",
+      "defaultValue": "local",
+      "description": "Config preference."
     }
   ]
 }

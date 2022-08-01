@@ -46,18 +46,20 @@ public class NacosConfigManager {
 	/**
 	 * Compatible with old design,It will be perfected in the future.
 	 */
-	static ConfigService createConfigService(NacosConfigProperties nacosConfigProperties) {
+	static ConfigService createConfigService(
+			NacosConfigProperties nacosConfigProperties) {
 		if (Objects.isNull(service)) {
 			synchronized (NacosConfigManager.class) {
 				try {
 					if (Objects.isNull(service)) {
-						service = NacosFactory
-								.createConfigService(nacosConfigProperties.assembleConfigServiceProperties());
+						service = NacosFactory.createConfigService(
+								nacosConfigProperties.assembleConfigServiceProperties());
 					}
 				}
 				catch (NacosException e) {
 					log.error(e.getMessage());
-					throw new NacosConnectionFailureException(nacosConfigProperties.getServerAddr(), e.getMessage(), e);
+					throw new NacosConnectionFailureException(
+							nacosConfigProperties.getServerAddr(), e.getMessage(), e);
 				}
 			}
 		}

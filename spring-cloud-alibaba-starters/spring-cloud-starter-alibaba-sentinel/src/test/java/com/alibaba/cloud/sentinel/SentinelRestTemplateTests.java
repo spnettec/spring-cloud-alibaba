@@ -60,7 +60,8 @@ public class SentinelRestTemplateTests {
 
 	@Test
 	public void testNormal() {
-		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(TestConfig5.class);
+		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(
+				TestConfig5.class);
 		assertThat(context.getBeansOfType(RestTemplate.class).size()).isEqualTo(1);
 	}
 
@@ -113,7 +114,8 @@ public class SentinelRestTemplateTests {
 	public static class TestConfig1 {
 
 		@Bean
-		SentinelBeanPostProcessor sentinelBeanPostProcessor(ApplicationContext applicationContext) {
+		SentinelBeanPostProcessor sentinelBeanPostProcessor(
+				ApplicationContext applicationContext) {
 			return new SentinelBeanPostProcessor(applicationContext);
 		}
 
@@ -129,7 +131,8 @@ public class SentinelRestTemplateTests {
 	public static class TestConfig2 {
 
 		@Bean
-		SentinelBeanPostProcessor sentinelBeanPostProcessor(ApplicationContext applicationContext) {
+		SentinelBeanPostProcessor sentinelBeanPostProcessor(
+				ApplicationContext applicationContext) {
 			return new SentinelBeanPostProcessor(applicationContext);
 		}
 
@@ -145,7 +148,8 @@ public class SentinelRestTemplateTests {
 	public static class TestConfig3 {
 
 		@Bean
-		SentinelBeanPostProcessor sentinelBeanPostProcessor(ApplicationContext applicationContext) {
+		SentinelBeanPostProcessor sentinelBeanPostProcessor(
+				ApplicationContext applicationContext) {
 			return new SentinelBeanPostProcessor(applicationContext);
 		}
 
@@ -161,7 +165,8 @@ public class SentinelRestTemplateTests {
 	public static class TestConfig4 {
 
 		@Bean
-		SentinelBeanPostProcessor sentinelBeanPostProcessor(ApplicationContext applicationContext) {
+		SentinelBeanPostProcessor sentinelBeanPostProcessor(
+				ApplicationContext applicationContext) {
 			return new SentinelBeanPostProcessor(applicationContext);
 		}
 
@@ -177,14 +182,18 @@ public class SentinelRestTemplateTests {
 	public static class TestConfig5 {
 
 		@Bean
-		SentinelBeanPostProcessor sentinelBeanPostProcessor(ApplicationContext applicationContext) {
+		SentinelBeanPostProcessor sentinelBeanPostProcessor(
+				ApplicationContext applicationContext) {
 			return new SentinelBeanPostProcessor(applicationContext);
 		}
 
 		@Bean
-		@SentinelRestTemplate(blockHandlerClass = SentinelRestTemplateTests.ExceptionUtil.class,
-				blockHandler = "handleException", fallbackClass = SentinelRestTemplateTests.ExceptionUtil.class,
-				fallback = "fallbackException", urlCleanerClass = SentinelRestTemplateTests.UrlCleanUtil.class,
+		@SentinelRestTemplate(
+				blockHandlerClass = SentinelRestTemplateTests.ExceptionUtil.class,
+				blockHandler = "handleException",
+				fallbackClass = SentinelRestTemplateTests.ExceptionUtil.class,
+				fallback = "fallbackException",
+				urlCleanerClass = SentinelRestTemplateTests.UrlCleanUtil.class,
 				urlCleaner = "clean")
 		RestTemplate restTemplate() {
 			return new RestTemplate();
@@ -196,12 +205,14 @@ public class SentinelRestTemplateTests {
 	public static class TestConfig6 {
 
 		@Bean
-		SentinelBeanPostProcessor sentinelBeanPostProcessor(ApplicationContext applicationContext) {
+		SentinelBeanPostProcessor sentinelBeanPostProcessor(
+				ApplicationContext applicationContext) {
 			return new SentinelBeanPostProcessor(applicationContext);
 		}
 
 		@Bean
-		@SentinelRestTemplate(blockHandlerClass = SentinelRestTemplateTests.ExceptionUtil.class,
+		@SentinelRestTemplate(
+				blockHandlerClass = SentinelRestTemplateTests.ExceptionUtil.class,
 				blockHandler = "handleException1")
 		RestTemplate restTemplate() {
 			return new RestTemplate();
@@ -213,12 +224,14 @@ public class SentinelRestTemplateTests {
 	public static class TestConfig7 {
 
 		@Bean
-		SentinelBeanPostProcessor sentinelBeanPostProcessor(ApplicationContext applicationContext) {
+		SentinelBeanPostProcessor sentinelBeanPostProcessor(
+				ApplicationContext applicationContext) {
 			return new SentinelBeanPostProcessor(applicationContext);
 		}
 
 		@Bean
-		@SentinelRestTemplate(fallbackClass = SentinelRestTemplateTests.ExceptionUtil.class,
+		@SentinelRestTemplate(
+				fallbackClass = SentinelRestTemplateTests.ExceptionUtil.class,
 				fallback = "fallbackException1")
 		RestTemplate restTemplate() {
 			return new RestTemplate();
@@ -230,12 +243,14 @@ public class SentinelRestTemplateTests {
 	public static class TestConfig8 {
 
 		@Bean
-		SentinelBeanPostProcessor sentinelBeanPostProcessor(ApplicationContext applicationContext) {
+		SentinelBeanPostProcessor sentinelBeanPostProcessor(
+				ApplicationContext applicationContext) {
 			return new SentinelBeanPostProcessor(applicationContext);
 		}
 
 		@Bean
-		@SentinelRestTemplate(blockHandlerClass = SentinelRestTemplateTests.ExceptionUtil.class,
+		@SentinelRestTemplate(
+				blockHandlerClass = SentinelRestTemplateTests.ExceptionUtil.class,
 				blockHandler = "handleException2")
 		RestTemplate restTemplate() {
 			return new RestTemplate();
@@ -247,12 +262,14 @@ public class SentinelRestTemplateTests {
 	public static class TestConfig9 {
 
 		@Bean
-		SentinelBeanPostProcessor sentinelBeanPostProcessor(ApplicationContext applicationContext) {
+		SentinelBeanPostProcessor sentinelBeanPostProcessor(
+				ApplicationContext applicationContext) {
 			return new SentinelBeanPostProcessor(applicationContext);
 		}
 
 		@Bean
-		@SentinelRestTemplate(fallbackClass = SentinelRestTemplateTests.ExceptionUtil.class,
+		@SentinelRestTemplate(
+				fallbackClass = SentinelRestTemplateTests.ExceptionUtil.class,
 				fallback = "fallbackException2")
 		RestTemplate restTemplate() {
 			return new RestTemplate();
@@ -264,7 +281,8 @@ public class SentinelRestTemplateTests {
 	public static class TestConfig10 {
 
 		@Bean
-		SentinelBeanPostProcessor sentinelBeanPostProcessor(ApplicationContext applicationContext) {
+		SentinelBeanPostProcessor sentinelBeanPostProcessor(
+				ApplicationContext applicationContext) {
 			return new SentinelBeanPostProcessor(applicationContext);
 		}
 
@@ -286,7 +304,8 @@ public class SentinelRestTemplateTests {
 	public static class TestConfig11 {
 
 		@Bean
-		SentinelBeanPostProcessor sentinelBeanPostProcessor(ApplicationContext applicationContext) {
+		SentinelBeanPostProcessor sentinelBeanPostProcessor(
+				ApplicationContext applicationContext) {
 			return new SentinelBeanPostProcessor(applicationContext);
 		}
 
@@ -302,7 +321,8 @@ public class SentinelRestTemplateTests {
 	public static class TestConfig12 {
 
 		@Bean
-		SentinelBeanPostProcessor sentinelBeanPostProcessor(ApplicationContext applicationContext) {
+		SentinelBeanPostProcessor sentinelBeanPostProcessor(
+				ApplicationContext applicationContext) {
 			return new SentinelBeanPostProcessor(applicationContext);
 		}
 
@@ -318,12 +338,15 @@ public class SentinelRestTemplateTests {
 	public static class TestConfig13 {
 
 		@Bean
-		SentinelBeanPostProcessor sentinelBeanPostProcessor(ApplicationContext applicationContext) {
+		SentinelBeanPostProcessor sentinelBeanPostProcessor(
+				ApplicationContext applicationContext) {
 			return new SentinelBeanPostProcessor(applicationContext);
 		}
 
 		@Bean
-		@SentinelRestTemplate(urlCleanerClass = SentinelRestTemplateTests.UrlCleanUtil.class, urlCleaner = "clean1")
+		@SentinelRestTemplate(
+				urlCleanerClass = SentinelRestTemplateTests.UrlCleanUtil.class,
+				urlCleaner = "clean1")
 		RestTemplate restTemplate() {
 			return new RestTemplate();
 		}
@@ -334,12 +357,15 @@ public class SentinelRestTemplateTests {
 	public static class TestConfig14 {
 
 		@Bean
-		SentinelBeanPostProcessor sentinelBeanPostProcessor(ApplicationContext applicationContext) {
+		SentinelBeanPostProcessor sentinelBeanPostProcessor(
+				ApplicationContext applicationContext) {
 			return new SentinelBeanPostProcessor(applicationContext);
 		}
 
 		@Bean
-		@SentinelRestTemplate(urlCleanerClass = SentinelRestTemplateTests.UrlCleanUtil.class, urlCleaner = "clean2")
+		@SentinelRestTemplate(
+				urlCleanerClass = SentinelRestTemplateTests.UrlCleanUtil.class,
+				urlCleaner = "clean2")
 		RestTemplate restTemplate() {
 			return new RestTemplate();
 		}
@@ -348,25 +374,25 @@ public class SentinelRestTemplateTests {
 
 	public static class ExceptionUtil {
 
-		public static SentinelClientHttpResponse handleException(HttpRequest request, byte[] body,
-				ClientHttpRequestExecution execution, BlockException ex) {
+		public static SentinelClientHttpResponse handleException(HttpRequest request,
+				byte[] body, ClientHttpRequestExecution execution, BlockException ex) {
 			System.out.println("Oops: " + ex.getClass().getCanonicalName());
 			return new SentinelClientHttpResponse("Oops");
 		}
 
-		public static void handleException2(HttpRequest request, byte[] body, ClientHttpRequestExecution execution,
-				BlockException ex) {
+		public static void handleException2(HttpRequest request, byte[] body,
+				ClientHttpRequestExecution execution, BlockException ex) {
 			System.out.println("Oops: " + ex.getClass().getCanonicalName());
 		}
 
-		public static SentinelClientHttpResponse fallbackException(HttpRequest request, byte[] body,
-				ClientHttpRequestExecution execution, BlockException ex) {
+		public static SentinelClientHttpResponse fallbackException(HttpRequest request,
+				byte[] body, ClientHttpRequestExecution execution, BlockException ex) {
 			System.out.println("Oops: " + ex.getClass().getCanonicalName());
 			return new SentinelClientHttpResponse("Oops fallback");
 		}
 
-		public static void fallbackException2(HttpRequest request, byte[] body, ClientHttpRequestExecution execution,
-				BlockException ex) {
+		public static void fallbackException2(HttpRequest request, byte[] body,
+				ClientHttpRequestExecution execution, BlockException ex) {
 			System.out.println("Oops: " + ex.getClass().getCanonicalName());
 		}
 

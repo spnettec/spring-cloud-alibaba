@@ -26,7 +26,7 @@ import com.alibaba.csp.sentinel.datasource.FileRefreshableDataSource;
 import com.alibaba.csp.sentinel.slots.block.flow.FlowRule;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -45,11 +45,12 @@ public class FileRefreshableDataSourceFactoryBeanTests {
 		AnnotationConfigApplicationContext annotationConfigApplicationContext = new AnnotationConfigApplicationContext(
 				TestConfig.class);
 		assertThat(annotationConfigApplicationContext.getBean("fileBean")).isNotNull();
-		FileRefreshableDataSource fileRefreshableDataSource = annotationConfigApplicationContext.getBean("fileBean",
-				FileRefreshableDataSource.class);
-		assertThat(((List<FlowRule>) fileRefreshableDataSource.loadConfig()).size()).isEqualTo(1);
-		FileRefreshableDataSourceFactoryBean factoryBean = annotationConfigApplicationContext.getBean("&fileBean",
-				FileRefreshableDataSourceFactoryBean.class);
+		FileRefreshableDataSource fileRefreshableDataSource = annotationConfigApplicationContext
+				.getBean("fileBean", FileRefreshableDataSource.class);
+		assertThat(((List<FlowRule>) fileRefreshableDataSource.loadConfig()).size())
+				.isEqualTo(1);
+		FileRefreshableDataSourceFactoryBean factoryBean = annotationConfigApplicationContext
+				.getBean("&fileBean", FileRefreshableDataSourceFactoryBean.class);
 		assertThat(factoryBean.getBufSize()).isEqualTo(1024);
 		assertThat(factoryBean.getCharset()).isEqualTo("utf-8");
 		assertThat(factoryBean.getRecommendRefreshMs()).isEqualTo(2000);
@@ -67,7 +68,8 @@ public class FileRefreshableDataSourceFactoryBeanTests {
 			factoryBean.setCharset("utf-8");
 			factoryBean.setRecommendRefreshMs(2000);
 			try {
-				factoryBean.setFile(ResourceUtils.getFile("classpath:flowrule.json").getAbsolutePath());
+				factoryBean.setFile(ResourceUtils.getFile("classpath:flowrule.json")
+						.getAbsolutePath());
 			}
 			catch (FileNotFoundException e) {
 				// ignore
@@ -83,8 +85,9 @@ public class FileRefreshableDataSourceFactoryBeanTests {
 				@Override
 				public List<FlowRule> convert(String source) {
 					try {
-						return objectMapper.readValue(source, new TypeReference<List<FlowRule>>() {
-						});
+						return objectMapper.readValue(source,
+								new TypeReference<List<FlowRule>>() {
+								});
 					}
 					catch (IOException e) {
 						// ignore

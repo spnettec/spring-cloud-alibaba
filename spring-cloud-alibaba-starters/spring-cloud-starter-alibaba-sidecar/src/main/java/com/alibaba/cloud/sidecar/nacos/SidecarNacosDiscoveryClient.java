@@ -28,7 +28,8 @@ import org.slf4j.LoggerFactory;
  */
 public class SidecarNacosDiscoveryClient implements SidecarDiscoveryClient {
 
-	private static final Logger log = LoggerFactory.getLogger(SidecarNacosDiscoveryClient.class);
+	private static final Logger log = LoggerFactory
+			.getLogger(SidecarNacosDiscoveryClient.class);
 
 	private NacosServiceManager nacosServiceManager;
 
@@ -43,8 +44,8 @@ public class SidecarNacosDiscoveryClient implements SidecarDiscoveryClient {
 	@Override
 	public void registerInstance(String applicationName, String ip, Integer port) {
 		try {
-			this.namingService().registerInstance(applicationName, sidecarNacosDiscoveryProperties.getGroup(), ip,
-					port);
+			this.namingService().registerInstance(applicationName,
+					sidecarNacosDiscoveryProperties.getGroup(), ip, port);
 		}
 		catch (NacosException e) {
 			log.warn("nacos exception happens", e);
@@ -54,8 +55,8 @@ public class SidecarNacosDiscoveryClient implements SidecarDiscoveryClient {
 	@Override
 	public void deregisterInstance(String applicationName, String ip, Integer port) {
 		try {
-			this.namingService().deregisterInstance(applicationName, sidecarNacosDiscoveryProperties.getGroup(), ip,
-					port);
+			this.namingService().deregisterInstance(applicationName,
+					sidecarNacosDiscoveryProperties.getGroup(), ip, port);
 		}
 		catch (NacosException e) {
 			log.warn("nacos exception happens", e);
@@ -63,7 +64,8 @@ public class SidecarNacosDiscoveryClient implements SidecarDiscoveryClient {
 	}
 
 	private NamingService namingService() {
-		return nacosServiceManager.getNamingService(sidecarNacosDiscoveryProperties.getNacosProperties());
+		return nacosServiceManager
+				.getNamingService();
 	}
 
 }

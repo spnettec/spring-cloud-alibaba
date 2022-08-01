@@ -33,12 +33,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class NacosReactiveDiscoveryClientConfigurationTests {
 
 	private ApplicationContextRunner contextRunner = new ApplicationContextRunner()
-			.withConfiguration(AutoConfigurations.of(UtilAutoConfiguration.class, NacosDiscoveryAutoConfiguration.class,
-					NacosReactiveDiscoveryClientConfiguration.class, NacosServiceAutoConfiguration.class));
+			.withConfiguration(AutoConfigurations.of(UtilAutoConfiguration.class,
+					NacosDiscoveryAutoConfiguration.class,
+					NacosServiceAutoConfiguration.class,
+					NacosReactiveDiscoveryClientConfiguration.class));
 
 	@Test
 	public void testDefaultInitialization() {
-		contextRunner.run(context -> assertThat(context).hasSingleBean(ReactiveDiscoveryClient.class));
+		contextRunner.run(context -> assertThat(context)
+				.hasSingleBean(ReactiveDiscoveryClient.class));
 	}
 
 }

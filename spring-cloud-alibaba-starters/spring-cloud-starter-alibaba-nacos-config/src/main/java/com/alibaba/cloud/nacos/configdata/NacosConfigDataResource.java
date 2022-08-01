@@ -28,6 +28,7 @@ import org.springframework.util.StringUtils;
 
 /**
  * @author freeman
+ * @since 2021.0.1.0
  */
 public class NacosConfigDataResource extends ConfigDataResource {
 
@@ -41,8 +42,8 @@ public class NacosConfigDataResource extends ConfigDataResource {
 
 	private final NacosItemConfig config;
 
-	public NacosConfigDataResource(NacosConfigProperties properties, boolean optional, Profiles profiles, Log log,
-			NacosItemConfig config) {
+	public NacosConfigDataResource(NacosConfigProperties properties, boolean optional,
+			Profiles profiles, Log log, NacosItemConfig config) {
 		this.properties = properties;
 		this.optional = optional;
 		this.profiles = profiles;
@@ -84,8 +85,8 @@ public class NacosConfigDataResource extends ConfigDataResource {
 		}
 		NacosConfigDataResource that = (NacosConfigDataResource) o;
 		return optional == that.optional && Objects.equals(properties, that.properties)
-				&& Objects.equals(profiles, that.profiles) && Objects.equals(log, that.log)
-				&& Objects.equals(config, that.config);
+				&& Objects.equals(profiles, that.profiles)
+				&& Objects.equals(log, that.log) && Objects.equals(config, that.config);
 	}
 
 	@Override
@@ -95,28 +96,27 @@ public class NacosConfigDataResource extends ConfigDataResource {
 
 	@Override
 	public String toString() {
-		return "NacosConfigDataResource{" + "properties=" + properties + ", optional=" + optional + ", profiles="
-				+ profiles + ", config=" + config + '}';
+		return "NacosConfigDataResource{" + "properties=" + properties + ", optional="
+				+ optional + ", profiles=" + profiles + ", config=" + config + '}';
 	}
 
 	public static class NacosItemConfig {
-
 		private String group;
-
 		private String dataId;
-
 		private String suffix;
-
 		private boolean refreshEnabled;
+		private String preference;
 
 		public NacosItemConfig() {
 		}
 
-		public NacosItemConfig(String group, String dataId, String suffix, boolean refreshEnabled) {
+		public NacosItemConfig(String group, String dataId, String suffix,
+				boolean refreshEnabled, String preference) {
 			this.group = group;
 			this.dataId = dataId;
 			this.suffix = suffix;
 			this.refreshEnabled = refreshEnabled;
+			this.preference = preference;
 		}
 
 		public NacosItemConfig setGroup(String group) {
@@ -139,6 +139,11 @@ public class NacosConfigDataResource extends ConfigDataResource {
 			return this;
 		}
 
+		public NacosItemConfig setPreference(String preference) {
+			this.preference = preference;
+			return this;
+		}
+
 		public String getGroup() {
 			return group;
 		}
@@ -155,6 +160,10 @@ public class NacosConfigDataResource extends ConfigDataResource {
 			return refreshEnabled;
 		}
 
+		public String getPreference() {
+			return preference;
+		}
+
 		@Override
 		public boolean equals(Object o) {
 			if (this == o) {
@@ -164,21 +173,24 @@ public class NacosConfigDataResource extends ConfigDataResource {
 				return false;
 			}
 			NacosItemConfig that = (NacosItemConfig) o;
-			return refreshEnabled == that.refreshEnabled && Objects.equals(group, that.group)
-					&& Objects.equals(dataId, that.dataId) && Objects.equals(suffix, that.suffix);
+			return refreshEnabled == that.refreshEnabled
+					&& Objects.equals(group, that.group)
+					&& Objects.equals(dataId, that.dataId)
+					&& Objects.equals(suffix, that.suffix)
+					&& Objects.equals(preference, that.preference);
 		}
 
 		@Override
 		public int hashCode() {
-			return Objects.hash(group, dataId, suffix, refreshEnabled);
+			return Objects.hash(group, dataId, suffix, refreshEnabled, preference);
 		}
 
 		@Override
 		public String toString() {
-			return "NacosItemConfig{" + "group='" + group + '\'' + ", dataId='" + dataId + '\'' + ", suffix='" + suffix
-					+ '\'' + ", refreshEnabled=" + refreshEnabled + '}';
+			return "NacosItemConfig{" + "group='" + group + '\'' + ", dataId='" + dataId
+					+ '\'' + ", suffix='" + suffix + '\'' + ", refreshEnabled="
+					+ refreshEnabled + ", preference=" + preference + '}';
 		}
-
 	}
 
 }
