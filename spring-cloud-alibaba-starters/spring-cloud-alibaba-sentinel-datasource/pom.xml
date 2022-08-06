@@ -15,6 +15,12 @@
     <name>Spring Cloud Alibaba Sentinel DataSource</name>
 
     <dependencies>
+
+        <dependency>
+            <groupId>com.alibaba.nacos</groupId>
+            <artifactId>nacos-api</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>com.alibaba.cloud</groupId>
             <artifactId>spring-cloud-alibaba-commons</artifactId>
