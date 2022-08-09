@@ -261,26 +261,6 @@
                 <enabled>false</enabled>
             </snapshots>
         </repository>
-        <repository>
-            <id>fis-release</id>
-            <url>http://10.70.19.94:8081/repository/yofc-release/</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-        <repository>
-            <id>fis-snapshot</id>
-            <url>http://10.70.19.94:8081/repository/yofc-snapshot/</url>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </repository>
     </repositories>
     <profiles>
         <profile>
@@ -355,14 +335,6 @@
                     </plugin>
                 </plugins>
             </build>
-
-            <distributionManagement>
-                <repository>
-                    <id>yofc-release-repo</id>
-                    <name>yofc Repository</name>
-                    <url>http://admin:admin@10.70.19.94:8081/repository/yofc-release/</url>
-                </repository>
-            </distributionManagement>
         </profile>
 
     </profiles>

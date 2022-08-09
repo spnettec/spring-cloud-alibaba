@@ -81,7 +81,7 @@
     <properties>
         <!-- Project revision -->
         <revision>2021.0.1.1.B</revision>
-        <nacos.version>2.1.0.B</nacos.version>
+        <nacos.version>2.1.1.B</nacos.version>
         <spring-boot.version>2.7.2</spring-boot.version>
 
         <!-- Spring Cloud -->
@@ -341,14 +341,6 @@
                    -->
                 </plugins>
             </build>
-
-            <distributionManagement>
-                <repository>
-                    <id>yofc-release-repo</id>
-                    <name>yofc Repository</name>
-                    <url>http://admin:admin@10.70.19.94:8081/repository/yofc-release/</url>
-                </repository>
-            </distributionManagement>
         </profile>
     </profiles>
 
