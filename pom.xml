@@ -82,7 +82,7 @@
         <!-- Project revision -->
         <revision>2021.0.1.1.B</revision>
         <nacos.version>2.1.1.B</nacos.version>
-        <spring-boot.version>2.7.2</spring-boot.version>
+        <spring-boot.version>2.7.3</spring-boot.version>
 
         <!-- Spring Cloud -->
         <spring.cloud.version>2021.0.3</spring.cloud.version>
