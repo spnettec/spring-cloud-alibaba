@@ -15,7 +15,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>io.seata</groupId>
+            <groupId>com.github.heyoulin.seata</groupId>
             <artifactId>seata-server</artifactId>
             <version>1.5.2.B</version>
         </dependency>

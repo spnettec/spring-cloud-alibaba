@@ -88,12 +88,12 @@
         </dependency>
 
         <dependency>
-            <groupId>com.alibaba.csp</groupId>
+            <groupId>com.github.heyoulin.Sentinel</groupId>
             <artifactId>sentinel-transport-simple-http</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>com.alibaba.csp</groupId>
+            <groupId>com.github.heyoulin.Sentinel</groupId>
             <artifactId>sentinel-annotation-aspectj</artifactId>
         </dependency>
 
@@ -103,33 +103,33 @@
         </dependency>
 
         <dependency>
-            <groupId>com.alibaba.csp</groupId>
+            <groupId>com.github.heyoulin.Sentinel</groupId>
             <artifactId>sentinel-spring-webflux-adapter</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>com.alibaba.csp</groupId>
+            <groupId>com.github.heyoulin.Sentinel</groupId>
             <artifactId>sentinel-spring-webmvc-adapter</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>com.alibaba.csp</groupId>
+            <groupId>com.github.heyoulin.Sentinel</groupId>
             <artifactId>sentinel-parameter-flow-control</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>com.alibaba.csp</groupId>
+            <groupId>com.github.heyoulin.Sentinel</groupId>
             <artifactId>sentinel-api-gateway-adapter-common</artifactId>
             <optional>true</optional>
         </dependency>
 
         <dependency>
-            <groupId>com.alibaba.csp</groupId>
+            <groupId>com.github.heyoulin.Sentinel</groupId>
             <artifactId>sentinel-cluster-server-default</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>com.alibaba.csp</groupId>
+            <groupId>com.github.heyoulin.Sentinel</groupId>
             <artifactId>sentinel-cluster-client-default</artifactId>
         </dependency>
 

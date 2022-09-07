@@ -79,6 +79,8 @@
     </developers>
 
     <properties>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
         <!-- Project revision -->
         <revision>2021.0.1.1.B</revision>
         <nacos.version>2.1.1.B</nacos.version>
@@ -118,12 +120,12 @@
         <dependencies>
             <!--Nacos-->
             <dependency>
-                <groupId>com.alibaba.nacos</groupId>
+                <groupId>com.github.heyoulin.nacos</groupId>
                 <artifactId>nacos-api</artifactId>
                 <version>${nacos.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.alibaba.nacos</groupId>
+                <groupId>com.github.heyoulin.nacos</groupId>
                 <artifactId>nacos-common</artifactId>
                 <version>${nacos.version}</version>
             </dependency>
@@ -164,7 +166,29 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+        <repository>
+            <id>central-repos1</id>
+            <name>Central Repository 2</name>
+            <url>https://repo1.maven.org/maven2/</url>
+        </repository>
+        <!--阿里云主仓库，代理了maven central和jcenter仓库-->
+        <repository>
+            <id>aliyun</id>
+            <name>aliyun</name>
+            <url>https://maven.aliyun.com/repository/public</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
     <build>
         <pluginManagement>
             <plugins>
@@ -341,19 +365,6 @@
                    -->
                 </plugins>
             </build>
-
-            <distributionManagement>
-                <snapshotRepository>
-                    <id>sonatype-nexus-snapshots</id>
-                    <name>Sonatype Nexus Snapshots</name>
-                    <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-                </snapshotRepository>
-                <repository>
-                    <id>sonatype-nexus-staging</id>
-                    <name>Nexus Release Repository</name>
-                    <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-                </repository>
-            </distributionManagement>
         </profile>
     </profiles>
 

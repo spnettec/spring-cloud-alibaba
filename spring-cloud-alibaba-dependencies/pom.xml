@@ -36,127 +36,127 @@
 
             <!--Nacos-->
             <dependency>
-                <groupId>com.alibaba.nacos</groupId>
+                <groupId>com.github.heyoulin.nacos</groupId>
                 <artifactId>nacos-client</artifactId>
                 <version>${nacos.version}</version>
             </dependency>
 
             <dependency>
-                <groupId>com.alibaba.nacos</groupId>
+                <groupId>com.github.heyoulin.nacos</groupId>
                 <artifactId>nacos-config</artifactId>
                 <version>${nacos.version}</version>
             </dependency>
 
             <!-- Sentinel -->
             <dependency>
-                <groupId>com.alibaba.csp</groupId>
+                <groupId>com.github.heyoulin.Sentinel</groupId>
                 <artifactId>sentinel-core</artifactId>
                 <version>${sentinel.version}</version>
             </dependency>
 
             <dependency>
-                <groupId>com.alibaba.csp</groupId>
+                <groupId>com.github.heyoulin.Sentinel</groupId>
                 <artifactId>sentinel-parameter-flow-control</artifactId>
                 <version>${sentinel.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.alibaba.csp</groupId>
+                <groupId>com.github.heyoulin.Sentinel</groupId>
                 <artifactId>sentinel-datasource-extension</artifactId>
                 <version>${sentinel.version}</version>
             </dependency>
 
             <dependency>
-                <groupId>com.alibaba.csp</groupId>
+                <groupId>com.github.heyoulin.Sentinel</groupId>
                 <artifactId>sentinel-datasource-apollo</artifactId>
                 <version>${sentinel.version}</version>
             </dependency>
 
             <dependency>
-                <groupId>com.alibaba.csp</groupId>
+                <groupId>com.github.heyoulin.Sentinel</groupId>
                 <artifactId>sentinel-datasource-zookeeper</artifactId>
                 <version>${sentinel.version}</version>
             </dependency>
 
             <dependency>
-                <groupId>com.alibaba.csp</groupId>
+                <groupId>com.github.heyoulin.Sentinel</groupId>
                 <artifactId>sentinel-datasource-nacos</artifactId>
                 <version>${sentinel.version}</version>
             </dependency>
 
             <dependency>
-                <groupId>com.alibaba.csp</groupId>
+                <groupId>com.github.heyoulin.Sentinel</groupId>
                 <artifactId>sentinel-datasource-redis</artifactId>
                 <version>${sentinel.version}</version>
             </dependency>
 
             <dependency>
-                <groupId>com.alibaba.csp</groupId>
+                <groupId>com.github.heyoulin.Sentinel</groupId>
                 <artifactId>sentinel-datasource-consul</artifactId>
                 <version>${sentinel.version}</version>
             </dependency>
 
             <dependency>
-                <groupId>com.alibaba.csp</groupId>
+                <groupId>com.github.heyoulin.Sentinel</groupId>
                 <artifactId>sentinel-web-servlet</artifactId>
                 <version>${sentinel.version}</version>
             </dependency>
 
             <dependency>
-                <groupId>com.alibaba.csp</groupId>
+                <groupId>com.github.heyoulin.Sentinel</groupId>
                 <artifactId>sentinel-spring-cloud-gateway-adapter</artifactId>
                 <version>${sentinel.version}</version>
             </dependency>
 
             <dependency>
-                <groupId>com.alibaba.csp</groupId>
+                <groupId>com.github.heyoulin.Sentinel</groupId>
                 <artifactId>sentinel-transport-simple-http</artifactId>
                 <version>${sentinel.version}</version>
             </dependency>
 
             <dependency>
-                <groupId>com.alibaba.csp</groupId>
+                <groupId>com.github.heyoulin.Sentinel</groupId>
                 <artifactId>sentinel-annotation-aspectj</artifactId>
                 <version>${sentinel.version}</version>
             </dependency>
 
             <dependency>
-                <groupId>com.alibaba.csp</groupId>
+                <groupId>com.github.heyoulin.Sentinel</groupId>
                 <artifactId>sentinel-reactor-adapter</artifactId>
                 <version>${sentinel.version}</version>
             </dependency>
 
             <dependency>
-                <groupId>com.alibaba.csp</groupId>
+                <groupId>com.github.heyoulin.Sentinel</groupId>
                 <artifactId>sentinel-cluster-server-default</artifactId>
                 <version>${sentinel.version}</version>
             </dependency>
 
             <dependency>
-                <groupId>com.alibaba.csp</groupId>
+                <groupId>com.github.heyoulin.Sentinel</groupId>
                 <artifactId>sentinel-cluster-client-default</artifactId>
                 <version>${sentinel.version}</version>
             </dependency>
 
             <dependency>
-                <groupId>com.alibaba.csp</groupId>
+                <groupId>com.github.heyoulin.Sentinel</groupId>
                 <artifactId>sentinel-spring-webflux-adapter</artifactId>
                 <version>${sentinel.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.alibaba.csp</groupId>
+                <groupId>com.github.heyoulin.Sentinel</groupId>
                 <artifactId>sentinel-api-gateway-adapter-common</artifactId>
                 <version>${sentinel.version}</version>
             </dependency>
 
             <dependency>
-                <groupId>com.alibaba.csp</groupId>
+                <groupId>com.github.heyoulin.Sentinel</groupId>
                 <artifactId>sentinel-spring-webmvc-adapter</artifactId>
                 <version>${sentinel.version}</version>
             </dependency>
 
             <!--Alibaba Seata-->
             <dependency>
-                <groupId>io.seata</groupId>
+                <groupId>com.github.heyoulin.seata</groupId>
                 <artifactId>seata-spring-boot-starter</artifactId>
                 <version>${seata.version}</version>
             </dependency>

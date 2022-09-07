@@ -17,7 +17,7 @@
     <dependencies>
 
         <dependency>
-            <groupId>com.alibaba.nacos</groupId>
+            <groupId>com.github.heyoulin.nacos</groupId>
             <artifactId>nacos-api</artifactId>
         </dependency>
 
@@ -46,49 +46,49 @@
         </dependency>
 
         <dependency>
-            <groupId>com.alibaba.csp</groupId>
+            <groupId>com.github.heyoulin.Sentinel</groupId>
             <artifactId>sentinel-datasource-extension</artifactId>
             <optional>true</optional>
         </dependency>
 
         <dependency>
-            <groupId>com.alibaba.csp</groupId>
+            <groupId>com.github.heyoulin.Sentinel</groupId>
             <artifactId>sentinel-parameter-flow-control</artifactId>
             <optional>true</optional>
         </dependency>
 
         <dependency>
-            <groupId>com.alibaba.csp</groupId>
+            <groupId>com.github.heyoulin.Sentinel</groupId>
             <artifactId>sentinel-api-gateway-adapter-common</artifactId>
             <optional>true</optional>
         </dependency>
 
         <dependency>
-            <groupId>com.alibaba.csp</groupId>
+            <groupId>com.github.heyoulin.Sentinel</groupId>
             <artifactId>sentinel-datasource-nacos</artifactId>
             <optional>true</optional>
         </dependency>
 
         <dependency>
-            <groupId>com.alibaba.csp</groupId>
+            <groupId>com.github.heyoulin.Sentinel</groupId>
             <artifactId>sentinel-datasource-zookeeper</artifactId>
             <optional>true</optional>
         </dependency>
 
         <dependency>
-            <groupId>com.alibaba.csp</groupId>
+            <groupId>com.github.heyoulin.Sentinel</groupId>
             <artifactId>sentinel-datasource-apollo</artifactId>
             <optional>true</optional>
         </dependency>
 
         <dependency>
-            <groupId>com.alibaba.csp</groupId>
+            <groupId>com.github.heyoulin.Sentinel</groupId>
             <artifactId>sentinel-datasource-redis</artifactId>
             <optional>true</optional>
         </dependency>
 
         <dependency>
-            <groupId>com.alibaba.csp</groupId>
+            <groupId>com.github.heyoulin.Sentinel</groupId>
             <artifactId>sentinel-datasource-consul</artifactId>
             <optional>true</optional>
         </dependency>

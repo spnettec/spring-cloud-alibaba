@@ -14,11 +14,11 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.alibaba.nacos</groupId>
+            <groupId>com.github.heyoulin.nacos</groupId>
             <artifactId>nacos-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.alibaba.nacos</groupId>
+            <groupId>com.github.heyoulin.nacos</groupId>
             <artifactId>nacos-common</artifactId>
         </dependency>
 
@@ -45,7 +45,7 @@
         </dependency>
 
         <dependency>
-            <groupId>com.alibaba.nacos</groupId>
+            <groupId>com.github.heyoulin.nacos</groupId>
             <artifactId>nacos-client</artifactId>
         </dependency>
 

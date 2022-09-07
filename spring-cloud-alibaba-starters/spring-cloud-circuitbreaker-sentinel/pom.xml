@@ -29,12 +29,12 @@
         </dependency>
 
         <dependency>
-            <groupId>com.alibaba.csp</groupId>
+            <groupId>com.github.heyoulin.Sentinel</groupId>
             <artifactId>sentinel-core</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>com.alibaba.csp</groupId>
+            <groupId>com.github.heyoulin.Sentinel</groupId>
             <artifactId>sentinel-reactor-adapter</artifactId>
         </dependency>
 
@@ -58,7 +58,7 @@
 
         <!-- datasource rules -->
         <dependency>
-            <groupId>com.alibaba.csp</groupId>
+            <groupId>com.github.heyoulin.Sentinel</groupId>
             <artifactId>sentinel-datasource-extension</artifactId>
             <scope>provided</scope>
         </dependency>
