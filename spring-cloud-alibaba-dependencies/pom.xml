@@ -20,7 +20,7 @@
     <properties>
         <revision>2021.0.4.0.B</revision>
         <sentinel.version>1.8.5.B</sentinel.version>
-        <seata.version>1.5.2.B</seata.version>
+        <seata.version>1.6.0.B</seata.version>
         <nacos.version>2.1.1.B</nacos.version>
         <spring.context.support.version>1.0.11</spring.context.support.version>
 
