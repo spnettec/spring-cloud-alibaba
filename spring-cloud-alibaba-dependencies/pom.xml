@@ -240,6 +240,10 @@
     </dependencyManagement>
     <repositories>
         <repository>
+            <id>jitpack.io</id>
+            <url>https://www.jitpack.io</url>
+        </repository>
+        <repository>
             <id>central-repos1</id>
             <name>Central Repository 2</name>
             <url>https://repo1.maven.org/maven2/</url>
