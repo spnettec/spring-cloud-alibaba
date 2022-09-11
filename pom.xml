@@ -82,7 +82,7 @@
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
         <!-- Project revision -->
-        <revision>2021.0.1.1.B</revision>
+        <revision>2021.0.4.0.B</revision>
         <nacos.version>2.1.1.B</nacos.version>
         <spring-boot.version>2.7.3</spring-boot.version>
 
