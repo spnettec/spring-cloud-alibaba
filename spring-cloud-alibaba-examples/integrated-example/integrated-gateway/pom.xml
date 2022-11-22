@@ -36,7 +36,7 @@
 			<artifactId>spring-cloud-starter-loadbalancer</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.alibaba.csp</groupId>
+			<groupId>com.github.heyoulin.Sentinel</groupId>
 			<artifactId>sentinel-spring-cloud-gateway-adapter</artifactId>
 		</dependency>
 	</dependencies>

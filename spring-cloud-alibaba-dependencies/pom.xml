@@ -18,10 +18,10 @@
     <description>Spring Cloud Alibaba Dependencies</description>
 
     <properties>
-        <revision>2021.0.4.0.B</revision>
-        <sentinel.version>1.8.6.B</sentinel.version>
-        <seata.version>1.6.0.B</seata.version>
-        <nacos.version>2.1.2.B</nacos.version>
+        <revision>2021.0.4.1.B</revision>
+        <sentinel.version>2.0.0.B</sentinel.version>
+        <seata.version>1.6.1.B</seata.version>
+        <nacos.version>2.2.0.B</nacos.version>
         <spring.context.support.version>1.0.11</spring.context.support.version>
 
         <!-- Maven Plugin Versions -->
