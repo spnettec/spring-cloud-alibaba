@@ -20,8 +20,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import javax.annotation.PostConstruct;
-
 import com.alibaba.cloud.sentinel.gateway.ConfigConstants;
 import com.alibaba.cloud.sentinel.gateway.FallbackProperties;
 import com.alibaba.csp.sentinel.adapter.gateway.sc.SentinelGatewayFilter;
@@ -31,6 +29,7 @@ import com.alibaba.csp.sentinel.adapter.gateway.sc.callback.RedirectBlockRequest
 import com.alibaba.csp.sentinel.adapter.gateway.sc.exception.SentinelGatewayBlockExceptionHandler;
 import com.alibaba.csp.sentinel.config.SentinelConfig;
 import com.alibaba.csp.sentinel.util.StringUtil;
+import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -76,7 +75,7 @@ public class SentinelSCGAutoConfiguration {
 	private SentinelGatewayProperties gatewayProperties;
 
 	@PostConstruct
-	private void init() {
+	public void init() {
 		// blockRequestHandlerOptional has low priority
 		blockRequestHandlerOptional.ifPresent(GatewayCallbackManager::setBlockHandler);
 		initAppType();

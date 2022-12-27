@@ -16,7 +16,6 @@
 
 package com.alibaba.cloud.sentinel.custom;
 
-import javax.annotation.PostConstruct;
 
 import com.alibaba.cloud.commons.lang.StringUtils;
 import com.alibaba.cloud.sentinel.SentinelProperties;
@@ -35,6 +34,7 @@ import com.alibaba.csp.sentinel.transport.config.TransportConfig;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+import jakarta.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -69,7 +69,7 @@ public class SentinelAutoConfiguration {
 	private SentinelProperties properties;
 
 	@PostConstruct
-	private void init() {
+	public void init() {
 		if (StringUtils.isEmpty(System.getProperty(LogBase.LOG_DIR))
 				&& StringUtils.isNotBlank(properties.getLog().getDir())) {
 			System.setProperty(LogBase.LOG_DIR, properties.getLog().getDir());

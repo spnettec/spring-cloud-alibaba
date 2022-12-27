@@ -16,8 +16,6 @@
 
 package com.alibaba.cloud.sentinel.datasource.config;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 
 import com.alibaba.cloud.sentinel.datasource.RuleType;
 import com.alibaba.csp.sentinel.adapter.gateway.common.api.GatewayApiDefinitionManager;
@@ -29,6 +27,8 @@ import com.alibaba.csp.sentinel.slots.block.flow.FlowRuleManager;
 import com.alibaba.csp.sentinel.slots.block.flow.param.ParamFlowRuleManager;
 import com.alibaba.csp.sentinel.slots.system.SystemRuleManager;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
 import org.springframework.core.env.Environment;
 
@@ -99,29 +99,13 @@ public class AbstractDataSourceProperties {
 
 	public void postRegister(AbstractDataSource dataSource) {
 		switch (this.getRuleType()) {
-		case FLOW:
-			FlowRuleManager.register2Property(dataSource.getProperty());
-			break;
-		case DEGRADE:
-			DegradeRuleManager.register2Property(dataSource.getProperty());
-			break;
-		case PARAM_FLOW:
-			ParamFlowRuleManager.register2Property(dataSource.getProperty());
-			break;
-		case SYSTEM:
-			SystemRuleManager.register2Property(dataSource.getProperty());
-			break;
-		case AUTHORITY:
-			AuthorityRuleManager.register2Property(dataSource.getProperty());
-			break;
-		case GW_FLOW:
-			GatewayRuleManager.register2Property(dataSource.getProperty());
-			break;
-		case GW_API_GROUP:
-			GatewayApiDefinitionManager.register2Property(dataSource.getProperty());
-			break;
-		default:
-			break;
+		case FLOW -> FlowRuleManager.register2Property(dataSource.getProperty());
+		case DEGRADE -> DegradeRuleManager.register2Property(dataSource.getProperty());
+		case PARAM_FLOW -> ParamFlowRuleManager.register2Property(dataSource.getProperty());
+		case SYSTEM -> SystemRuleManager.register2Property(dataSource.getProperty());
+		case AUTHORITY -> AuthorityRuleManager.register2Property(dataSource.getProperty());
+		case GW_FLOW -> GatewayRuleManager.register2Property(dataSource.getProperty());
+		case GW_API_GROUP -> GatewayApiDefinitionManager.register2Property(dataSource.getProperty());
 		}
 	}
 

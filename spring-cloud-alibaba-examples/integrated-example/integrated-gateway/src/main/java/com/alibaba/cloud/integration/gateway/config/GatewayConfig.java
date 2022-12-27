@@ -21,7 +21,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import javax.annotation.PostConstruct;
 
 import com.alibaba.csp.sentinel.adapter.gateway.common.rule.GatewayFlowRule;
 import com.alibaba.csp.sentinel.adapter.gateway.common.rule.GatewayRuleManager;
@@ -29,6 +28,7 @@ import com.alibaba.csp.sentinel.adapter.gateway.sc.SentinelGatewayFilter;
 import com.alibaba.csp.sentinel.adapter.gateway.sc.callback.BlockRequestHandler;
 import com.alibaba.csp.sentinel.adapter.gateway.sc.callback.GatewayCallbackManager;
 import com.alibaba.csp.sentinel.adapter.gateway.sc.exception.SentinelGatewayBlockExceptionHandler;
+import jakarta.annotation.PostConstruct;
 import reactor.core.publisher.Mono;
 
 import org.springframework.beans.factory.ObjectProvider;
@@ -71,7 +71,7 @@ public class GatewayConfig {
 	}
 
 	@PostConstruct
-	private void initGatewayRules() {
+	public void initGatewayRules() {
 		Set<GatewayFlowRule> rules = new HashSet<>();
 		rules.add(
 				new GatewayFlowRule("praiseItemSentinel").setCount(5).setIntervalSec(1));
@@ -104,10 +104,10 @@ public class GatewayConfig {
 	public CorsWebFilter corsFilter() {
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		CorsConfiguration config = new CorsConfiguration();
-		config.addAllowedOrigin("*");
 		config.setAllowCredentials(true);
 		config.addAllowedHeader("*");
 		config.addAllowedMethod("*");
+		config.addAllowedOriginPattern("*");
 		source.registerCorsConfiguration("/**", config);
 
 		return new CorsWebFilter(source);

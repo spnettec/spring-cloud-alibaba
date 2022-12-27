@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.springframework.cloud</groupId>
         <artifactId>spring-cloud-dependencies-parent</artifactId>
-        <version>3.1.4</version>
+        <version>4.0.0</version>
         <relativePath/>
     </parent>
 
@@ -18,10 +18,10 @@
     <description>Spring Cloud Alibaba Dependencies</description>
 
     <properties>
-        <revision>2021.0.4.1.B</revision>
-        <sentinel.version>2.0.0.B</sentinel.version>
-        <seata.version>1.6.1.B</seata.version>
-        <nacos.version>2.2.0.B</nacos.version>
+        <revision>2022.0.0.0.B</revision>
+        <sentinel.version>2.0.1.B</sentinel.version>
+        <seata.version>1.6.2.B</seata.version>
+        <nacos.client.version>2.2.1.B</nacos.client.version>
         <spring.context.support.version>1.0.11</spring.context.support.version>
 
         <!-- Maven Plugin Versions -->
@@ -149,7 +149,7 @@
             </dependency>
 
             <dependency>
-                <groupId>com.github.heyoulin.Sentinel</groupId>
+                <groupId>com.alibaba.csp</groupId>
                 <artifactId>sentinel-spring-webmvc-adapter</artifactId>
                 <version>${sentinel.version}</version>
             </dependency>
@@ -350,4 +350,5 @@
         </profile>
 
     </profiles>
+
 </project>

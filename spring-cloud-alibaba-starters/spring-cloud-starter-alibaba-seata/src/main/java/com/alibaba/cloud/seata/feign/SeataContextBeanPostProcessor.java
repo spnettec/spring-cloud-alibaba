@@ -19,7 +19,7 @@ package com.alibaba.cloud.seata.feign;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.config.BeanPostProcessor;
-import org.springframework.cloud.openfeign.FeignContext;
+import org.springframework.cloud.openfeign.FeignClientFactory;
 
 /**
  * @author xiaojing
@@ -37,9 +37,9 @@ public class SeataContextBeanPostProcessor implements BeanPostProcessor {
 	@Override
 	public Object postProcessBeforeInitialization(Object bean, String beanName)
 			throws BeansException {
-		if (bean instanceof FeignContext && !(bean instanceof SeataFeignContext)) {
+		if (bean instanceof FeignClientFactory && !(bean instanceof SeataFeignContext)) {
 			return new SeataFeignContext(getSeataFeignObjectWrapper(),
-					(FeignContext) bean);
+					(FeignClientFactory) bean);
 		}
 		return bean;
 	}
