@@ -83,12 +83,12 @@
         <maven.compiler.target>17</maven.compiler.target>
         <!-- Project revision -->
         <revision>2022.0.0.0.B</revision>
-
+        <nacos.version>2.2.1.B</nacos.version>
         <!-- Spring Cloud -->
         <spring.cloud.version>2022.0.0</spring.cloud.version>
 
         <!-- Spring Boot -->
-        <spring-boot.version>3.0.0</spring-boot.version>
+        <spring-boot.version>3.0.1</spring-boot.version>
 
         <curator.version>4.0.1</curator.version>
 

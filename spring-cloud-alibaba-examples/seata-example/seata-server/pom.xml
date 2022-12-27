@@ -17,7 +17,7 @@
         <dependency>
             <groupId>com.github.heyoulin.seata</groupId>
             <artifactId>seata-server</artifactId>
-            <version>1.6.1.B</version>
+            <version>1.6.2.B</version>
         </dependency>
     </dependencies>
 
