@@ -53,7 +53,11 @@
                 <artifactId>sentinel-core</artifactId>
                 <version>${sentinel.version}</version>
             </dependency>
-
+            <dependency>
+                <groupId>com.github.heyoulin.Sentinel</groupId>
+                <artifactId>sentinel-spring-webmvc-adapter</artifactId>
+                <version>${sentinel.version}</version>
+            </dependency>
             <dependency>
                 <groupId>com.github.heyoulin.Sentinel</groupId>
                 <artifactId>sentinel-parameter-flow-control</artifactId>
