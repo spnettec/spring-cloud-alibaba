@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2018 the original author or authors.
+ * Copyright 2013-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -77,10 +77,10 @@ public final class RocketMQUtils {
 		if (null != rpcHook) {
 			SessionCredentials sessionCredentials = ((AclClientRPCHook) rpcHook)
 					.getSessionCredentials();
-			instanceName.append(sessionCredentials.getAccessKey()).append(separator)
-					.append(sessionCredentials.getSecretKey()).append(separator);
+			instanceName.append(sessionCredentials.getAccessKey()).append(separator);
 		}
-		instanceName.append(identify).append(separator).append(UtilAll.getPid());
+		instanceName.append(identify).append(separator).append(UtilAll.getPid())
+				.append(separator).append(Long.toString(System.nanoTime(), 36));
 		return instanceName.toString();
 	}
 
