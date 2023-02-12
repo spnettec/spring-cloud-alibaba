@@ -18,10 +18,10 @@
     <description>Spring Cloud Alibaba Dependencies</description>
 
     <properties>
-        <revision>2022.0.0.0.B</revision>
-        <sentinel.version>2.0.1.B</sentinel.version>
-        <seata.version>1.6.2.B</seata.version>
-        <nacos.version>2.2.1.B</nacos.version>
+        <revision>2022.0.0.1.B</revision>
+        <sentinel.version>2.0.2.B</sentinel.version>
+        <seata.version>1.6.3.B</seata.version>
+        <nacos.version>2.2.2.B</nacos.version>
         <spring.context.support.version>1.0.11</spring.context.support.version>
 
         <!-- Maven Plugin Versions -->
@@ -149,12 +149,6 @@
             <dependency>
                 <groupId>com.github.heyoulin.Sentinel</groupId>
                 <artifactId>sentinel-api-gateway-adapter-common</artifactId>
-                <version>${sentinel.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.alibaba.csp</groupId>
-                <artifactId>sentinel-spring-webmvc-adapter</artifactId>
                 <version>${sentinel.version}</version>
             </dependency>
 

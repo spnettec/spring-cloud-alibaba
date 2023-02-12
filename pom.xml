@@ -8,7 +8,7 @@
     <parent>
         <groupId>org.springframework.cloud</groupId>
         <artifactId>spring-cloud-build</artifactId>
-        <version>4.0.0</version>
+        <version>4.0.1</version>
         <relativePath/>
     </parent>
 
@@ -82,13 +82,13 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <!-- Project revision -->
-        <revision>2022.0.0.0.B</revision>
-        <nacos.version>2.2.1.B</nacos.version>
+        <revision>2022.0.0.1.B</revision>
+        <nacos.version>2.2.2.B</nacos.version>
         <!-- Spring Cloud -->
-        <spring.cloud.version>2022.0.0</spring.cloud.version>
+        <spring.cloud.version>2022.0.1</spring.cloud.version>
 
         <!-- Spring Boot -->
-        <spring-boot.version>3.0.1</spring-boot.version>
+        <spring-boot.version>3.0.2</spring-boot.version>
 
         <curator.version>4.0.1</curator.version>
 
