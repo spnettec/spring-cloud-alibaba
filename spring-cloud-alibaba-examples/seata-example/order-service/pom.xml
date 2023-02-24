@@ -38,7 +38,7 @@
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>druid-spring-boot-starter</artifactId>
-            <version>1.2.15</version>
+            <version>1.2.16</version>
         </dependency>
         <dependency>
             <groupId>com.mysql</groupId>
@@ -47,12 +47,56 @@
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-core</artifactId>
-            <version>2.19.0</version>
+            <version>2.20.0</version>
         </dependency>
     </dependencies>
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.graalvm.buildtools</groupId>
+                <artifactId>native-maven-plugin</artifactId>
+                <configuration>
+                    <classesDirectory>${project.build.outputDirectory}</classesDirectory>
+                    <metadataRepository>
+                        <enabled>true</enabled>
+                    </metadataRepository>
+                    <requiredVersion>22.3</requiredVersion>
+                    <buildArgs>
+                        --initialize-at-build-time=ch.qos.logback.classic.Logger
+                        --initialize-at-build-time=ch.qos.logback.core.status.InfoStatus
+                        --initialize-at-build-time=ch.qos.logback.core.status.StatusBase
+                        --initialize-at-build-time=org.slf4j.LoggerFactory
+                        --initialize-at-build-time=ch.qos.logback.core.CoreConstants
+                        --initialize-at-build-time=org.slf4j.MDC
+                        --initialize-at-build-time=ch.qos.logback.classic.Level
+                        --initialize-at-build-time=ch.qos.logback.core.util.Loader
+                        --initialize-at-build-time=ch.qos.logback.core.util.StatusPrinter
+                        --initialize-at-run-time=io.netty.channel.epoll.Epoll
+                        --initialize-at-run-time=io.netty.channel.epoll.Native
+                        --initialize-at-run-time=io.netty.channel.epoll.EpollEventLoop
+                        --initialize-at-run-time=io.netty.channel.epoll.EpollEventArray
+                        --initialize-at-run-time=io.netty.channel.DefaultFileRegion
+                        --initialize-at-run-time=io.netty.channel.kqueue.KQueueEventArray
+                        --initialize-at-run-time=io.netty.channel.kqueue.KQueueEventLoop
+                        --initialize-at-run-time=io.netty.channel.kqueue.Native
+                        --initialize-at-run-time=io.netty.channel.unix.Errors
+                        --initialize-at-run-time=io.netty.channel.unix.IovArray
+                        --initialize-at-run-time=io.netty.channel.unix.Limits
+                        --initialize-at-run-time=io.netty.util.internal.logging.Log4JLogger
+                        --initialize-at-run-time=io.netty.channel.unix.Socket
+                        --initialize-at-run-time=io.netty.channel.ChannelHandlerMask
+                    </buildArgs>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>add-reachability-metadata</id>
+                        <goals>
+                            <goal>add-reachability-metadata</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>

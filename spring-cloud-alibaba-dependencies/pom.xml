@@ -152,6 +152,12 @@
                 <version>${sentinel.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>com.alibaba.csp</groupId>
+                <artifactId>sentinel-spring-webmvc-6x-adapter</artifactId>
+                <version>${sentinel.version}</version>
+            </dependency>
+
             <!--Alibaba Seata-->
             <dependency>
                 <groupId>com.github.heyoulin.seata</groupId>
