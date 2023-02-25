@@ -50,7 +50,7 @@ Add dependency spring-cloud-starter-stream-rocketmq to the `pom.xml` file in you
 
 ```xml
 <dependency>
-    <groupId>com.alibaba.cloud</groupId>
+    <groupId>com.github.heyoulin.spring-cloud-alibaba</groupId>
     <artifactId>spring-cloud-starter-stream-rocketmq</artifactId>
 </dependency>
 ```

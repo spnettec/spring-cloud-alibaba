@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>spring-cloud-alibaba-examples</artifactId>
-        <groupId>com.alibaba.cloud</groupId>
+        <groupId>com.github.heyoulin.spring-cloud-alibaba</groupId>
         <version>${revision}</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
@@ -48,12 +48,12 @@
         </dependency>
 
         <dependency>
-            <groupId>com.alibaba.cloud</groupId>
+            <groupId>com.github.heyoulin.spring-cloud-alibaba</groupId>
             <artifactId>spring-cloud-starter-alibaba-seata</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>com.alibaba.cloud</groupId>
+            <groupId>com.github.heyoulin.spring-cloud-alibaba</groupId>
             <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
         </dependency>
 
@@ -63,7 +63,7 @@
         </dependency>
 
         <dependency>
-            <groupId>com.alibaba.cloud</groupId>
+            <groupId>com.github.heyoulin.spring-cloud-alibaba</groupId>
             <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
         </dependency>
 
@@ -73,7 +73,7 @@
         </dependency>
 
         <dependency>
-            <groupId>com.alibaba.cloud</groupId>
+            <groupId>com.github.heyoulin.spring-cloud-alibaba</groupId>
             <artifactId>integrated-common</artifactId>
             <version>${revision}</version>
         </dependency>

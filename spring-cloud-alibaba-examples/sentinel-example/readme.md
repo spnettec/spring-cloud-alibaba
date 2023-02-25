@@ -25,7 +25,7 @@ First, modify the pom.xml file to introduce Sentinel starter and Openfeign start
 </dependency>
 
 <dependency>
-    <groupId>com.alibaba.cloud</groupId>
+    <groupId>com.github.heyoulin.spring-cloud-alibaba</groupId>
     <artifactId>spring-cloud-starter-alibaba-sentinel</artifactId>
 </dependency>
 
@@ -34,7 +34,7 @@ First, modify the pom.xml file to introduce Sentinel starter and Openfeign start
 
 ```xml
 <dependency>
-    <groupId>com.alibaba.cloud</groupId>
+    <groupId>com.github.heyoulin.spring-cloud-alibaba</groupId>
     <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
 </dependency>
 ```
@@ -88,7 +88,7 @@ Service provider
 
 ```xml
 <dependency>
-    <groupId>com.alibaba.cloud</groupId>
+    <groupId>com.github.heyoulin.spring-cloud-alibaba</groupId>
     <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
 </dependency>
 ```

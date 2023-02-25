@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>com.alibaba.cloud</groupId>
+        <groupId>com.github.heyoulin.spring-cloud-alibaba</groupId>
         <artifactId>spring-cloud-alibaba-starters</artifactId>
         <version>${revision}</version>
         <relativePath>../pom.xml</relativePath>
@@ -98,7 +98,7 @@
         </dependency>
 
         <dependency>
-            <groupId>com.alibaba.cloud</groupId>
+            <groupId>com.github.heyoulin.spring-cloud-alibaba</groupId>
             <artifactId>spring-cloud-circuitbreaker-sentinel</artifactId>
         </dependency>
 
@@ -134,7 +134,7 @@
         </dependency>
 
         <dependency>
-            <groupId>com.alibaba.cloud</groupId>
+            <groupId>com.github.heyoulin.spring-cloud-alibaba</groupId>
             <artifactId>spring-cloud-alibaba-sentinel-datasource</artifactId>
         </dependency>
 

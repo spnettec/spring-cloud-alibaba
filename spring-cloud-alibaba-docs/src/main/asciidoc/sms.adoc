@@ -11,7 +11,7 @@ If you want to use SMS in your project, please use the starter with the group ID
 [source,xml]
 ----
 <dependency>
-    <groupId>com.alibaba.cloud</groupId>
+    <groupId>com.github.heyoulin.spring-cloud-alibaba</groupId>
     <artifactId>spring-cloud-starter-alicloud-sms</artifactId>
 </dependency>
 ----

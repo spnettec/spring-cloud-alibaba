@@ -17,7 +17,7 @@ please use the starter with the group ID as `com.alibaba.cloud` and the artifact
 [source,xml,indent=0]
 ----
 <dependency>
-    <groupId>com.alibaba.cloud</groupId>
+    <groupId>com.github.heyoulin.spring-cloud-alibaba</groupId>
     <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
 </dependency>
 ----
@@ -79,7 +79,7 @@ The following sample illustrates how to register a service to Nacos.
                 <scope>import</scope>
             </dependency>
             <dependency>
-                <groupId>com.alibaba.cloud</groupId>
+                <groupId>com.github.heyoulin.spring-cloud-alibaba</groupId>
                 <artifactId>spring-cloud-alibaba-dependencies</artifactId>
                 <version>${spring.cloud.alibaba.version}</version>
                 <type>pom</type>
@@ -100,7 +100,7 @@ The following sample illustrates how to register a service to Nacos.
         </dependency>
 
         <dependency>
-            <groupId>com.alibaba.cloud</groupId>
+            <groupId>com.github.heyoulin.spring-cloud-alibaba</groupId>
             <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
         </dependency>
     </dependencies>

@@ -2,7 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <groupId>com.alibaba.cloud</groupId>
+        <groupId>com.github.heyoulin.spring-cloud-alibaba</groupId>
         <artifactId>spring-cloud-alibaba-examples</artifactId>
         <version>${revision}</version>
         <relativePath>../../pom.xml</relativePath>
@@ -27,11 +27,11 @@
         </dependency>
 
         <dependency>
-            <groupId>com.alibaba.cloud</groupId>
+            <groupId>com.github.heyoulin.spring-cloud-alibaba</groupId>
             <artifactId>spring-cloud-starter-alibaba-sidecar</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.alibaba.cloud</groupId>
+            <groupId>com.github.heyoulin.spring-cloud-alibaba</groupId>
             <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
         </dependency>
 

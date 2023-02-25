@@ -9,7 +9,7 @@ If you want to use SchedulerX in your project, please use the starter with the g
 [source,xml]
 ----
 <dependency>
-    <groupId>com.alibaba.cloud</groupId>
+    <groupId>com.github.heyoulin.spring-cloud-alibaba</groupId>
     <artifactId>spring-cloud-starter-alicloud-schedulerX</artifactId>
 </dependency>
 ----

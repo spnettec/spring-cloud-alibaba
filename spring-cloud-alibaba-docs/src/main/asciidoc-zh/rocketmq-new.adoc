@@ -121,7 +121,7 @@ messageChannel.send(MessageBuilder.withPayload("simple msg").build());
 
 ```xml
 <dependency>
-  <groupId>com.alibaba.cloud</groupId>
+  <groupId>com.github.heyoulin.spring-cloud-alibaba</groupId>
   <artifactId>spring-cloud-stream-binder-rocketmq</artifactId>
 </dependency>
 ```
@@ -130,7 +130,7 @@ messageChannel.send(MessageBuilder.withPayload("simple msg").build());
 
 ```xml
 <dependency>
-    <groupId>com.alibaba.cloud</groupId>
+    <groupId>com.github.heyoulin.spring-cloud-alibaba</groupId>
     <artifactId>spring-cloud-starter-stream-rocketmq</artifactId>
 </dependency>
 ```

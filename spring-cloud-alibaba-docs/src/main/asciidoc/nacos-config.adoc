@@ -11,7 +11,7 @@ please use the starter with the group ID as `com.alibaba.cloud` and the artifact
 [source,xml,indent=0]
 ----
 <dependency>
-    <groupId>com.alibaba.cloud</groupId>
+    <groupId>com.github.heyoulin.spring-cloud-alibaba</groupId>
     <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
 </dependency>
 ----
@@ -53,7 +53,7 @@ If you want to use Nacos to manage externalized configurations for your applicat
 [source,xml]
 ----
 <dependency>
-    <groupId>com.alibaba.cloud</groupId>
+    <groupId>com.github.heyoulin.spring-cloud-alibaba</groupId>
     <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
 </dependency>
 ----

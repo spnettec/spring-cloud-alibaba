@@ -13,7 +13,7 @@ To include Seata in your project, use the starter with group ID `com.alibaba.clo
 [source,xml]
 ----
 <dependency>
-    <groupId>com.alibaba.cloud</groupId>
+    <groupId>com.github.heyoulin.spring-cloud-alibaba</groupId>
     <artifactId>spring-cloud-starter-alibaba-seata</artifactId>
 </dependency>
 ----

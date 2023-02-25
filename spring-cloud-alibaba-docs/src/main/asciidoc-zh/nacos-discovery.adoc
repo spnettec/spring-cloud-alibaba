@@ -17,7 +17,7 @@ Discovery 也将服务实例自身的一些元数据信息-例如 host，port, �
 [source,xml,indent=0]
 ----
 <dependency>
-    <groupId>com.alibaba.cloud</groupId>
+    <groupId>com.github.heyoulin.spring-cloud-alibaba</groupId>
     <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
 </dependency>
 ----
@@ -79,7 +79,7 @@ image::https://img.alicdn.com/tfs/TB1dyWJbQL0gK0jSZFtXXXQCXXa-2788-1086.png[]
                 <scope>import</scope>
             </dependency>
             <dependency>
-                <groupId>com.alibaba.cloud</groupId>
+                <groupId>com.github.heyoulin.spring-cloud-alibaba</groupId>
                 <artifactId>spring-cloud-alibaba-dependencies</artifactId>
                 <version>${spring.cloud.alibaba.version}</version>
                 <type>pom</type>
@@ -100,7 +100,7 @@ image::https://img.alicdn.com/tfs/TB1dyWJbQL0gK0jSZFtXXXQCXXa-2788-1086.png[]
         </dependency>
 
         <dependency>
-            <groupId>com.alibaba.cloud</groupId>
+            <groupId>com.github.heyoulin.spring-cloud-alibaba</groupId>
             <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
         </dependency>
     </dependencies>

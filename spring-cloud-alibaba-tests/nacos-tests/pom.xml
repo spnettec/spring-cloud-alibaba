@@ -9,7 +9,7 @@
     </modules>
     <parent>
         <artifactId>spring-cloud-alibaba-tests</artifactId>
-        <groupId>com.alibaba.cloud</groupId>
+        <groupId>com.github.heyoulin.spring-cloud-alibaba</groupId>
         <version>${revision}</version>
     </parent>
     <packaging>pom</packaging>

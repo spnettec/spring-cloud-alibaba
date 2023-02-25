@@ -13,7 +13,7 @@ NOTE: 目前 EDAS 已经支持直接部署 Nacos Config 应用
 [source,xml]
 ----
 <dependency>
-    <groupId>com.alibaba.cloud</groupId>
+    <groupId>com.github.heyoulin.spring-cloud-alibaba</groupId>
     <artifactId>spring-cloud-starter-alicloud-acm</artifactId>
 </dependency>
 ----

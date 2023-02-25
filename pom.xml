@@ -12,7 +12,7 @@
         <relativePath/>
     </parent>
 
-    <groupId>com.alibaba.cloud</groupId>
+    <groupId>com.github.heyoulin.spring-cloud-alibaba</groupId>
     <artifactId>spring-cloud-alibaba</artifactId>
     <version>${revision}</version>
     <packaging>pom</packaging>
@@ -150,7 +150,7 @@
             </dependency>
 
             <dependency>
-                <groupId>com.alibaba.cloud</groupId>
+                <groupId>com.github.heyoulin.spring-cloud-alibaba</groupId>
                 <artifactId>spring-cloud-alibaba-dependencies</artifactId>
                 <version>${project.version}</version>
                 <type>pom</type>

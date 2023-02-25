@@ -72,7 +72,7 @@ These artifacts are available from Maven Central and Spring Release repository v
 <dependencyManagement>
     <dependencies>
         <dependency>
-            <groupId>com.alibaba.cloud</groupId>
+            <groupId>com.github.heyoulin.spring-cloud-alibaba</groupId>
             <artifactId>spring-cloud-alibaba-dependencies</artifactId>
             <version>2022.0.0.0-RC1</version>
             <type>pom</type>

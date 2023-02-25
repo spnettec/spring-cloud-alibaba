@@ -12,7 +12,7 @@ Seata是一个分布式事务框架, 用于保证在微服务架构下每个服�
 [source,xml]
 ----
 <dependency>
-    <groupId>com.alibaba.cloud</groupId>
+    <groupId>com.github.heyoulin.spring-cloud-alibaba</groupId>
     <artifactId>spring-cloud-starter-alibaba-seata</artifactId>
 </dependency>
 ----
