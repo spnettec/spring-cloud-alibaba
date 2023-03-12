@@ -82,15 +82,15 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <!-- Project revision -->
-        <revision>2022.0.0.1.B</revision>
-        <nacos.version>2.2.2.B</nacos.version>
+        <revision>2022.0.0.2.B</revision>
+        <nacos.version>2.2.3.B</nacos.version>
         <!-- Spring Cloud -->
         <spring.cloud.version>2022.0.1</spring.cloud.version>
 
         <!-- Spring Boot -->
-        <spring-boot.version>3.0.3</spring-boot.version>
+        <spring-boot.version>3.0.4</spring-boot.version>
 
-        <curator.version>4.0.1</curator.version>
+        <curator.version>5.4.0</curator.version>
 
         <!-- Apache RocketMQ -->
         <rocketmq.version>4.9.4</rocketmq.version>
@@ -106,7 +106,7 @@
         <flatten-maven-plugin.version>1.2.7</flatten-maven-plugin.version>
         <gmavenplus-plugin.version>1.6</gmavenplus-plugin.version>
         <jacoco.version>0.8.8</jacoco.version>
-        <native-maven-plugin.version>0.9.19</native-maven-plugin.version>
+        <native-maven-plugin.version>0.9.20</native-maven-plugin.version>
     </properties>
 
     <modules>
