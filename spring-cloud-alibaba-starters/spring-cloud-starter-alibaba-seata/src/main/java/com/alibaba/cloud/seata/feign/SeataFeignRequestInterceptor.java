@@ -36,9 +36,6 @@ public class SeataFeignRequestInterceptor implements RequestInterceptor {
 		if (!StringUtils.hasLength(xid)) {
 			return;
 		}
-
-		List<String> seataXid = new ArrayList<>();
-		seataXid.add(xid);
 		template.header(RootContext.KEY_XID, xid);
 	}
 }
