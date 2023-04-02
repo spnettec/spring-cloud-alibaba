@@ -165,6 +165,12 @@
                 <version>${seata.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>com.github.heyoulin.seata</groupId>
+                <artifactId>seata-server</artifactId>
+                <version>${seata.version}</version>
+            </dependency>
+
             <!-- Own dependencies  -->
             <dependency>
                 <groupId>com.github.heyoulin.spring-cloud-alibaba</groupId>
