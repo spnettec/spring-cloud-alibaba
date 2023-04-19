@@ -25,6 +25,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
@@ -33,6 +34,7 @@ import org.testcontainers.Testcontainers;
 import org.testcontainers.containers.DockerComposeContainer;
 import org.testcontainers.shaded.org.awaitility.Awaitility;
 
+@Slf4j
 final class SpringCloudAlibabaExtension
 		implements BeforeAllCallback, AfterAllCallback, BeforeEachCallback {
 	private final boolean LOCAL_MODE = Objects.equals(System.getProperty("local"),
@@ -66,7 +68,7 @@ final class SpringCloudAlibabaExtension
 	@Override
 	public void afterAll(ExtensionContext context) {
 		if (compose != null) {
-			compose.close();
+			compose.stop();
 		}
 	}
 
