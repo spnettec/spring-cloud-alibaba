@@ -52,8 +52,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 		"spring.cloud.nacos.server-addr=123.123.123.123:8848",
 		"spring.cloud.nacos.config.username=nacos",
 		"spring.cloud.nacos.config.password=nacos",
-		"spring.cloud.nacos.config.file-extension=properties",
-		"spring.cloud.bootstrap.enabled=true"})
+		"spring.cloud.nacos.config.file-extension=properties"})
 
 public class NacosConfigPropertiesServerAddressBothLevelTests {
 

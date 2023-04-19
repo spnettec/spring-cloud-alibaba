@@ -58,8 +58,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 		"spring.cloud.nacos.config.extension-configs[0].data-id=ext-config-common01.properties",
 		"spring.cloud.nacos.config.extension-configs[1].data-id=ext-config-common02.properties",
 		"spring.cloud.nacos.config.extension-configs[1].group=GLOBAL_GROUP",
-		"spring.cloud.nacos.config.shared-dataids=common1.properties,common2.properties",
-		"spring.cloud.bootstrap.enabled=true" })
+		"spring.cloud.nacos.config.sharedConfigs=common1.properties,common2.properties"})
 public class NacosConfigurationExtConfigTests {
 
 	/**
