@@ -88,12 +88,12 @@
         <spring.cloud.version>2022.0.2</spring.cloud.version>
 
         <!-- Spring Boot -->
-        <spring-boot.version>3.0.5</spring-boot.version>
+        <spring-boot.version>3.0.6</spring-boot.version>
 
         <curator.version>5.4.0</curator.version>
 
         <!-- Apache RocketMQ -->
-        <rocketmq.version>4.9.4</rocketmq.version>
+        <rocketmq.version>4.9.5</rocketmq.version>
 
         <!-- Maven Plugin Versions -->
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
@@ -106,7 +106,7 @@
         <flatten-maven-plugin.version>1.2.7</flatten-maven-plugin.version>
         <gmavenplus-plugin.version>1.6</gmavenplus-plugin.version>
         <jacoco.version>0.8.8</jacoco.version>
-        <native-maven-plugin.version>0.9.20</native-maven-plugin.version>
+        <native-maven-plugin.version>0.9.21</native-maven-plugin.version>
     </properties>
 
     <modules>
