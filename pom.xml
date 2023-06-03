@@ -8,7 +8,7 @@
     <parent>
         <groupId>org.springframework.cloud</groupId>
         <artifactId>spring-cloud-build</artifactId>
-        <version>4.0.2</version>
+        <version>4.0.3</version>
         <relativePath/>
     </parent>
 
@@ -85,10 +85,10 @@
         <revision>2022.0.0.3.B</revision>
         <nacos.version>2.2.4.B</nacos.version>
         <!-- Spring Cloud -->
-        <spring.cloud.version>2022.0.2</spring.cloud.version>
+        <spring.cloud.version>2022.0.3</spring.cloud.version>
 
         <!-- Spring Boot -->
-        <spring-boot.version>3.0.6</spring-boot.version>
+        <spring-boot.version>3.1.0</spring-boot.version>
 
         <curator.version>5.4.0</curator.version>
 
@@ -106,7 +106,7 @@
         <flatten-maven-plugin.version>1.2.7</flatten-maven-plugin.version>
         <gmavenplus-plugin.version>1.6</gmavenplus-plugin.version>
         <jacoco.version>0.8.8</jacoco.version>
-        <native-maven-plugin.version>0.9.21</native-maven-plugin.version>
+        <native-maven-plugin.version>0.9.22</native-maven-plugin.version>
     </properties>
 
     <modules>
