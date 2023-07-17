@@ -23,7 +23,8 @@
         <seata.version>2.0.1.B</seata.version>
         <nacos.version>2.2.4.B</nacos.version>
         <spring.context.support.version>1.0.11</spring.context.support.version>
-
+        <!-- Apache RocketMQ -->
+        <rocketmq.version>4.9.4</rocketmq.version>
         <!-- Maven Plugin Versions -->
         <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
         <maven-javadoc-plugin.version>3.1.1</maven-javadoc-plugin.version>
@@ -164,6 +165,17 @@
                 <groupId>com.github.heyoulin.seata</groupId>
                 <artifactId>seata-spring-boot-starter</artifactId>
                 <version>${seata.version}</version>
+            </dependency>
+            <!--Alibaba RocketMQ-->
+            <dependency>
+                <groupId>org.apache.rocketmq</groupId>
+                <artifactId>rocketmq-client</artifactId>
+                <version>${rocketmq.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.rocketmq</groupId>
+                <artifactId>rocketmq-acl</artifactId>
+                <version>${rocketmq.version}</version>
             </dependency>
 
             <dependency>
