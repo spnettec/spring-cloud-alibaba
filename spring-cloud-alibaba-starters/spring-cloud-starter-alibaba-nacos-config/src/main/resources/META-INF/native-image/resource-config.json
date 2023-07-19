@@ -10,7 +10,11 @@
       "pattern":"\\QMETA-INF/services/com.alibaba.nacos.api.remote.Payload\\E"
     }, 
     {
-      "condition":{"typeReachable":"com.alibaba.nacos.client.config.impl.ConfigTransportClient"},
+      "condition":{"typeReachable":"com.alibaba.nacos.client.utils.LogUtils"},
+      "pattern":"\\QMETA-INF/services/com.alibaba.nacos.common.log.NacosLogbackConfigurator\\E"
+    }, 
+    {
+      "condition":{"typeReachable":"com.alibaba.nacos.plugin.auth.spi.client.ClientAuthPluginManager"},
       "pattern":"\\QMETA-INF/services/com.alibaba.nacos.plugin.auth.spi.client.AbstractClientAuthService\\E"
     }, 
     {
