@@ -85,7 +85,7 @@
         <revision>2022.0.0.3.B</revision>
         <nacos.version>2.2.4.B</nacos.version>
         <!-- Spring Cloud -->
-        <spring.cloud.version>2022.0.3</spring.cloud.version>
+        <spring.cloud.version>2022.0.4</spring.cloud.version>
 
         <!-- Spring Boot -->
         <spring-boot.version>3.1.2</spring-boot.version>
