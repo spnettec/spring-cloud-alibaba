@@ -15,8 +15,8 @@
 
 	<properties>
 		<mysql.version>8.0.28</mysql.version>
-		<durid.version>1.2.18</durid.version>
-		<mybatis.version>3.0.1</mybatis.version>
+		<durid.version>1.2.20</durid.version>
+		<mybatis.version>3.0.2</mybatis.version>
 	</properties>
 
 	<dependencies>

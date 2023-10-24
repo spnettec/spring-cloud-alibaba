@@ -13,7 +13,9 @@
     <artifactId>account-service</artifactId>
     <name>Spring Cloud Starter Alibaba Seata Example - Account Service</name>
     <packaging>jar</packaging>
-
+    <properties>
+        <druid.version>1.2.20</druid.version>
+    </properties>
     <dependencies>
         <dependency>
             <groupId>com.github.heyoulin.spring-cloud-alibaba</groupId>
@@ -39,7 +41,7 @@
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>druid-spring-boot-starter</artifactId>
-            <version>1.2.18</version>
+            <version>${druid.version}</version>
         </dependency>
         <dependency>
             <groupId>com.mysql</groupId>
