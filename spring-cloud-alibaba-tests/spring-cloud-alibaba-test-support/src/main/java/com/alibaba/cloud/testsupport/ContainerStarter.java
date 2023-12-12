@@ -39,7 +39,7 @@ public class ContainerStarter {
 
 	private static final String NACOS_VERSION = "1.4.2";
 	private static final String SENTINEL_VERSION = "1.8.3";
-	private static final String ROCKETMQ_VERSION = "4.9.2";
+	private static final String ROCKETMQ_VERSION = "5.1.4";
 	private static final String SEATA_VERSION = "1.4.2";
 
 	private static final Map<String, GenericContainer> nacosMap = new ConcurrentHashMap<>(
