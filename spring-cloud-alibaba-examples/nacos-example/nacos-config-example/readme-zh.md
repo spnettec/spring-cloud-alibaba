@@ -29,7 +29,7 @@ spring:
       serverAddr: 127.0.0.1:8848
   config:
     import:
-      - nacos:nacos-config-example.properties?refresh=true
+      - nacos:nacos-config-example.properties?refresh=true&group=DEFAULT_GROUP
 ```
 		  
 3. 完成上述两步后，应用会从 Nacos Config 中获取相应的配置，并添加在 Spring Environment 的 PropertySources 中。假设我们通过 Nacos 配置中心保存 Nacos 的部分配置,有以下四种例子:
@@ -188,10 +188,9 @@ SecretKey|spring.cloud.nacos.config.secret-key||
 集群服务名|spring.cloud.nacos.config.cluster-name||
 
 ### Native Image构建
-请参考`spring-cloud-alibaba-docs`中的`graalvm.adoc`文档
+请参考 Spring Cloud Alibaba 官网中的 [Graalvm 快速开始](https://sca.aliyun.com/zh-cn/docs/2022.0.0.0/user-guide/graalvm/quick-start)7
 
 #### 更多介绍
 Nacos为用户提供包括动态服务发现，配置管理，服务管理等服务基础设施，帮助用户更灵活，更轻松地构建，交付和管理他们的微服务平台，基于Nacos, 用户可以更快速的构建以“服务”为中心的现代云原生应用。Nacos可以和Spring Cloud、Kubernetes/CNCF、Dubbo 等微服务生态无缝融合，为用户提供更卓越的体验。更多 Nacos 相关的信息，请参考 [Nacos 项目](https://github.com/alibaba/Nacos)。
 
 如果您对 Spring Cloud Nacos Config Starter 有任何建议或想法，欢迎在 issue 中或者通过其他社区渠道向我们提出。
-

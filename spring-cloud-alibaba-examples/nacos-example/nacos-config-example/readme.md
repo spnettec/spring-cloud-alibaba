@@ -31,7 +31,7 @@ spring:
       serverAddr: 127.0.0.1:8848
   config:
     import:
-      - nacos:nacos-config-example.properties?refresh=true
+      - nacos:nacos-config-example.properties?refresh=true&group=DEFAULT_GROUP
 ```
 
 3. After completing the above two steps, the application will obtain the corresponding configuration from Nacos Config and add it to the PropertySources of Spring Environment. Suppose we save part of the configuration of Nacos through the Nacos configuration center, there are the following four examples:
@@ -196,7 +196,7 @@ refresh|spring.cloud.nacos.config.refresh.enabled|true|enable auto refresh
 cluster name|spring.cloud.nacos.config.cluster-name||
 
 ### Build Native Image
-Please refer to `graalvm.adoc` document in `spring-cloud-alibaba-docs`
+Please refer to [Graalvm Quick Start](https://sca.aliyun.com/zh-cn/docs/2022.0.0.0/user-guide/graalvm/quick-start) in the Spring Cloud Alibaba official website.
 
 #### More introduction
 [Nacos](https://github.com/alibaba/Nacos) is committed to help you discover, configure, and manage your microservices. It provides a set of simple and useful features enabling you to realize dynamic service discovery, service configuration, service metadata and traffic management.
