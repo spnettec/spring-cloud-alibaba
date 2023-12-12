@@ -14,9 +14,9 @@
 	<name>Spring Cloud Alibaba Integrated Account Example</name>
 
 	<properties>
-		<mysql.version>8.0.28</mysql.version>
-		<durid.version>1.2.20</durid.version>
-		<mybatis.version>3.0.2</mybatis.version>
+		<mysql.version>8.0.33</mysql.version>
+		<druid.version>1.2.20</druid.version>
+		<mybatis.version>3.0.3</mybatis.version>
 	</properties>
 
 	<dependencies>
@@ -38,7 +38,7 @@
 		<dependency>
 			<groupId>com.alibaba</groupId>
 			<artifactId>druid-spring-boot-starter</artifactId>
-			<version>${durid.version}</version>
+			<version>${druid.version}</version>
 		</dependency>
 
 		<dependency>
