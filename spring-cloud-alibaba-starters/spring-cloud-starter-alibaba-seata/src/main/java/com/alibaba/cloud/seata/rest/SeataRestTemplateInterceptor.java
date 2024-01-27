@@ -18,7 +18,7 @@ package com.alibaba.cloud.seata.rest;
 
 import java.io.IOException;
 
-import io.seata.core.context.RootContext;
+import org.apache.seata.core.context.RootContext;
 
 import org.springframework.http.HttpRequest;
 import org.springframework.http.client.ClientHttpRequestExecution;

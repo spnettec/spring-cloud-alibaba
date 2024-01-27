@@ -18,7 +18,7 @@ package com.alibaba.cloud.examples;
 
 import java.util.Random;
 
-import io.seata.core.context.RootContext;
+import org.apache.seata.core.context.RootContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

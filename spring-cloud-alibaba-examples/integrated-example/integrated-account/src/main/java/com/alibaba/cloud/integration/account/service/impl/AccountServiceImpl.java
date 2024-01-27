@@ -22,7 +22,7 @@ import com.alibaba.cloud.integration.account.mapper.AccountMapper;
 import com.alibaba.cloud.integration.account.service.AccountService;
 import com.alibaba.cloud.integration.common.BusinessException;
 import com.alibaba.cloud.integration.common.Result;
-import io.seata.core.context.RootContext;
+import org.apache.seata.core.context.RootContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

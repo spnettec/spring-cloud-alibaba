@@ -21,7 +21,7 @@ import java.util.List;
 
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
-import io.seata.core.context.RootContext;
+import org.apache.seata.core.context.RootContext;
 
 import org.springframework.util.StringUtils;
 

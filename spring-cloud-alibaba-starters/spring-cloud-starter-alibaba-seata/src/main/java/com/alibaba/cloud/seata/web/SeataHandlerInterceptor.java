@@ -16,8 +16,8 @@
 
 package com.alibaba.cloud.seata.web;
 
-import io.seata.common.util.StringUtils;
-import io.seata.core.context.RootContext;
+import org.apache.seata.common.util.StringUtils;
+import org.apache.seata.core.context.RootContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
@@ -29,7 +29,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
  * @author xiaojing
  *
  * Seata HandlerInterceptor, Convert Seata information into
- * @see io.seata.core.context.RootContext from http request's header in
+ * @see org.apache.seata.core.context.RootContext from http request's header in
  * {@link org.springframework.web.servlet.HandlerInterceptor#preHandle(HttpServletRequest, HttpServletResponse, Object)},
  * And clean up Seata information after servlet method invocation in
  * {@link org.springframework.web.servlet.HandlerInterceptor#afterCompletion(HttpServletRequest, HttpServletResponse, Object, Exception)}

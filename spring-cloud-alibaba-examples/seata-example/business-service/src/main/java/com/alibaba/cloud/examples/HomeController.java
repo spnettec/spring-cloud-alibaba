@@ -18,7 +18,7 @@ package com.alibaba.cloud.examples;
 
 import com.alibaba.cloud.examples.BusinessApplication.OrderService;
 import com.alibaba.cloud.examples.BusinessApplication.StorageService;
-import io.seata.spring.annotation.GlobalTransactional;
+import org.apache.seata.spring.annotation.GlobalTransactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
