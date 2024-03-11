@@ -456,7 +456,7 @@ public class NacosConfigProperties {
 	public String getSharedDataids() {
 		return null == getSharedConfigs() ? null
 				: getSharedConfigs().stream().map(Config::getDataId)
-						.collect(Collectors.joining(COMMAS));
+				.collect(Collectors.joining(COMMAS));
 	}
 
 	/**
@@ -486,7 +486,7 @@ public class NacosConfigProperties {
 	public String getRefreshableDataids() {
 		return null == getSharedConfigs() ? null
 				: getSharedConfigs().stream().filter(Config::isRefresh)
-						.map(Config::getDataId).collect(Collectors.joining(COMMAS));
+				.map(Config::getDataId).collect(Collectors.joining(COMMAS));
 	}
 
 	/**

@@ -253,29 +253,7 @@
             <!-- Testing Dependencies -->
         </dependencies>
     </dependencyManagement>
-    <repositories>
-        <repository>
-            <id>jitpack.io</id>
-            <url>https://www.jitpack.io</url>
-        </repository>
-        <repository>
-            <id>central-repos1</id>
-            <name>Central Repository 2</name>
-            <url>https://repo1.maven.org/maven2/</url>
-        </repository>
-        <!--阿里云主仓库，代理了maven central和jcenter仓库-->
-        <repository>
-            <id>aliyun</id>
-            <name>aliyun</name>
-            <url>https://maven.aliyun.com/repository/public</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
+
     <profiles>
         <profile>
             <id>release</id>
@@ -307,7 +285,7 @@
                             </execution>
                         </executions>
                     </plugin>
-                    <!--
+
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
@@ -321,7 +299,7 @@
                             </execution>
                         </executions>
                     </plugin>
-                    -->
+
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>flatten-maven-plugin</artifactId>
