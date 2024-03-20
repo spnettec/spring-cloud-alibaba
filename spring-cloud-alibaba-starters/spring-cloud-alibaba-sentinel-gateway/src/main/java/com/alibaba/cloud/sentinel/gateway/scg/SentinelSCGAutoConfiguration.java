@@ -56,7 +56,7 @@ import static org.springframework.web.reactive.function.BodyInserters.fromValue;
  */
 @Configuration(proxyBeanMethods = false)
 @ConditionalOnClass(GlobalFilter.class)
-@ConditionalOnProperty(prefix = ConfigConstants.GATEWAY_PREFIX, name = "enabled",
+@ConditionalOnProperty(value={ConfigConstants.GATEWAY_PREFIX + ".enabled", "spring.cloud.sentinel.enabled"},
 		havingValue = "true", matchIfMissing = true)
 @EnableConfigurationProperties(SentinelGatewayProperties.class)
 public class SentinelSCGAutoConfiguration {
