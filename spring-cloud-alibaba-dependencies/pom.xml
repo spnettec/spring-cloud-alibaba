@@ -25,6 +25,11 @@
         <spring.context.support.version>1.0.11</spring.context.support.version>
         <!-- Apache RocketMQ -->
         <rocketmq.version>5.1.4</rocketmq.version>
+
+        <!-- Spring AI -->
+        <spring.ai.version>0.8.0</spring.ai.version>
+        <dashscope-sdk-java.version>2.10.1</dashscope-sdk-java.version>
+
         <!-- Maven Plugin Versions -->
         <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
         <maven-javadoc-plugin.version>3.1.1</maven-javadoc-plugin.version>
@@ -48,6 +53,19 @@
                 <version>${nacos.version}</version>
             </dependency>
 
+            <!-- Spring AI & dashscope SDK-->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>dashscope-sdk-java</artifactId>
+                <version>${dashscope-sdk-java.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.ai</groupId>
+                <artifactId>spring-ai-core</artifactId>
+                <version>${spring.ai.version}</version>
+            </dependency>
+
             <!-- Sentinel -->
             <dependency>
                 <groupId>com.github.heyoulin.Sentinel</groupId>
@@ -55,11 +73,6 @@
                 <version>${sentinel.version}</version>
             </dependency>
 
-            <dependency>
-                <groupId>com.github.heyoulin.Sentinel</groupId>
-                <artifactId>sentinel-spring-webmvc-adapter</artifactId>
-                <version>${sentinel.version}</version>
-            </dependency>
             <dependency>
                 <groupId>com.github.heyoulin.Sentinel</groupId>
                 <artifactId>sentinel-parameter-flow-control</artifactId>
@@ -153,6 +166,13 @@
                 <artifactId>sentinel-api-gateway-adapter-common</artifactId>
                 <version>${sentinel.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>com.github.heyoulin.Sentinel</groupId>
+                <artifactId>sentinel-spring-webmvc-6x-adapter</artifactId>
+                <version>${sentinel.version}</version>
+            </dependency>
+
             <!--Alibaba Seata-->
             <dependency>
                 <groupId>com.github.heyoulin.seata</groupId>
@@ -169,12 +189,6 @@
                 <groupId>org.apache.rocketmq</groupId>
                 <artifactId>rocketmq-acl</artifactId>
                 <version>${rocketmq.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.github.heyoulin.seata</groupId>
-                <artifactId>seata-server</artifactId>
-                <version>${seata.version}</version>
             </dependency>
 
             <!-- Own dependencies  -->
@@ -205,6 +219,12 @@
             <dependency>
                 <groupId>com.github.heyoulin.spring-cloud-alibaba</groupId>
                 <artifactId>spring-cloud-starter-alibaba-seata</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.github.heyoulin.spring-cloud-alibaba</groupId>
+                <artifactId>spring-cloud-starter-alibaba-ai</artifactId>
                 <version>${revision}</version>
             </dependency>
 
