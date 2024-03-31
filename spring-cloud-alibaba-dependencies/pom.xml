@@ -18,10 +18,10 @@
     <description>Spring Cloud Alibaba Dependencies</description>
 
     <properties>
-        <revision>2022.0.0.6.B</revision>
-        <sentinel.version>2.0.7.B</sentinel.version>
-        <seata.version>2.1.0.B</seata.version>
-        <nacos.version>2.3.1.B</nacos.version>
+        <revision>2022.0.0.7.B</revision>
+        <sentinel.version>2.0.8.B</sentinel.version>
+        <seata.version>2.1.1.B</seata.version>
+        <nacos.version>2.4.0.B</nacos.version>
         <spring.context.support.version>1.0.11</spring.context.support.version>
         <!-- Apache RocketMQ -->
         <rocketmq.version>5.1.4</rocketmq.version>
