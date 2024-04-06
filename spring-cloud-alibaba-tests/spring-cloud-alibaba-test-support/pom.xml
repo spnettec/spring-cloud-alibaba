@@ -19,13 +19,13 @@
 
         <junit.version>5.7.2</junit.version>
         <selenium.version>3.141.59</selenium.version>
-        <lombok.version>1.18.30</lombok.version>
+        <lombok.version>1.18.32</lombok.version>
         <assertj-core.version>3.25.3</assertj-core.version>
         <awaitility.version>4.2.0</awaitility.version>
         <kotlin.version>1.5.30</kotlin.version>
         <slf4j-api.version>2.0.12</slf4j-api.version>
-        <log4j-slf4j-impl.version>2.23.0</log4j-slf4j-impl.version>
-        <guava.version>33.0.0-jre</guava.version>
+        <log4j-slf4j-impl.version>2.23.1</log4j-slf4j-impl.version>
+        <guava.version>33.1.0-jre</guava.version>
         <hamcrest.version>2.2</hamcrest.version>
     </properties>
 

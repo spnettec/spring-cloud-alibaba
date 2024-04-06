@@ -23,7 +23,7 @@ import org.springframework.cloud.loadbalancer.annotation.LoadBalancerClients;
 
 @SpringBootApplication
 @LoadBalancerClients({
-		@LoadBalancerClient("sidecar-service")
+		@LoadBalancerClient("node-service")
 })
 public class DemoApplication {
 

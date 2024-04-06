@@ -16,6 +16,7 @@
 
 package com.alibaba.cloud.nacos.discovery.configclient;
 
+
 import com.alibaba.cloud.nacos.NacosDiscoveryProperties;
 import jakarta.annotation.PostConstruct;
 
