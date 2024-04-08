@@ -16,7 +16,7 @@
 
 package com.alibaba.cloud.ai.tongyi;
 
-import com.alibaba.cloud.ai.tongyi.constant.TongYiConstants;
+import com.alibaba.dashscope.aigc.generation.Generation;
 import com.alibaba.dashscope.aigc.generation.models.QwenParam;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -24,7 +24,8 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 /**
  * @author yuluo
- * @since 2023.0.0.0
+ * @author <a href="mailto:yuluo08290126@gmail.com">yuluo</a>
+ * @since 2023.0.0.0-RC1
  */
 
 @ConfigurationProperties(TongYiChatProperties.CONFIG_PREFIX)
@@ -38,7 +39,7 @@ public class TongYiChatProperties {
 	/**
 	 * Default TongYi Chat model.
 	 */
-	public static final String DEFAULT_DEPLOYMENT_NAME = TongYiConstants.Model.QWEN_TURBO;
+	public static final String DEFAULT_DEPLOYMENT_NAME = Generation.Models.QWEN_TURBO;
 
 	/**
 	 * Default temperature speed.

@@ -18,15 +18,68 @@ package com.alibaba.cloud.ai.example.tongyi.service;
 
 import java.util.Map;
 
+import com.alibaba.cloud.ai.example.tongyi.models.ActorsFilms;
+import com.alibaba.cloud.ai.example.tongyi.models.Completion;
+
+import org.springframework.ai.chat.messages.AssistantMessage;
+
 /**
  * @author yuluo
- * @since 2023.0.0.0
+ * @author <a href="mailto:yuluo08290126@gmail.com">yuluo</a>
+ * @since 2023.0.0.0-RC1
  */
 
 public interface TongYiService {
 
+	/**
+	 * Hello World example.
+	 *
+	 * @param message conversation content question.
+	 * @return AI answer.
+	 */
 	String completion(String message);
 
+	/**
+	 * Stream call.
+	 *
+	 * @param message conversation content question.
+	 * @return AI answer.
+	 */
 	Map<String, String> streamCompletion(String message);
 
+	/**
+	 * Output parse object.
+	 *
+	 * @param actor actor name.
+	 * @return Object.
+	 */
+	ActorsFilms genOutputParse(String actor);
+
+	/**
+	 * Prompt template.
+	 *
+	 * @param adjective params1.
+	 * @param topic params2.
+	 * @return AI answer.
+	 */
+	AssistantMessage genPromptTemplates(String adjective, String topic);
+
+	/**
+	 * AI role example.
+	 *
+	 * @param message question content,
+	 * @param name params1.
+	 * @param voice params2.
+	 * @return AI answer.
+	 */
+	AssistantMessage genRole(String message, String name, String voice);
+
+	/**
+	 * Stuff and answer.
+	 *
+	 * @param message question.
+	 * @param stuffit is stuff.
+	 * @return Completion object.
+	 */
+	Completion stuffCompletion(String message, boolean stuffit);
 }

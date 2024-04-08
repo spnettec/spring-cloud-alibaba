@@ -14,25 +14,44 @@
  * limitations under the License.
  */
 
-package com.alibaba.cloud.ai.tongyi.aot;
+package com.alibaba.cloud.ai.example.tongyi.models;
 
-import org.springframework.aot.hint.RuntimeHints;
-import org.springframework.aot.hint.RuntimeHintsRegistrar;
+import java.util.List;
 
 /**
- * The TongYiRuntimeHints class is responsible for registering runtime hints for TongYiAI.
- *
  * @author yuluo
- * @since 2023.0.0.0
+ * @author <a href="mailto:yuluo08290126@gmail.com">yuluo</a>
+ * @since 2023.0.0.0-RC1
  */
 
-public class TongYiRuntimeHints implements RuntimeHintsRegistrar {
+public class ActorsFilms {
+
+	private String actor;
+
+	private List<String> movies;
+
+	public ActorsFilms() {
+	}
+
+	public String getActor() {
+		return actor;
+	}
+
+	public void setActor(String actor) {
+		this.actor = actor;
+	}
+
+	public List<String> getMovies() {
+		return movies;
+	}
+
+	public void setMovies(List<String> movies) {
+		this.movies = movies;
+	}
 
 	@Override
-	public void registerHints(RuntimeHints hints, ClassLoader classLoader) {
-
-		// todo
-
+	public String toString() {
+		return "ActorsFilms{" + "actor='" + actor + '\'' + ", movies=" + movies + '}';
 	}
 
 }

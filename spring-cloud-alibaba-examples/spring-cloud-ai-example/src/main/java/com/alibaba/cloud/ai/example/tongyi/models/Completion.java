@@ -14,25 +14,24 @@
  * limitations under the License.
  */
 
-package com.alibaba.cloud.ai.tongyi.exception;
+package com.alibaba.cloud.ai.example.tongyi.models;
 
 /**
- * TongYi models runtime exception.
- *
  * @author yuluo
  * @author <a href="mailto:yuluo08290126@gmail.com">yuluo</a>
  * @since 2023.0.0.0-RC1
  */
 
-public class TongYiException extends RuntimeException {
+public class Completion {
 
-	public TongYiException(String message) {
+	private final String completion;
 
-		super(message);
+	public Completion(String completion) {
+		this.completion = completion;
 	}
 
-	public TongYiException(String message, Throwable cause) {
-
-		super(message, cause);
+	public String getCompletion() {
+		return completion;
 	}
+
 }
