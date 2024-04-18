@@ -14,37 +14,31 @@
  * limitations under the License.
  */
 
-package com.alibaba.cloud.ai.tongyi;
-
-import org.springframework.boot.context.properties.ConfigurationProperties;
+package com.alibaba.cloud.ai.tongyi.audio;
 
 /**
- * TongYi connection API properties.
+ * More models see: https://help.aliyun.com/zh/dashscope/model-list?spm=a2c4g.11186623.0.i5
+ * Support all models in list.
  *
  * @author yuluo
  * @author <a href="mailto:yuluo08290126@gmail.com">yuluo</a>
  * @since 2023.0.0.0-RC1
  */
 
-@ConfigurationProperties(TongYiConnectionProperties.CONFIG_PREFIX)
-public class TongYiConnectionProperties {
+public final class AudioModels {
 
-	/**
-	 * Spring Cloud Alibaba AI configuration prefix.
-	 */
-	public static final String CONFIG_PREFIX = "spring.cloud.ai.tongyi";
-
-	/**
-	 * API key.
-
-	 */
-	private String apiKey;
-
-	public String getApiKey() {
-		return apiKey;
+	private AudioModels() {
 	}
 
-	public void setApiKey(String apiKey) {
-		this.apiKey = apiKey;
-	}
+	/**
+	 * Male Voice of the Tongue(舌尖男声).
+	 * zh & en.
+	 * Default sample rate: 48 Hz.
+	 */
+	public static final String SAMBERT_ZHICHU_V1 = "sambert-zhichu-v1";
+
+
+
 }
+
+

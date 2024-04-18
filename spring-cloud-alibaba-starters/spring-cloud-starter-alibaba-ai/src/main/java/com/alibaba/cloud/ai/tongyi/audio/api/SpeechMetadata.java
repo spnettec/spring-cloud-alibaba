@@ -14,37 +14,30 @@
  * limitations under the License.
  */
 
-package com.alibaba.cloud.ai.tongyi;
+package com.alibaba.cloud.ai.tongyi.audio.api;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.ai.model.ResultMetadata;
 
 /**
- * TongYi connection API properties.
- *
  * @author yuluo
  * @author <a href="mailto:yuluo08290126@gmail.com">yuluo</a>
  * @since 2023.0.0.0-RC1
  */
 
-@ConfigurationProperties(TongYiConnectionProperties.CONFIG_PREFIX)
-public class TongYiConnectionProperties {
+public interface SpeechMetadata extends ResultMetadata {
 
 	/**
-	 * Spring Cloud Alibaba AI configuration prefix.
+	 * Null Object.
 	 */
-	public static final String CONFIG_PREFIX = "spring.cloud.ai.tongyi";
+	SpeechMetadata NULL = SpeechMetadata.create();
 
 	/**
-	 * API key.
-
+	 * Factory method used to construct a new {@link SpeechMetadata}.
+	 * @return a new {@link SpeechMetadata}
 	 */
-	private String apiKey;
-
-	public String getApiKey() {
-		return apiKey;
+	static SpeechMetadata create() {
+		return new SpeechMetadata() {
+		};
 	}
 
-	public void setApiKey(String apiKey) {
-		this.apiKey = apiKey;
-	}
 }

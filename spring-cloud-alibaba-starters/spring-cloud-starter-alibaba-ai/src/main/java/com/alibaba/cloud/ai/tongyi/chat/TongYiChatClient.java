@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.alibaba.cloud.ai.tongyi;
+package com.alibaba.cloud.ai.tongyi.chat;
 
 import java.util.HashSet;
 import java.util.List;
@@ -221,7 +221,7 @@ public class TongYiChatClient extends
 	 * @param prompt {@link Prompt}
 	 * @return Qwen models params {@link ConversationParam}
 	 */
-	ConversationParam toTongYiChatParams(Prompt prompt) {
+	public ConversationParam toTongYiChatParams(Prompt prompt) {
 
 		Set<String> functionsForThisRequest = new HashSet<>();
 
@@ -236,6 +236,7 @@ public class TongYiChatClient extends
 				.model(Generation.Models.QWEN_TURBO)
 				// {@link GenerationOutput}
 				.resultFormat(ConversationParam.ResultFormat.MESSAGE)
+
 				.build();
 
 		if (this.defaultOptions != null) {

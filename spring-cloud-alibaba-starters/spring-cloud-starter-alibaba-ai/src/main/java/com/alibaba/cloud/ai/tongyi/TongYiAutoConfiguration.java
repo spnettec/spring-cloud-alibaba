@@ -18,9 +18,16 @@ package com.alibaba.cloud.ai.tongyi;
 
 import java.util.Objects;
 
+import com.alibaba.cloud.ai.tongyi.audio.TongYiAudioSpeechClient;
+import com.alibaba.cloud.ai.tongyi.audio.TongYiAudioSpeechProperties;
+import com.alibaba.cloud.ai.tongyi.chat.TongYiChatClient;
+import com.alibaba.cloud.ai.tongyi.chat.TongYiChatProperties;
 import com.alibaba.cloud.ai.tongyi.exception.TongYiException;
+import com.alibaba.cloud.ai.tongyi.image.TongYiImagesClient;
+import com.alibaba.cloud.ai.tongyi.image.TongYiImagesProperties;
 import com.alibaba.dashscope.aigc.generation.Generation;
 import com.alibaba.dashscope.aigc.imagesynthesis.ImageSynthesis;
+import com.alibaba.dashscope.audio.tts.SpeechSynthesizer;
 import com.alibaba.dashscope.common.MessageManager;
 import com.alibaba.dashscope.exception.NoApiKeyException;
 import com.alibaba.dashscope.utils.ApiKey;
@@ -45,11 +52,13 @@ import org.springframework.context.annotation.Bean;
 @ConditionalOnClass({
 		MessageManager.class,
 		TongYiChatClient.class,
-		TongYiImagesClient.class
+		TongYiImagesClient.class,
+		TongYiAudioSpeechClient.class
 })
 @EnableConfigurationProperties({
 		TongYiChatProperties.class,
 		TongYiImagesProperties.class,
+		TongYiAudioSpeechProperties.class,
 		TongYiConnectionProperties.class
 })
 public class TongYiAutoConfiguration {
@@ -73,6 +82,13 @@ public class TongYiAutoConfiguration {
 	public ImageSynthesis imageSynthesis() {
 
 		return new ImageSynthesis();
+	}
+
+	@Bean
+	@ConditionalOnMissingBean
+	public SpeechSynthesizer speechSynthesizer() {
+
+		return new SpeechSynthesizer();
 	}
 
 	@Bean
@@ -119,8 +135,27 @@ public class TongYiAutoConfiguration {
 		return new TongYiImagesClient(imageSynthesis, imagesOptions.getOptions());
 	}
 
+	@Bean
+	@ConditionalOnProperty(
+			prefix = TongYiAudioSpeechProperties.CONFIG_PREFIX,
+			name = "enabled",
+			havingValue = "true",
+			matchIfMissing = true
+	)
+	public TongYiAudioSpeechClient tongYiAudioSpeechClient(
+			SpeechSynthesizer speechSynthesizer,
+			TongYiAudioSpeechProperties speechProperties,
+			TongYiConnectionProperties connectionProperties
+	) {
+
+		settingApiKey(connectionProperties);
+
+		return new TongYiAudioSpeechClient(speechSynthesizer, speechProperties.getOptions());
+	}
+
 	/**
-	 * Setting TongYi model apiKey .
+	 * Setting the API key.
+	 * @param connectionProperties {@link TongYiConnectionProperties}
 	 */
 	public void settingApiKey(TongYiConnectionProperties connectionProperties) {
 
