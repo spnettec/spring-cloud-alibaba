@@ -96,7 +96,7 @@
         <!-- JUnit 5 requires Surefire version 2.22.0 or higher -->
         <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
         <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
-        <maven-javadoc-plugin.version>3.1.1</maven-javadoc-plugin.version>
+        <maven-javadoc-plugin.version>3.2.0</maven-javadoc-plugin.version>
         <maven-gpg-plugin.version>3.0.1</maven-gpg-plugin.version>
         <flatten-maven-plugin.version>1.6.0</flatten-maven-plugin.version>
         <gmavenplus-plugin.version>1.6</gmavenplus-plugin.version>
@@ -282,52 +282,56 @@
         </plugins>
     </reporting>
 
-   <profiles>
-       <profile>
-           <id>release</id>
-           <build>
-               <plugins>
-                   <plugin>
-                       <groupId>org.apache.maven.plugins</groupId>
-                       <artifactId>maven-source-plugin</artifactId>
-                       <version>${maven-source-plugin.version}</version>
-                       <executions>
-                           <execution>
-                               <phase>package</phase>
-                               <goals>
-                                   <goal>jar-no-fork</goal>
-                               </goals>
-                           </execution>
-                       </executions>
-                   </plugin>
-                   <plugin>
-                       <groupId>org.apache.maven.plugins</groupId>
-                       <artifactId>maven-javadoc-plugin</artifactId>
-                       <version>${maven-javadoc-plugin.version}</version>
-                       <executions>
-                           <execution>
-                               <phase>package</phase>
-                               <goals>
-                                   <goal>jar</goal>
-                               </goals>
-                           </execution>
-                       </executions>
-                   </plugin>
-                   <!--
-                   <plugin>
-                       <groupId>org.apache.maven.plugins</groupId>
-                       <artifactId>maven-gpg-plugin</artifactId>
-                       <version>${maven-gpg-plugin.version}</version>
-                       <executions>
-                           <execution>
-                               <phase>verify</phase>
-                               <goals>
-                                   <goal>sign</goal>
-                               </goals>
-                           </execution>
-                       </executions>
-                   </plugin>
-                   -->
+    <profiles>
+        <profile>
+            <id>release</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <version>${maven-source-plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>${maven-javadoc-plugin.version}</version>
+                        <configuration>
+                            <doclint>none</doclint>
+                            <source>17</source>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <!--
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>${maven-gpg-plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    -->
                 </plugins>
             </build>
 
