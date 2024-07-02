@@ -173,7 +173,7 @@
 
             <dependency>
                 <groupId>com.github.heyoulin.Sentinel</groupId>
-                <artifactId>sentinel-spring-webmvc-adapter</artifactId>
+                <artifactId>sentinel-spring-webmvc-v6x-adapter</artifactId>
                 <version>${sentinel.version}</version>
             </dependency>
 
