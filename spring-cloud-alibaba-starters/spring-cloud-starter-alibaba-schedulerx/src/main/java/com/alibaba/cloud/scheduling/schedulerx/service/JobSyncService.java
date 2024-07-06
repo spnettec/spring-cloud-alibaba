@@ -149,7 +149,7 @@ public class JobSyncService {
 		CreateNamespaceRequest request = new CreateNamespaceRequest();
 		request.setUid(properties.getNamespace());
 		request.setName(properties.getNamespaceName());
-		request.setSource(getNamespaceSource());
+		request.setDescription(getNamespaceSource());
 		CreateNamespaceResponse response = client.getAcsResponse(request);
 		if (response.getSuccess()) {
 			logger.info(JsonUtil.toJson(response));
