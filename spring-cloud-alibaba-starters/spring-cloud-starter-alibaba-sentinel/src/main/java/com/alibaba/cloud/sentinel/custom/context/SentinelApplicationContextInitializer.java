@@ -46,7 +46,9 @@ public class SentinelApplicationContextInitializer implements ApplicationContext
 		String applicationName = environment.getProperty("spring.application.name");
 		SentinelProperties sentinelProperties = Binder.get(environment)
 				.bindOrCreate(SentinelConstants.PROPERTY_PREFIX, SentinelProperties.class);
-
+		if (!sentinelProperties.isEnabled()) {
+			return;
+		}
 		initSentinelConfig(sentinelProperties, applicationName);
 	}
 
