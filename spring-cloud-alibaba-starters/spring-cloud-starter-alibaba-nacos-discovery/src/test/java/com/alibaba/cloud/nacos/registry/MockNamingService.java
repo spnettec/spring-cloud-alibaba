@@ -372,4 +372,24 @@ public class MockNamingService implements NamingService {
 		emptyListView.setData(Collections.emptyList());
 		return emptyListView;
 	}
+
+	@Override
+	public void subscribe(String s, NamingSelector namingSelector, EventListener eventListener) throws NacosException {
+
+	}
+
+	@Override
+	public void subscribe(String s, String s1, NamingSelector namingSelector, EventListener eventListener) throws NacosException {
+
+	}
+
+	@Override
+	public void unsubscribe(String s, NamingSelector namingSelector, EventListener eventListener) throws NacosException {
+
+	}
+
+	@Override
+	public void unsubscribe(String s, String s1, NamingSelector namingSelector, EventListener eventListener) throws NacosException {
+
+	}
 }

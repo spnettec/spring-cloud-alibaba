@@ -36,7 +36,7 @@
 
         <!-- Maven Plugin Versions -->
         <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
-        <maven-javadoc-plugin.version>3.1.1</maven-javadoc-plugin.version>
+        <maven-javadoc-plugin.version>3.2.0</maven-javadoc-plugin.version>
         <maven-gpg-plugin.version>3.0.1</maven-gpg-plugin.version>
         <flatten-maven-plugin.version>1.2.7</flatten-maven-plugin.version>
     </properties>
@@ -176,8 +176,7 @@
                 <artifactId>sentinel-spring-webmvc-v6x-adapter</artifactId>
                 <version>${sentinel.version}</version>
             </dependency>
-
-            <!--Alibaba Seata-->
+            <!--apache Seata-->
             <dependency>
                 <groupId>com.github.heyoulin.seata</groupId>
                 <artifactId>seata-spring-boot-starter</artifactId>
@@ -289,12 +288,6 @@
                 <groupId>com.github.heyoulin.spring-cloud-alibaba</groupId>
                 <artifactId>spring-cloud-starter-alibaba-schedulerx</artifactId>
                 <version>${revision}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.alibaba.spring</groupId>
-                <artifactId>spring-context-support</artifactId>
-                <version>${spring.context.support.version}</version>
             </dependency>
 
             <!-- Testing Dependencies -->
