@@ -283,17 +283,6 @@ public class MockNamingService implements NamingService {
 	}
 
 	@Override
-	public void subscribe(String serviceName, NamingSelector selector, EventListener listener) throws NacosException {
-
-	}
-
-	@Override
-	public void subscribe(String serviceName, String groupName, NamingSelector selector, EventListener listener)
-			throws NacosException {
-
-	}
-
-	@Override
 	public void unsubscribe(String serviceName, EventListener listener)
 			throws NacosException {
 
@@ -314,17 +303,6 @@ public class MockNamingService implements NamingService {
 	@Override
 	public void unsubscribe(String serviceName, String groupName, List<String> clusters,
 			EventListener listener) throws NacosException {
-
-	}
-
-	@Override
-	public void unsubscribe(String serviceName, NamingSelector selector, EventListener listener) throws NacosException {
-
-	}
-
-	@Override
-	public void unsubscribe(String serviceName, String groupName, NamingSelector selector, EventListener listener)
-			throws NacosException {
 
 	}
 
