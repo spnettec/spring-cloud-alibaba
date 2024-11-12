@@ -22,9 +22,8 @@
         <sentinel.version>2.0.9.B</sentinel.version>
         <seata.version>2.1.2.B</seata.version>
         <nacos.version>2.4.1.B</nacos.version>
-        <spring.context.support.version>1.0.11</spring.context.support.version>
         <!-- Apache RocketMQ -->
-        <rocketmq.version>5.1.4</rocketmq.version>
+        <rocketmq.version>5.3.1</rocketmq.version>
 
         <!-- Spring AI -->
         <spring.ai.version>1.0.0-M1</spring.ai.version>
@@ -247,6 +246,11 @@
                 <artifactId>spring-cloud-starter-alibaba-ai</artifactId>
                 <version>${revision}</version>
             </dependency>
+            <dependency>
+                <groupId>com.github.heyoulin.spring-cloud-alibaba</groupId>
+                <artifactId>spring-alibaba-nacos-config</artifactId>
+                <version>${revision}</version>
+            </dependency>
 
             <dependency>
                 <groupId>com.github.heyoulin.spring-cloud-alibaba</groupId>
@@ -388,7 +392,5 @@
                 </repository>
             </distributionManagement>
         </profile>
-
     </profiles>
-
 </project>
