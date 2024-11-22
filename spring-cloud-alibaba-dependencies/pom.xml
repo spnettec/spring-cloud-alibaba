@@ -25,10 +25,6 @@
         <!-- Apache RocketMQ -->
         <rocketmq.version>5.3.1</rocketmq.version>
 
-        <!-- Spring AI -->
-        <spring.ai.version>1.0.0-M1</spring.ai.version>
-        <dashscope-sdk-java.version>2.15.1</dashscope-sdk-java.version>
-
         <!-- scheduling -->
         <shedlock.version>4.23.0</shedlock.version>
         <schedulerx.worker.version>1.11.5</schedulerx.worker.version>
@@ -54,19 +50,6 @@
                 <groupId>com.github.heyoulin.nacos</groupId>
                 <artifactId>nacos-config</artifactId>
                 <version>${nacos.version}</version>
-            </dependency>
-
-            <!-- Spring AI & dashscope SDK-->
-            <dependency>
-                <groupId>com.alibaba</groupId>
-                <artifactId>dashscope-sdk-java</artifactId>
-                <version>${dashscope-sdk-java.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.springframework.ai</groupId>
-                <artifactId>spring-ai-core</artifactId>
-                <version>${spring.ai.version}</version>
             </dependency>
 
             <!-- Sentinel -->
@@ -243,11 +226,6 @@
 
             <dependency>
                 <groupId>com.github.heyoulin.spring-cloud-alibaba</groupId>
-                <artifactId>spring-cloud-starter-alibaba-ai</artifactId>
-                <version>${revision}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.github.heyoulin.spring-cloud-alibaba</groupId>
                 <artifactId>spring-alibaba-nacos-config</artifactId>
                 <version>${revision}</version>
             </dependency>
@@ -292,14 +270,6 @@
                 <groupId>com.github.heyoulin.spring-cloud-alibaba</groupId>
                 <artifactId>spring-cloud-starter-alibaba-schedulerx</artifactId>
                 <version>${revision}</version>
-            </dependency>
-
-            <!-- Testing Dependencies -->
-            <dependency>
-                <groupId>org.springframework.ai</groupId>
-                <artifactId>spring-ai-test</artifactId>
-                <version>${spring.ai.version}</version>
-                <scope>test</scope>
             </dependency>
 
         </dependencies>
