@@ -166,10 +166,10 @@ public class FeignClientCircuitBreakerRuleIntegrationTest {
 		interface UserClient {
 
 			@GetMapping("/specificFeign/{success}")
-			String specificFeign(@PathVariable boolean success);
+			String specificFeign(@PathVariable(value = "success") boolean success);
 
 			@GetMapping("/specificFeignMethod/{success}")
-			String specificFeignMethod(@PathVariable boolean success);
+			String specificFeignMethod(@PathVariable(value = "success") boolean success);
 
 		}
 
@@ -177,7 +177,7 @@ public class FeignClientCircuitBreakerRuleIntegrationTest {
 		interface OrderClient {
 
 			@GetMapping("/defaultConfig/{success}")
-			String defaultConfig(@PathVariable boolean success);
+			String defaultConfig(@PathVariable(value = "success") boolean success);
 
 		}
 
@@ -210,7 +210,7 @@ public class FeignClientCircuitBreakerRuleIntegrationTest {
 		static class TestController {
 
 			@GetMapping("/specificFeign/{success}")
-			public String specificFeign(@PathVariable boolean success) {
+			public String specificFeign(@PathVariable(value = "success") boolean success) {
 				if (success) {
 					return "ok";
 				}
@@ -218,7 +218,7 @@ public class FeignClientCircuitBreakerRuleIntegrationTest {
 			}
 
 			@GetMapping("/defaultConfig/{success}")
-			String defaultConfig(@PathVariable boolean success) {
+			String defaultConfig(@PathVariable(value = "success") boolean success) {
 				if (success) {
 					return "ok";
 				}
@@ -226,7 +226,7 @@ public class FeignClientCircuitBreakerRuleIntegrationTest {
 			}
 
 			@GetMapping("/specificFeignMethod/{success}")
-			String specificFeignMethod(@PathVariable boolean success) {
+			String specificFeignMethod(@PathVariable(value = "success") boolean success) {
 				if (success) {
 					return "ok";
 				}

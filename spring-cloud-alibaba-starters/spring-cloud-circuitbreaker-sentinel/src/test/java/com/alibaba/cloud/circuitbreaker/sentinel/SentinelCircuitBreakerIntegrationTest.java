@@ -96,7 +96,7 @@ public class SentinelCircuitBreakerIntegrationTest {
 	protected static class Application {
 
 		@GetMapping("/slow")
-		public String slow(@RequestParam(required = false) Boolean slow)
+		public String slow(@RequestParam(value = "slow", required = false) Boolean slow)
 				throws InterruptedException {
 			if (slow == null || slow) {
 				Thread.sleep(80);

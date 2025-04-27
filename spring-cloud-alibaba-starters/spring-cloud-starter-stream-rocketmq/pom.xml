@@ -39,8 +39,8 @@
             <artifactId>rocketmq-acl</artifactId>
             <exclusions>
                 <exclusion>
-                    <groupId>com.alibaba</groupId>
-                    <artifactId>fastjson</artifactId>
+                    <groupId>com.alibaba.fastjson2</groupId>
+                    <artifactId>fastjson2</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
