@@ -75,8 +75,8 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <!-- Project revision -->
-        <revision>2023.0.1.2.B</revision>
-        <nacos.version>2.4.1.B</nacos.version>
+        <revision>2023.0.3.2.B</revision>
+        <nacos.version>2.5.2.B</nacos.version>
         <!-- Spring Cloud -->
         <spring.cloud.version>2024.0.1</spring.cloud.version>
 
