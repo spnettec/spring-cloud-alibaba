@@ -78,10 +78,10 @@
         <revision>2023.0.3.2.B</revision>
         <nacos.version>2.5.2.B</nacos.version>
         <!-- Spring Cloud -->
-        <spring.cloud.version>2024.0.1</spring.cloud.version>
+        <spring.cloud.version>2025.0.0</spring.cloud.version>
 
         <!-- Spring Boot -->
-        <spring-boot.version>3.4.5</spring-boot.version>
+        <spring-boot.version>3.5.4</spring-boot.version>
 
         <!-- Maven Plugin Versions -->
         <maven-compiler-plugin.version>3.8.1</maven-compiler-plugin.version>
