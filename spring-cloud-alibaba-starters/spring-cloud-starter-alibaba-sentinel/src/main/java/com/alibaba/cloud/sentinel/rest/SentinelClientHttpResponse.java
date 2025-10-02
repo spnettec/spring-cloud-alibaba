@@ -17,7 +17,9 @@
 package com.alibaba.cloud.sentinel.rest;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,12 +49,17 @@ public class SentinelClientHttpResponse implements ClientHttpResponse {
 	}
 
 	@Override
-	public HttpStatus getStatusCode() {
+	public int getRawStatusCode() throws IOException {
+		return HttpStatus.OK.value();
+	}
+
+	@Override
+	public HttpStatus getStatusCode() throws IOException {
 		return HttpStatus.OK;
 	}
 
 	@Override
-	public String getStatusText() {
+	public String getStatusText() throws IOException {
 		return blockResponse;
 	}
 
@@ -62,14 +69,15 @@ public class SentinelClientHttpResponse implements ClientHttpResponse {
 	}
 
 	@Override
-	public InputStream getBody() {
+	public InputStream getBody() throws IOException {
 		return new ByteArrayInputStream(blockResponse.getBytes());
 	}
 
 	@Override
 	public HttpHeaders getHeaders() {
 		Map<String, List<String>> headers = new HashMap<>();
-		headers.put(HttpHeaders.CONTENT_TYPE, List.of(MediaType.APPLICATION_JSON_VALUE));
+		headers.put(HttpHeaders.CONTENT_TYPE,
+				Arrays.asList(MediaType.APPLICATION_JSON_VALUE));
 		HttpHeaders httpHeaders = new HttpHeaders();
 		httpHeaders.putAll(headers);
 		return httpHeaders;

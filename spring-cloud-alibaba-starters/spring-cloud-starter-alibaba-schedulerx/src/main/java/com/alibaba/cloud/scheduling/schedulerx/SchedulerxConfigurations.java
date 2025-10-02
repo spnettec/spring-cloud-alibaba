@@ -43,7 +43,7 @@ import org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProc
  **/
 public class SchedulerxConfigurations {
 
-	@Configuration
+	@Configuration(proxyBeanMethods = false)
 	@ConditionalOnClass(SchedulerxWorker.class)
 	@ConditionalOnProperty(prefix = SchedulerxProperties.CONFIG_PREFIX, name = "enabled", havingValue = "true", matchIfMissing = true)
 	static class SchedulerxWorkerConfiguration {

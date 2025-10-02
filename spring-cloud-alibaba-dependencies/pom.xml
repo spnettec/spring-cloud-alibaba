@@ -18,10 +18,10 @@
     <description>Spring Cloud Alibaba Dependencies</description>
 
     <properties>
-        <revision>2023.0.3.2.B</revision>
+        <revision>2025.0.0.1.B</revision>
         <sentinel.version>2.0.10.B</sentinel.version>
-        <seata.version>2.5.0.B</seata.version>
-        <nacos.version>2.5.2.B</nacos.version>
+        <seata.version>2.6.0.B</seata.version>
+        <nacos.version>3.0.2.B</nacos.version>
         <!-- Apache RocketMQ -->
         <rocketmq.version>5.3.2</rocketmq.version>
 
@@ -29,11 +29,14 @@
         <shedlock.version>6.3.1</shedlock.version>
         <schedulerx.worker.version>1.11.5</schedulerx.worker.version>
 
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+
         <!-- Maven Plugin Versions -->
         <maven-source-plugin.version>3.2.1</maven-source-plugin.version>
-        <maven-javadoc-plugin.version>3.2.0</maven-javadoc-plugin.version>
-        <maven-gpg-plugin.version>3.0.1</maven-gpg-plugin.version>
-        <flatten-maven-plugin.version>1.2.7</flatten-maven-plugin.version>
+        <maven-javadoc-plugin.version>3.11.2</maven-javadoc-plugin.version>
+        <maven-gpg-plugin.version>3.2.7</maven-gpg-plugin.version>
+        <flatten-maven-plugin.version>1.7.0</flatten-maven-plugin.version>
 
         <!-- Maven Central Portal -->
         <central.publishing.maven.version>0.7.0</central.publishing.maven.version>

@@ -31,7 +31,6 @@ import com.alibaba.nacos.api.PropertyKeyConst;
 import com.alibaba.nacos.api.config.ConfigFactory;
 import com.alibaba.nacos.api.config.ConfigService;
 import com.alibaba.nacos.api.exception.NacosException;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -44,6 +43,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Configuration;
 
 import static com.alibaba.cloud.testsupport.Constant.TIME_OUT;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.NONE;
 
 @SpringCloudAlibaba(composeFiles = "docker/nacos-compose-test.yml", serviceName = "nacos-standalone")
@@ -122,13 +122,13 @@ public class NacosConfigurationExtConfigTests {
 				"DEFAULT_GROUP", TIME_OUT);
 		String remoteContent = fetchConfig(remoteService, "nacos-config-refresh.yml",
 				"DEFAULT_GROUP", TIME_OUT);
-		Assertions.assertEquals(localContent, remoteContent);
+		assertThat(remoteContent).isEqualTo(localContent);
 
 		List<NacosConfigProperties.Config> mockConfig = mockExtConfigs();
 
 		List<NacosConfigProperties.Config> extConfig = nacosConfigProperties
 				.getExtensionConfigs();
-		Assertions.assertArrayEquals(extConfig.toArray(), mockConfig.toArray());
+		assertThat(extConfig.toArray()).containsExactly(mockConfig.toArray());
 
 	}
 
