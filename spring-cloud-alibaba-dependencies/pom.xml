@@ -27,7 +27,7 @@
 
         <!-- scheduling -->
         <shedlock.version>6.3.1</shedlock.version>
-        <schedulerx.worker.version>1.11.5</schedulerx.worker.version>
+        <schedulerx.worker.version>1.13.1</schedulerx.worker.version>
 
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
@@ -311,8 +311,8 @@
                 <version>${slf4j-api.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.alibaba</groupId>
-                <artifactId>fastjson</artifactId>
+                <groupId>com.alibaba.fastjson2</groupId>
+                <artifactId>fastjson2</artifactId>
                 <version>${fastjson.version}</version>
             </dependency>
             <dependency>

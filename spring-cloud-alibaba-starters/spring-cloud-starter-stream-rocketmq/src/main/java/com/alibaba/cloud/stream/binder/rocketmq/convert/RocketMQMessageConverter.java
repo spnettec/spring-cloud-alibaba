@@ -50,9 +50,9 @@ public class RocketMQMessageConverter extends AbstractMessageConverter {
 				.isPresent("com.fasterxml.jackson.databind.ObjectMapper", classLoader)
 				&& ClassUtils.isPresent("com.fasterxml.jackson.core.JsonGenerator",
 						classLoader);
-		FASTJSON_PRESENT = ClassUtils.isPresent("com.alibaba.fastjson.JSON", classLoader)
+		FASTJSON_PRESENT = ClassUtils.isPresent("com.alibaba.fastjson2.JSON", classLoader)
 				&& ClassUtils.isPresent(
-						"com.alibaba.fastjson.support.config.FastJsonConfig",
+						"com.alibaba.fastjson2.support.config.FastJsonConfig",
 						classLoader);
 	}
 
@@ -70,7 +70,7 @@ public class RocketMQMessageConverter extends AbstractMessageConverter {
 		if (FASTJSON_PRESENT) {
 			try {
 				messageConverters.add((MessageConverter) ClassUtils.forName(
-						"com.alibaba.fastjson.support.spring.messaging.MappingFastJsonMessageConverter",
+						"com.alibaba.fastjson2.support.spring6.messaging.MappingFastJsonMessageConverter",
 						ClassUtils.getDefaultClassLoader()).newInstance());
 			}
 			catch (ClassNotFoundException | IllegalAccessException
