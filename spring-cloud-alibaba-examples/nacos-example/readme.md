@@ -6,26 +6,26 @@ This project demonstrates how to use Spring Cloud Alibaba Nacos related Starters
 
 [Nacos](https://github.com/alibaba/Nacos) It is Alibaba's open source dynamic service discovery, configuration management and service management platform that is easier to build cloud-native applications.
 
-## Nacos Server 3.0.2 is properly configured and started
+## Nacos Server 3.0.3 is properly configured and started
 
-In Nacos 3.0.2, functions related to user authentication are added. When starting Nacos Server for the first time, it needs to be configured correctly to avoid the problem of startup failure.
+In Nacos 3.0.3, functions related to user authentication are added. When starting Nacos Server for the first time, it needs to be configured correctly to avoid the problem of startup failure.
 
 ### Download Nacos Server
 
-> The Nacos serv version used in this example is 3.0.2!
+> The Nacos serv version used in this example is 3.0.3!
 
-Nacos supports both direct download and source code construction. **Nacos Server version 3.0.2 is recommended for Spring Cloud Alibaba 2022.x.**
+Nacos supports both direct download and source code construction. **Nacos Server version 3.0.3 is recommended for Spring Cloud Alibaba 2022.x.**
 
 1. Direct download: [Nacos Server download page](https://github.com/alibaba/nacos/releases)
 2. Source code construction: Enter Nacos [Github project page](https://github.com/alibaba/nacos), git clone the code to the local compilation and packaging [参考文档](https://nacos.io/zh-cn/docs/quick-start.html).
 
 ### Configure the Nacos Server
 
-Open the `\nacos-server-3.0.2\conf\application.properties` configuration file and modify the following configuration items:
+Open the `\nacos-server-3.0.3\conf\application.properties` configuration file and modify the following configuration items:
 
 #### Configure the data source
 
-Take the MySQL database as an example here, and use the `nacos-server-3.0.2\conf\mysql-schema.sql` initialization database table file. Modify the following configuration as well
+Take the MySQL database as an example here, and use the `nacos-server-3.0.3\conf\mysql-schema.sql` initialization database table file. Modify the following configuration as well
 
 ```properties
 #*************** Config Module Related Configurations ***************#
@@ -49,7 +49,7 @@ db.pool.config.minimumIdle=2
 
 #### Turn on authentication
 
-**Note: If it is not enabled, login failure exception will occur in 3.0.2!**
+**Note: If it is not enabled, login failure exception will occur in 3.0.3!**
 
 ```properties
 ### The auth system to use, currently only 'nacos' and 'ldap' is supported:
@@ -77,7 +77,7 @@ nacos.core.auth.plugin.nacos.token.secret.key=SecretKey0123456789012345678901234
 
 #### Open API authentication
 
-Authentication is required when using the Open api interface in nacos server 3.0.2: For more details, please refer to: [Nacos api authentication](https://nacos.io/zh-cn/docs/auth.html)
+Authentication is required when using the Open api interface in nacos server 3.0.3: For more details, please refer to: [Nacos api authentication](https://nacos.io/zh-cn/docs/auth.html)
 
 1. Obtain accessToken: Use username and password to log in to the nacos server:
 
@@ -95,11 +95,11 @@ Authentication is required when using the Open api interface in nacos server 3.0
 
 1. Start Nacos Server, enter the folder after downloading to the local and decompressing (enter the folder after compiling and packaging by using the source code construction method), then enter its relative folder `nacos/bin`, and execute the following command according to the actual situation of the operating system. [详情参考此文档](https://nacos.io/zh-cn/docs/quick-start.html)。
 
-   1. Linux/Unix/Mac operating system, execute the command
+    1. Linux/Unix/Mac operating system, execute the command
 
        `sh startup.sh -m standalone`
 
-   2. Windows operating system, executing command
+    2. Windows operating system, executing command
 
        `cmd startup.cmd`
 
@@ -110,6 +110,49 @@ Authentication is required when using the Open api interface in nacos server 3.0
 ## Nacos application example
 
 ### Spring Cloud Alibaba Nacos Config
+
+#### Configuration Update Instructions
+
+In version 2023.0.1.3, to support integration with Nacos Configuration Center in Spring Boot applications and to enable annotations such as `@NacosConfig` and `@NacosConfigListener` based on the original `nacos config` module, the `spring-cloud-starter-alibaba-nacos-config` module has been split into two:
+
+- **spring-alibaba-nacos-config**: Depends only on Spring Boot and can be used independently in non-Spring Cloud applications.
+- **spring-cloud-starter-alibaba-nacos-config**: Retains only the components that depend on Spring Cloud.
+
+During the module refactoring, it was observed that as the code evolved, multiple branches of configuration loading logic emerged. This includes the original approach of concatenating `spring.application.name` with `fileExtension` and loading configurations via `share-configs`, `extension-configs`, and `spring.config.import`. These different property sources were loaded at inconsistent times, resulting in **fragmented logic that hinders the extensibility of the configuration module**.
+
+To improve code maintainability, the configuration loading logic has been streamlined, retaining only the **`spring.config.import` standard configuration import mechanism**, which was introduced in **Spring Boot 2.4.0 (November 12, 2020)**. In that release, Spring also **recommended deprecating the bootstrap mode** and encouraged unifying configuration into **`application.properties`**.
+
+For configurations previously loaded using the `application.name` concatenation approach or via `share-configs`, `extension-configs`, etc., you now need to **migrate to using the `spring.config.import`** mechanism for configuration import.
+
+**The standard usage for integrating with NacosConfig is as follows**:
+
+- Importing a Single Configuration
+
+  ```
+  spring:
+  config:
+      import:nacos:application.propertise?refreshEnabled=true&group=DEFAULT_GROUP
+    cloud:
+      nacos:
+        config:
+          serverAddr: {nacos server addr}
+          namespace: {nacos namespace id}
+  ```
+
+- Importing Multiple Configurations
+
+  ```
+  spring:
+    config:
+      import:
+        - nacos:application.propertise?group=refreshEnabled=true&group=DEFAULT_GROUP
+        - nacos:{other config data id}?group={other config group}&refreshEnabled=true
+    cloud:
+      nacos:
+        config:
+          serverAddr: {nacos server addr}
+          namespace: {nacos namespace id}
+  ```
 
 #### Application access
 
@@ -141,10 +184,10 @@ Before starting the application sample to demonstrate the project function, firs
    ```
 
 3. After completing the above two steps, the application will obtain the corresponding configuration from Nacos Server and add it to the Property Sources of Spring Environment. There are four ways to save a portion of the Nacos configuration using the Nacos Configuration Center:
-   - BeanAutoRefres hConfig Example: An example of supporting automatic refresh of configuration changes by configuring configuration information as beans;
-   - ConfigListenerEx ample: example of monitoring configuration information;
-   - Docking Interface Example: An example of docking the Nacos interface and completing the addition, deletion, modification and query of the configuration information through the interface;
-   - ValueAnnotation Example: An example of obtaining configuration information through the @ Value annotation.
+    - BeanAutoRefres hConfig Example: An example of supporting automatic refresh of configuration changes by configuring configuration information as beans;
+    - ConfigListenerEx ample: example of monitoring configuration information;
+    - Docking Interface Example: An example of docking the Nacos interface and completing the addition, deletion, modification and query of the configuration information through the interface;
+    - ValueAnnotation Example: An example of obtaining configuration information through the @ Value annotation.
 
 #### Add Configuration in Nacos Server
 
@@ -227,7 +270,7 @@ In the Nacos Config Starter, the concatenation format of dataId is as follow
 
 *  `spring.profiles.active` This is the profile corresponding to the current environment. For details, please refer to
 
-  ** Note that when the active profile is empty, the corresponding connector `-` does not exist, and the concatenation format of dataId becomes `${prefix}`. `${file-extension}` **
+** Note that when the active profile is empty, the corresponding connector `-` does not exist, and the concatenation format of dataId becomes `${prefix}`. `${file-extension}` **
 
 *  `file-extension` It is used to configure the data format of content, which can be configured by configuration item `spring.cloud.nacos.config.file-extension`. Currently only types are supported `properties`.
 
@@ -278,6 +321,8 @@ Relative path | spring. Cloud. Nacos. Config. Context-path | | Relative path of 
 Access point | spring. Cloud. Nacos. Config. Endpoint | | The domain name of a service in a region. The server address can be obtained dynamically through this domain name
 Whether to enable listening and automatic refresh | spring. Cloud. Nacos. Config. Refresh -enabled | true |
 Cluster service name | spring. Cloud. Nacos. Config. Cluster -name | |
+Whether to enable nacos-config health indicator |spring.nacos.config.health-indicator.enabled|false|
+Whether to enable nacos-discovery health indicator |spring.cloud.nacos.discovery.health-indicator.enabled|false|
 
 ### Spring Cloud Alibaba Nacos Discovery
 
@@ -545,11 +590,11 @@ Before starting the demo, learn how Spring Cloud applications connect to Spring 
 3. Configure Spring Cloud Gateway routing in the application's `/src/main/resources/application.properties` configuration file
 
    ```properties
-   spring.cloud.gateway.routes[0].id=nacos-route
-   spring.cloud.gateway.routes[0].uri=lb://service-gateway-provider
-   spring.cloud.gateway.routes[0].predicates[0].name=Path
-   spring.cloud.gateway.routes[0].predicates[0].args[pattern]=/nacos/**
-   spring.cloud.gateway.routes[0].filters[0]=StripPrefix=1
+   spring.cloud.gateway.server.webflux.routes[0].id=nacos-route
+   spring.cloud.gateway.server.webflux.routes[0].uri=lb://service-gateway-provider
+   spring.cloud.gateway.server.webflux.routes[0].predicates[0].name=Path
+   spring.cloud.gateway.server.webflux.routes[0].predicates[0].args[pattern]=/nacos/**
+   spring.cloud.gateway.server.webflux.routes[0].filters[0]=StripPrefix=1
    ```
 
 4. Use the @ EnableDiscoveryClient annotation to turn on service registration and discovery
@@ -605,5 +650,7 @@ Please refer to the Spring Cloud Alibaba website
 ## More introduction
 
 Nacos provides users with service infrastructure including dynamic service discovery, configuration management, service management, etc., to help users build, deliver and manage their microservice platforms more flexibly and easily. Based on Nacos, users can build modern cloud native applications centered on "services" more quickly. Nacos can be seamlessly integrated with Spring Cloud, Kubernetes/CNCF, Dubbo and other micro-service ecosystems to provide users with a better experience. For more information about Nacos, see the [Nacos 项目](https://github.com/alibaba/Nacos).
+
+In the future, the **Spring-Alibaba-Nacos-Config** module will take on more responsibilities. It will serve as a unified configuration management solution for both second-party middleware components and business components. For **Spring Boot** (including **Spring AI**) and **Spring Cloud** applications, it will provide centralized configuration hosting and seamless runtime configuration rotation. For general business components, it will offer flexible and user-friendly configuration injection and change callback capabilities through the `@NacosConfig` and `@NacosConfigListener` annotations.
 
 If you have any suggestions or ideas about Spring Cloud Nacos Discovery, please feel free to send them to us in the issue or through other community channels.
