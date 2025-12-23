@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2023 the original author or authors.
+ * Copyright 2013-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ import org.springframework.cloud.client.serviceregistry.AbstractAutoServiceRegis
 import org.springframework.cloud.client.serviceregistry.AutoServiceRegistrationProperties;
 import org.springframework.cloud.client.serviceregistry.Registration;
 import org.springframework.cloud.client.serviceregistry.ServiceRegistry;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.event.EventListener;
 import org.springframework.util.Assert;
 
@@ -40,10 +41,11 @@ public class NacosAutoServiceRegistration
 
 	private NacosRegistration registration;
 
-	public NacosAutoServiceRegistration(ServiceRegistry<Registration> serviceRegistry,
+	public NacosAutoServiceRegistration(ApplicationContext context,
+			ServiceRegistry<Registration> serviceRegistry,
 			AutoServiceRegistrationProperties autoServiceRegistrationProperties,
 			NacosRegistration registration) {
-		super(serviceRegistry, autoServiceRegistrationProperties);
+		super(context, serviceRegistry, autoServiceRegistrationProperties);
 		this.registration = registration;
 	}
 

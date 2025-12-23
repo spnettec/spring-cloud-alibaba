@@ -16,10 +16,10 @@
 
 package com.alibaba.cloud.seata.web;
 
-import org.apache.seata.common.util.StringUtils;
-import org.apache.seata.core.context.RootContext;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.apache.seata.common.util.StringUtils;
+import org.apache.seata.core.context.RootContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

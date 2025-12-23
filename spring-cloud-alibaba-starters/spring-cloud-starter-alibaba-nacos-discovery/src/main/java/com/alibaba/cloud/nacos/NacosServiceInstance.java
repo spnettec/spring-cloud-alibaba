@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2023 the original author or authors.
+ * Copyright 2013-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@ import java.net.URI;
 import java.util.Map;
 import java.util.Objects;
 
-import org.springframework.cloud.client.DefaultServiceInstance;
 import org.springframework.cloud.client.ServiceInstance;
 
 /**
@@ -68,7 +67,7 @@ public class NacosServiceInstance implements ServiceInstance {
 
 	@Override
 	public URI getUri() {
-		return DefaultServiceInstance.getUri(this);
+		return ServiceInstance.createUri(this);
 	}
 
 	@Override

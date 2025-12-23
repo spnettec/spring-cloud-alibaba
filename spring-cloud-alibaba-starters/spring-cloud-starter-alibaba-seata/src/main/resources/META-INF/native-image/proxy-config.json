@@ -1,18 +1,18 @@
 [
   {
     "condition": {
-      "typeReachable": "org.apache.seata.config.ConfigurationCache"
+      "typeReachable": "org.apache.config.ConfigurationCache"
     },
     "interfaces": [
-      "org.apache.seata.config.Configuration"
+      "org.apache.config.Configuration"
     ]
   },
   {
     "condition": {
-      "typeReachable": "org.apache.seata.spring.boot.autoconfigure.provider.SpringBootConfigurationProvider"
+      "typeReachable": "org.apache.spring.boot.autoconfigure.provider.SpringBootConfigurationProvider"
     },
     "interfaces": [
-      "org.apache.seata.config.Configuration"
+      "org.apache.config.Configuration"
     ]
   }
 ]

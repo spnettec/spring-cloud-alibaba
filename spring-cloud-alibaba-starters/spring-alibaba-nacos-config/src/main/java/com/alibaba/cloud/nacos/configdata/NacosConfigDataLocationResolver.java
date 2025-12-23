@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2023 the original author or authors.
+ * Copyright 2013-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,8 +30,8 @@ import com.alibaba.cloud.nacos.NacosPropertiesPrefixer;
 import com.alibaba.cloud.nacos.utils.StringUtils;
 import org.apache.commons.logging.Log;
 
-import org.springframework.boot.BootstrapRegistry.InstanceSupplier;
-import org.springframework.boot.ConfigurableBootstrapContext;
+import org.springframework.boot.bootstrap.BootstrapRegistry;
+import org.springframework.boot.bootstrap.ConfigurableBootstrapContext;
 import org.springframework.boot.context.config.ConfigDataLocation;
 import org.springframework.boot.context.config.ConfigDataLocationNotFoundException;
 import org.springframework.boot.context.config.ConfigDataLocationResolver;
@@ -46,6 +46,7 @@ import org.springframework.boot.logging.DeferredLogFactory;
 import org.springframework.core.Ordered;
 
 import static com.alibaba.cloud.nacos.configdata.NacosConfigDataResource.NacosItemConfig;
+import static com.alibaba.cloud.nacos.constants.Constants.SPRING_CONFIG_IMPORT_PROPERTIES;
 
 /**
  * Implementation of {@link ConfigDataLocationResolver}, load Nacos
@@ -151,9 +152,9 @@ public class NacosConfigDataLocationResolver
 				.getBootstrapContext();
 
 		bootstrapContext.registerIfAbsent(NacosConfigProperties.class,
-				InstanceSupplier.of(properties));
+				BootstrapRegistry.InstanceSupplier.of(properties));
 
-		registerConfigManager(properties, bootstrapContext);
+		registerConfigManager(properties, bootstrapContext, resolverContext);
 
 		return loadConfigDataResources(location, profiles, properties);
 	}
@@ -196,10 +197,13 @@ public class NacosConfigDataLocationResolver
 	}
 
 	private void registerConfigManager(NacosConfigProperties properties,
-			ConfigurableBootstrapContext bootstrapContext) {
-		if (!bootstrapContext.isRegistered(NacosConfigManager.class)) {
+			ConfigurableBootstrapContext bootstrapContext,
+			ConfigDataLocationResolverContext resolverContext) {
+		List<?> springConfigImportProperties = resolverContext.getBinder()
+				.bind(SPRING_CONFIG_IMPORT_PROPERTIES, List.class).get();
+		if (!springConfigImportProperties.isEmpty() && !bootstrapContext.isRegistered(NacosConfigManager.class)) {
 			bootstrapContext.register(NacosConfigManager.class,
-					InstanceSupplier.of(NacosConfigManager.getInstance(properties)));
+					BootstrapRegistry.InstanceSupplier.of(NacosConfigManager.getInstance(properties)));
 		}
 	}
 

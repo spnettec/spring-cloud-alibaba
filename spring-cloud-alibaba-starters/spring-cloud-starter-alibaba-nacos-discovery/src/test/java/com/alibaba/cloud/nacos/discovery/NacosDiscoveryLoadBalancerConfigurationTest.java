@@ -1,5 +1,5 @@
 /*
- * Copyright 2013-2023 the original author or authors.
+ * Copyright 2013-present the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,7 +50,10 @@ public class NacosDiscoveryLoadBalancerConfigurationTest {
 
 	@Test
 	public void testNacosLoadBalancerEnabled() {
-		contextRunner.withPropertyValues("spring.cloud.loadbalancer.nacos.enabled=true")
+		contextRunner.withPropertyValues(
+				"spring.cloud.loadbalancer.nacos.enabled=true",
+				"spring.cloud.loadbalancer.client.name=testService",
+				"spring.cloud.loadbalancer.configurations=none")
 				.withConfiguration(AutoConfigurations.of(
 						LoadBalancerNacosAutoConfiguration.class,
 						NacosLoadBalancerClientConfiguration.class))
@@ -62,7 +65,10 @@ public class NacosDiscoveryLoadBalancerConfigurationTest {
 
 	@Test
 	public void testNacosLoadBalancerDisabled() {
-		contextRunner.withPropertyValues("spring.cloud.loadbalancer.nacos.enabled=false")
+		contextRunner.withPropertyValues(
+				"spring.cloud.loadbalancer.nacos.enabled=false",
+				"spring.cloud.loadbalancer.client.name=testService",
+				"spring.cloud.loadbalancer.configurations=none")
 				.withConfiguration(AutoConfigurations.of(
 						LoadBalancerNacosAutoConfiguration.class,
 						NacosLoadBalancerClientConfiguration.class))

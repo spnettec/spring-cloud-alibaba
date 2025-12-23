@@ -5,7 +5,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.github.heyoulin.spring-cloud-alibaba</groupId>
+    <parent>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-build</artifactId>
+		<version>5.0.0</version>
+        <relativePath/>
+    </parent>
+
+    <groupId>com.alibaba.cloud</groupId>
     <artifactId>spring-cloud-alibaba</artifactId>
     <version>${revision}</version>
     <packaging>pom</packaging>
@@ -76,10 +83,10 @@
         <revision>2025.0.0.1.B</revision>
         <nacos.version>3.0.2.B</nacos.version>
         <!-- Spring Cloud -->
-        <spring.cloud.version>2025.0.0</spring.cloud.version>
+        <spring.cloud.version>2025.1.0</spring.cloud.version>
 
         <!-- Spring Boot -->
-        <spring-boot.version>3.5.4</spring-boot.version>
+        <spring-boot.version>4.0.0</spring-boot.version>
 
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
