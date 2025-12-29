@@ -16,26 +16,25 @@
 
 package com.alibaba.cloud.nacos.annotation;
 
-import java.io.IOException;
 import java.lang.reflect.Type;
 
 import com.alibaba.nacos.api.exception.runtime.NacosDeserializationException;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.type.TypeFactory;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.DeserializationFeature;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
+import tools.jackson.databind.type.TypeFactory;
 
 final class JsonUtils {
 
 	private JsonUtils() {
 	}
 
-	static ObjectMapper mapper = new ObjectMapper();
-
-	static {
-		mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
-		mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-	}
+	static ObjectMapper mapper = JsonMapper.builder().disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+			.changeDefaultPropertyInclusion(incl -> incl.withValueInclusion(JsonInclude.Include.NON_NULL))
+			.changeDefaultPropertyInclusion(incl -> incl.withContentInclusion(JsonInclude.Include.NON_NULL))
+			.build();
 
 	/**
 	 * Json string deserialize to Object.
@@ -50,16 +49,16 @@ final class JsonUtils {
 		try {
 			return mapper.readValue(json, cls);
 		}
-		catch (IOException e) {
+		catch (JacksonException e) {
 			throw new NacosDeserializationException(cls, e);
 		}
 	}
 
 	public static <T> T toObj(String json, Type type) {
 		try {
-			return mapper.readValue(json, TypeFactory.defaultInstance().constructType(type));
+			return mapper.readValue(json, TypeFactory.createDefaultInstance().constructType(type));
 		}
-		catch (IOException e) {
+		catch (JacksonException e) {
 			throw new NacosDeserializationException(type, e);
 		}
 	}

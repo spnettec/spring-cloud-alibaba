@@ -29,8 +29,9 @@ import com.alibaba.csp.sentinel.datasource.Converter;
 import com.alibaba.csp.sentinel.datasource.FileRefreshableDataSource;
 import com.alibaba.csp.sentinel.slots.block.flow.FlowRule;
 import com.alibaba.csp.sentinel.slots.block.flow.FlowRuleManager;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JacksonException;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.util.ResourceUtils;
@@ -149,7 +150,7 @@ public class DataSourcePropertiesTests {
 									new TypeReference<List<FlowRule>>() {
 									});
 						}
-						catch (IOException e) {
+						catch (JacksonException e) {
 							// ignore
 						}
 						return null;

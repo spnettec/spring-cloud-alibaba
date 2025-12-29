@@ -22,12 +22,14 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JsonParser;
+import tools.jackson.core.json.JsonReadFeature;
+import tools.jackson.databind.ObjectMapper;
 
 import org.springframework.boot.env.OriginTrackedMapPropertySource;
 import org.springframework.core.env.PropertySource;
 import org.springframework.core.io.Resource;
+import tools.jackson.databind.json.JsonMapper;
 
 /**
  * @author zkz
@@ -62,9 +64,8 @@ public class NacosJsonPropertySourceLoader extends AbstractPropertySourceLoader 
 	protected List<PropertySource<?>> doLoad(String name, Resource resource)
 			throws IOException {
 		Map<String, Object> result = new LinkedHashMap<>(32);
-		ObjectMapper mapper = new ObjectMapper();
+		ObjectMapper mapper = JsonMapper.builder().enable(JsonReadFeature.ALLOW_JAVA_COMMENTS).build();
 		// [fix issue #3043] support comment in json config
-		mapper.configure(JsonParser.Feature.ALLOW_COMMENTS, true);
 		Map<String, Object> nacosDataMap = mapper.readValue(resource.getInputStream(),
 				LinkedHashMap.class);
 		flattenedMap(result, nacosDataMap, null);

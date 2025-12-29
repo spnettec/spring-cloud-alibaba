@@ -58,7 +58,7 @@
         <!--</dependency>-->
         <!-- define in spring-boot-autoconfigure module -->
         <!--<dependency>-->
-        <!--<groupId>com.fasterxml.jackson.dataformat</groupId>-->
+        <!--<groupId>ctools.jackson.dataformat</groupId>-->
         <!--<artifactId>jackson-dataformat-xml</artifactId>-->
         <!--</dependency>-->
     </dependencies>

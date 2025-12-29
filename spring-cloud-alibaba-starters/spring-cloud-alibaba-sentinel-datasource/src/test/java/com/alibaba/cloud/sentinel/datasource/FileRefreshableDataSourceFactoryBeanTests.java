@@ -17,15 +17,15 @@
 package com.alibaba.cloud.sentinel.datasource;
 
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.List;
 
 import com.alibaba.cloud.sentinel.datasource.factorybean.FileRefreshableDataSourceFactoryBean;
 import com.alibaba.csp.sentinel.datasource.Converter;
 import com.alibaba.csp.sentinel.datasource.FileRefreshableDataSource;
 import com.alibaba.csp.sentinel.slots.block.flow.FlowRule;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JacksonException;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -89,7 +89,7 @@ public class FileRefreshableDataSourceFactoryBeanTests {
 								new TypeReference<List<FlowRule>>() {
 								});
 					}
-					catch (IOException e) {
+					catch (JacksonException e) {
 						// ignore
 					}
 					return null;
