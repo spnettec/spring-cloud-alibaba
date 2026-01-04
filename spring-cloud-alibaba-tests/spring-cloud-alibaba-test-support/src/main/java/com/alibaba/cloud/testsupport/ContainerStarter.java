@@ -21,9 +21,9 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.apache.commons.io.FileUtils;
 import org.testcontainers.containers.FixedHostPortGenericContainer;
 import org.testcontainers.containers.GenericContainer;
-import org.testcontainers.shaded.org.apache.commons.io.FileUtils;
 
 import org.springframework.core.io.ClassPathResource;
 
