@@ -20,7 +20,6 @@ import java.util.List;
 
 import com.alibaba.csp.sentinel.datasource.Converter;
 import com.alibaba.csp.sentinel.slots.block.flow.param.ParamFlowRule;
-import tools.jackson.core.JacksonException;
 import tools.jackson.core.type.TypeReference;
 import tools.jackson.databind.ObjectMapper;
 
@@ -33,14 +32,7 @@ public class TestConverter implements Converter<String, List<ParamFlowRule>> {
 
 	@Override
 	public List<ParamFlowRule> convert(String s) {
-		try {
-			return objectMapper.readValue(s, new TypeReference<List<ParamFlowRule>>() {
-			});
-		}
-		catch (JacksonException e) {
-			e.printStackTrace();
-		}
-		return null;
+		return objectMapper.readValue(s, new TypeReference<>() { });
 	}
 
 }

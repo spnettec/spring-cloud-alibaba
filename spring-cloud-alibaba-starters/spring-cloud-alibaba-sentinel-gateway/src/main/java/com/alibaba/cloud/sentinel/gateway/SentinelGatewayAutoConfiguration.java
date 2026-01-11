@@ -17,9 +17,7 @@
 package com.alibaba.cloud.sentinel.gateway;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import com.alibaba.cloud.sentinel.datasource.converter.JsonConverter;
 import com.alibaba.cloud.sentinel.datasource.converter.XmlConverter;
@@ -28,7 +26,6 @@ import com.alibaba.csp.sentinel.adapter.gateway.common.api.ApiPathPredicateItem;
 import com.alibaba.csp.sentinel.adapter.gateway.common.api.ApiPredicateGroupItem;
 import com.alibaba.csp.sentinel.adapter.gateway.common.api.ApiPredicateItem;
 import com.alibaba.csp.sentinel.adapter.gateway.common.rule.GatewayFlowRule;
-import tools.jackson.core.JacksonException;
 import tools.jackson.core.JsonParser;
 import tools.jackson.core.Version;
 import tools.jackson.databind.DeserializationContext;
@@ -59,7 +56,7 @@ public class SentinelGatewayAutoConfiguration {
 		static class ApiPredicateItemDeserializer
 				extends StdDeserializer<ApiPredicateItem> {
 
-			private final Map<String, Class<? extends ApiPredicateItem>> registry = new HashMap<>();
+			private Map<String, Class<? extends ApiPredicateItem>> registry = new HashMap<String, Class<? extends ApiPredicateItem>>();
 
 			ApiPredicateItemDeserializer() {
 				super(ApiPredicateItem.class);
@@ -72,13 +69,10 @@ public class SentinelGatewayAutoConfiguration {
 
 			@Override
 			public ApiPredicateItem deserialize(JsonParser jp,
-					DeserializationContext ctxt) throws JacksonException {
-				JsonNode root = jp.objectReadContext().readTree(jp);
+					DeserializationContext ctxt) {
+				JsonNode root = ctxt.readTree(jp);
 				Class<? extends ApiPredicateItem> apiPredicateItemClass = null;
-				Iterator<Entry<String, JsonNode>> elementsIterator = root.properties().iterator();
-				while (elementsIterator.hasNext()) {
-					Entry<String, JsonNode> element = elementsIterator.next();
-					String name = element.getKey();
+				for (String name : root.propertyNames()) {
 					if (registry.containsKey(name)) {
 						apiPredicateItemClass = registry.get(name);
 						break;
@@ -87,7 +81,7 @@ public class SentinelGatewayAutoConfiguration {
 				if (apiPredicateItemClass == null) {
 					return null;
 				}
-				return jp.readValueAs(apiPredicateItemClass);
+				return ctxt.readTreeAsValue(root, apiPredicateItemClass);
 			}
 
 		}
@@ -98,8 +92,6 @@ public class SentinelGatewayAutoConfiguration {
 			private final ObjectMapper objectMapper;
 
 			public SentinelJsonConfiguration() {
-
-
 				ApiPredicateItemDeserializer deserializer = new ApiPredicateItemDeserializer();
 				deserializer.registerApiPredicateItem("pattern",
 						ApiPathPredicateItem.class);
@@ -109,10 +101,11 @@ public class SentinelGatewayAutoConfiguration {
 						"PolymorphicApiPredicateItemDeserializerModule",
 						new Version(1, 0, 0, null, null, null));
 				module.addDeserializer(ApiPredicateItem.class, deserializer);
-				objectMapper = JsonMapper.builder()
-						.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,
-								false)
-								.addModule(module).build();
+
+				this.objectMapper = JsonMapper.builder()
+						.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+						.addModule(module)
+						.build();
 			}
 
 			@Bean("sentinel-json-gw-flow-converter")
@@ -134,7 +127,6 @@ public class SentinelGatewayAutoConfiguration {
 			private final XmlMapper xmlMapper;
 
 			public SentinelXmlConfiguration() {
-
 				ApiPredicateItemDeserializer deserializer = new ApiPredicateItemDeserializer();
 				deserializer.registerApiPredicateItem("pattern",
 						ApiPathPredicateItem.class);
@@ -144,9 +136,9 @@ public class SentinelGatewayAutoConfiguration {
 						"PolymorphicGatewayDeserializerModule",
 						new Version(1, 0, 0, null, null, null));
 				module.addDeserializer(ApiPredicateItem.class, deserializer);
-				xmlMapper = XmlMapper.builder()
-						.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,
-								false)
+
+				this.xmlMapper = XmlMapper.builder()
+						.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
 						.addModule(module)
 						.build();
 			}

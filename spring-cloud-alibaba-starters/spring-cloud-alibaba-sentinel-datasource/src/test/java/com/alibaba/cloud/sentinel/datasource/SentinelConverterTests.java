@@ -25,13 +25,9 @@ import com.alibaba.cloud.sentinel.datasource.converter.JsonConverter;
 import com.alibaba.cloud.sentinel.datasource.converter.XmlConverter;
 import com.alibaba.csp.sentinel.slots.block.RuleConstant;
 import com.alibaba.csp.sentinel.slots.block.flow.FlowRule;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import tools.jackson.core.StreamReadFeature;
-import tools.jackson.databind.DeserializationFeature;
-import tools.jackson.databind.ObjectMapper;
-import tools.jackson.databind.json.JsonMapper;
-import tools.jackson.dataformat.xml.XmlMapper;
 import org.junit.jupiter.api.Test;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.dataformat.xml.XmlMapper;
 
 import org.springframework.util.ResourceUtils;
 import org.springframework.util.StringUtils;
@@ -44,9 +40,7 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
  */
 public class SentinelConverterTests {
 
-	private ObjectMapper objectMapper  = JsonMapper.builder()
-			.enable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
-			.build();
+	private ObjectMapper objectMapper = new ObjectMapper();
 
 	private XmlMapper xmlMapper = new XmlMapper();
 
@@ -85,6 +79,7 @@ public class SentinelConverterTests {
 
 	@Test
 	public void testConverterErrorContent() {
+		// see https://github.com/FasterXML/jackson-databind/issues/493
 		assertThatExceptionOfType(RuntimeException.class).isThrownBy(() -> {
 			JsonConverter jsonConverter = new JsonConverter(objectMapper, FlowRule.class);
 			jsonConverter

@@ -86,8 +86,9 @@ public class SentinelAutoConfiguration {
 			private final ObjectMapper objectMapper;
 
 			public SentinelJsonConfiguration() {
-				objectMapper = JsonMapper.builder().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,
-						false).build();
+				this.objectMapper = JsonMapper.builder()
+						.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+						.build();
 			}
 
 			@Bean("sentinel-json-flow-converter")
@@ -124,8 +125,9 @@ public class SentinelAutoConfiguration {
 			private final XmlMapper xmlMapper;
 
 			public SentinelXmlConfiguration() {
-				xmlMapper = XmlMapper.builder().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES,
-						false).build();
+				this.xmlMapper = XmlMapper.builder()
+						.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+						.build();
 			}
 
 			@Bean("sentinel-xml-flow-converter")
