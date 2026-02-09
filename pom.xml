@@ -83,7 +83,7 @@
         <revision>2025.0.0.1.B</revision>
         <nacos.version>3.0.2.B</nacos.version>
         <!-- Spring Cloud -->
-        <spring.cloud.version>2025.1.0</spring.cloud.version>
+        <spring.cloud.version>2025.1.1</spring.cloud.version>
 
         <!-- Spring Boot -->
         <spring-boot.version>4.0.2</spring-boot.version>
@@ -92,7 +92,7 @@
         <maven.compiler.target>17</maven.compiler.target>
 
         <!-- Maven Plugin Versions -->
-        <maven-compiler-plugin.version>3.14.0</maven-compiler-plugin.version>
+        <maven-compiler-plugin.version>3.15.0</maven-compiler-plugin.version>
         <maven-deploy-plugin.version>3.1.4</maven-deploy-plugin.version>
         <!-- JUnit 5 requires Surefire version 2.22.0 or higher -->
         <maven-surefire-plugin.version>3.5.3</maven-surefire-plugin.version>
