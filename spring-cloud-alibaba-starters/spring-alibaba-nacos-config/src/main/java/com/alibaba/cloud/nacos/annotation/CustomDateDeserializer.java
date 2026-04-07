@@ -16,16 +16,16 @@
 
 package com.alibaba.cloud.nacos.annotation;
 
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.core.JacksonException;
+import tools.jackson.core.JsonParser;
+import tools.jackson.databind.DeserializationContext;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ValueDeserializer;
 
-public class CustomDateDeserializer extends JsonDeserializer<Date> {
+public class CustomDateDeserializer extends ValueDeserializer<Date> {
 
 	private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
@@ -34,14 +34,14 @@ public class CustomDateDeserializer extends JsonDeserializer<Date> {
 	}
 
 	@Override
-	public Date deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
-		JsonNode node = jsonParser.getCodec().readTree(jsonParser);
-		String date = node.textValue();
+	public Date deserialize(JsonParser jsonParser, DeserializationContext deserializationContext)
+			throws JacksonException {
+		JsonNode node = jsonParser.objectReadContext().readTree(jsonParser);
+		String date = node.stringValue();
 		try {
 			return dateFormat.parse(date);
-		}
-		catch (Exception e) {
-			throw new IOException("Invalid date format");
+		} catch (Exception e) {
+			throw JacksonException.wrapWithPath(e, new JacksonException.Reference("Invalid date format", 0));
 		}
 	}
 }

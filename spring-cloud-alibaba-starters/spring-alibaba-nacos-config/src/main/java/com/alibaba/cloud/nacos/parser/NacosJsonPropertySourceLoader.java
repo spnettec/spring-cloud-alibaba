@@ -22,13 +22,14 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import tools.jackson.core.JsonParser;
+import tools.jackson.core.json.JsonReadFeature;
 import tools.jackson.databind.ObjectMapper;
 import org.jspecify.annotations.Nullable;
 
 import org.springframework.boot.env.OriginTrackedMapPropertySource;
 import org.springframework.core.env.PropertySource;
 import org.springframework.core.io.Resource;
+import tools.jackson.databind.json.JsonMapper;
 
 /**
  * @author zkz
@@ -82,7 +83,7 @@ public class NacosJsonPropertySourceLoader extends AbstractPropertySourceLoader 
 	 * Reload the key ending in `value` if need.
 	 */
 	protected @Nullable Map<String, Object> reloadMap(Map<String, Object> map) {
-		if (map == null || map.isEmpty()) {
+		if (map.isEmpty()) {
 			return null;
 		}
 		Map<String, Object> result = new LinkedHashMap<>(map);
