@@ -23,13 +23,12 @@ import java.util.List;
 import java.util.Map;
 
 import tools.jackson.core.JsonParser;
-import tools.jackson.core.json.JsonReadFeature;
 import tools.jackson.databind.ObjectMapper;
+import org.jspecify.annotations.Nullable;
 
 import org.springframework.boot.env.OriginTrackedMapPropertySource;
 import org.springframework.core.env.PropertySource;
 import org.springframework.core.io.Resource;
-import tools.jackson.databind.json.JsonMapper;
 
 /**
  * @author zkz
@@ -69,15 +68,20 @@ public class NacosJsonPropertySourceLoader extends AbstractPropertySourceLoader 
 		Map<String, Object> nacosDataMap = mapper.readValue(resource.getInputStream(),
 				LinkedHashMap.class);
 		flattenedMap(result, nacosDataMap, null);
+		Map<String, Object> reloadedMap = this.reloadMap(result);
+		if (reloadedMap == null) {
+			return Collections.singletonList(
+					new OriginTrackedMapPropertySource(name, Collections.emptyMap(), true));
+		}
 		return Collections.singletonList(
-				new OriginTrackedMapPropertySource(name, this.reloadMap(result), true));
+				new OriginTrackedMapPropertySource(name, reloadedMap, true));
 
 	}
 
 	/**
 	 * Reload the key ending in `value` if need.
 	 */
-	protected Map<String, Object> reloadMap(Map<String, Object> map) {
+	protected @Nullable Map<String, Object> reloadMap(Map<String, Object> map) {
 		if (map == null || map.isEmpty()) {
 			return null;
 		}

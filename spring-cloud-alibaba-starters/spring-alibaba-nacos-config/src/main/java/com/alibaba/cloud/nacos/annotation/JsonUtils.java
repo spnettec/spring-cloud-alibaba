@@ -16,15 +16,16 @@
 
 package com.alibaba.cloud.nacos.annotation;
 
+import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.Objects;
 
 import com.alibaba.nacos.api.exception.runtime.NacosDeserializationException;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import tools.jackson.core.JacksonException;
 import tools.jackson.databind.DeserializationFeature;
 import tools.jackson.databind.ObjectMapper;
-import tools.jackson.databind.json.JsonMapper;
 import tools.jackson.databind.type.TypeFactory;
+import org.jspecify.annotations.Nullable;
 
 final class JsonUtils {
 
@@ -45,9 +46,9 @@ final class JsonUtils {
 	 * @return object
 	 * @throws NacosDeserializationException if deserialize failed
 	 */
-	public static <T> T toObj(String json, Class<T> cls) {
+	public static <T> T toObj(String json, Class<? extends @Nullable T> cls) {
 		try {
-			return mapper.readValue(json, cls);
+			return Objects.requireNonNull(mapper.readValue(json, cls));
 		}
 		catch (JacksonException e) {
 			throw new NacosDeserializationException(cls, e);

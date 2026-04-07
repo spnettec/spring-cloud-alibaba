@@ -19,6 +19,7 @@ package com.alibaba.cloud.nacos.loadbalancer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -60,11 +61,15 @@ public class NacosLoadBalancer implements ReactorServiceInstanceLoadBalancer {
 
 	private static final String IPV4_REGEX = "((2(5[0-5]|[0-4]\\d))|[0-1]?\\d{1,2})(.((2(5[0-5]|[0-4]\\d))|[0-1]?\\d{1,2})){3}";
 
+	private static final long CROSS_CLUSTER_WARN_INTERVAL_MS = 10_000L;
+
+	private volatile long lastWarnLogTime;
+
 	private static final String IPV6_KEY = "IPv6";
 	/**
 	 * Storage local valid IPv6 address, it's a flag whether local machine support IPv6 address stack.
 	 */
-	public static String ipv6;
+	public static String ipv6 = "";
 
 	private final InetIPv6Utils inetIPv6Utils;
 
@@ -76,10 +81,13 @@ public class NacosLoadBalancer implements ReactorServiceInstanceLoadBalancer {
 	public void init() {
 		String ip = nacosDiscoveryProperties.getIp();
 		if (StringUtils.isNotEmpty(ip)) {
-			ipv6 = Pattern.matches(IPV4_REGEX, ip) ? nacosDiscoveryProperties.getMetadata().get(IPV6_KEY) : ip;
+			String resolvedIp = Pattern.matches(IPV4_REGEX, ip)
+					? nacosDiscoveryProperties.getMetadata().get(IPV6_KEY) : ip;
+			ipv6 = resolvedIp == null ? "" : resolvedIp;
 		}
 		else {
-			ipv6 = inetIPv6Utils.findIPv6Address();
+			String found = inetIPv6Utils.findIPv6Address();
+			ipv6 = found == null ? "" : found;
 		}
 	}
 
@@ -87,8 +95,10 @@ public class NacosLoadBalancer implements ReactorServiceInstanceLoadBalancer {
 		if (StringUtils.isNotEmpty(ipv6)) {
 			List<ServiceInstance> ipv6InstanceList = new ArrayList<>();
 			for (ServiceInstance instance : instances) {
+				Map<String, String> metadata = instance.getMetadata();
 				if (Pattern.matches(IPV4_REGEX, instance.getHost())) {
-					if (StringUtils.isNotEmpty(instance.getMetadata().get(IPV6_KEY))) {
+					String ipv6Metadata = metadata == null ? null : metadata.get(IPV6_KEY);
+					if (StringUtils.isNotEmpty(ipv6Metadata)) {
 						ipv6InstanceList.add(instance);
 					}
 				}
@@ -142,21 +152,19 @@ public class NacosLoadBalancer implements ReactorServiceInstanceLoadBalancer {
 			String clusterName = this.nacosDiscoveryProperties.getClusterName();
 
 			List<ServiceInstance> instancesToChoose = serviceInstances;
-			if (StringUtils.isNotBlank(clusterName)) {
+			if (clusterName != null && StringUtils.isNotBlank(clusterName)) {
 				List<ServiceInstance> sameClusterInstances = serviceInstances.stream()
 						.filter(serviceInstance -> {
-							String cluster = serviceInstance.getMetadata()
-									.get("nacos.cluster");
-							return StringUtils.equals(cluster, clusterName);
+							Map<String, String> metadata = serviceInstance.getMetadata();
+							String cluster = metadata == null ? null : metadata.get("nacos.cluster");
+							return Objects.equals(cluster, clusterName);
 						}).collect(Collectors.toList());
 				if (!CollectionUtils.isEmpty(sameClusterInstances)) {
 					instancesToChoose = sameClusterInstances;
 				}
-			}
-			else {
-				log.warn(
-						"A cross-cluster call occurs，name = {}, clusterName = {}, instance = {}",
-						serviceId, clusterName, serviceInstances);
+				else {
+					warnCrossClusterThrottled(clusterName, serviceInstances);
+				}
 			}
 			instancesToChoose = this.filterInstanceByIpType(instancesToChoose);
 
@@ -168,18 +176,39 @@ public class NacosLoadBalancer implements ReactorServiceInstanceLoadBalancer {
 			ServiceInstance instance;
 			// Find the corresponding load balancing algorithm through the service ID and select the final service instance
 			if (loadBalancerAlgorithmMap.containsKey(serviceId)) {
-				instance = loadBalancerAlgorithmMap.get(serviceId).getInstance(request, instancesToChoose);
+				LoadBalancerAlgorithm loadBalancerAlgorithm = loadBalancerAlgorithmMap
+						.get(serviceId);
+				if (loadBalancerAlgorithm == null) {
+					return new EmptyResponse();
+				}
+				instance = loadBalancerAlgorithm.getInstance(request, instancesToChoose);
 			}
 			else {
-				instance = loadBalancerAlgorithmMap.get(LoadBalancerAlgorithm.DEFAULT_SERVICE_ID)
-						.getInstance(request, instancesToChoose);
+				LoadBalancerAlgorithm defaultLoadBalancerAlgorithm = loadBalancerAlgorithmMap
+						.get(LoadBalancerAlgorithm.DEFAULT_SERVICE_ID);
+				if (defaultLoadBalancerAlgorithm == null) {
+					return new EmptyResponse();
+				}
+				instance = defaultLoadBalancerAlgorithm.getInstance(request, instancesToChoose);
+			}
+			if (instance == null) {
+				return new EmptyResponse();
 			}
 
 			return new DefaultResponse(instance);
 		}
 		catch (Exception e) {
 			log.warn("NacosLoadBalancer error", e);
-			return null;
+			return new EmptyResponse();
+		}
+	}
+
+	private void warnCrossClusterThrottled(String clusterName, List<ServiceInstance> serviceInstances) {
+		long now = System.currentTimeMillis();
+		if (now - lastWarnLogTime > CROSS_CLUSTER_WARN_INTERVAL_MS) {
+			lastWarnLogTime = now;
+			log.warn("A cross-cluster call occurs，name = {}, clusterName = {}, instance = {}",
+					serviceId, clusterName, serviceInstances);
 		}
 	}
 
