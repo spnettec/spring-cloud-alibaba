@@ -63,7 +63,7 @@ public final class StringUtils {
 	 * @since 3.0 Changed signature from isEmpty(String) to isEmpty(CharSequence)
 	 */
 	public static boolean isEmpty(final @Nullable CharSequence cs) {
-		return cs == null || cs.length() == 0;
+		return cs == null || cs.isEmpty();
 	}
 
 	/**
