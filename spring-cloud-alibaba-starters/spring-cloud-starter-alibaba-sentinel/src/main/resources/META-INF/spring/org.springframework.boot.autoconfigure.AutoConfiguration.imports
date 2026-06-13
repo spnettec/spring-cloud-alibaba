@@ -1,5 +1,3 @@
 com.alibaba.cloud.sentinel.SentinelWebAutoConfiguration
-com.alibaba.cloud.sentinel.SentinelWebFluxAutoConfiguration
 com.alibaba.cloud.sentinel.endpoint.SentinelEndpointAutoConfiguration
 com.alibaba.cloud.sentinel.custom.SentinelAutoConfiguration
-com.alibaba.cloud.sentinel.feign.SentinelFeignAutoConfiguration

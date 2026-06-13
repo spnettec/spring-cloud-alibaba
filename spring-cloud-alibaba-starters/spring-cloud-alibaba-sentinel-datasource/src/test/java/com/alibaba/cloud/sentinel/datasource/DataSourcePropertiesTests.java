@@ -18,12 +18,8 @@ package com.alibaba.cloud.sentinel.datasource;
 
 import java.util.List;
 
-import com.alibaba.cloud.sentinel.datasource.config.ApolloDataSourceProperties;
 import com.alibaba.cloud.sentinel.datasource.config.FileDataSourceProperties;
-import com.alibaba.cloud.sentinel.datasource.config.ZookeeperDataSourceProperties;
-import com.alibaba.cloud.sentinel.datasource.factorybean.ApolloDataSourceFactoryBean;
 import com.alibaba.cloud.sentinel.datasource.factorybean.FileRefreshableDataSourceFactoryBean;
-import com.alibaba.cloud.sentinel.datasource.factorybean.ZookeeperDataSourceFactoryBean;
 import com.alibaba.csp.sentinel.datasource.Converter;
 import com.alibaba.csp.sentinel.datasource.FileRefreshableDataSource;
 import com.alibaba.csp.sentinel.slots.block.flow.FlowRule;
@@ -42,49 +38,6 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
  * @author <a href="mailto:fangjian0423@gmail.com">Jim</a>
  */
 public class DataSourcePropertiesTests {
-
-	@Test
-	public void testApollo() {
-		ApolloDataSourceProperties apolloDataSourceProperties = new ApolloDataSourceProperties();
-		apolloDataSourceProperties.setFlowRulesKey("test-key");
-		apolloDataSourceProperties.setDefaultFlowRuleValue("dft-val");
-		apolloDataSourceProperties.setNamespaceName("namespace");
-		apolloDataSourceProperties.setRuleType(RuleType.DEGRADE);
-
-		assertThat(apolloDataSourceProperties.getFlowRulesKey()).isEqualTo("test-key");
-		assertThat(apolloDataSourceProperties.getNamespaceName()).isEqualTo("namespace");
-		assertThat(apolloDataSourceProperties.getDataType()).isEqualTo("json");
-		assertThat(apolloDataSourceProperties.getRuleType()).isEqualTo(RuleType.DEGRADE);
-		assertThat(apolloDataSourceProperties.getDefaultFlowRuleValue())
-				.isEqualTo("dft-val");
-		assertThat(apolloDataSourceProperties.getFactoryBeanName())
-				.isEqualTo(ApolloDataSourceFactoryBean.class.getName());
-		assertThat(apolloDataSourceProperties.getConverterClass()).isNull();
-	}
-
-	@Test
-	public void testZK() {
-		ZookeeperDataSourceProperties zookeeperDataSourceProperties = new ZookeeperDataSourceProperties();
-
-		zookeeperDataSourceProperties.setServerAddr("localhost:2181");
-		zookeeperDataSourceProperties.setGroupId("groupId");
-		zookeeperDataSourceProperties.setDataId("dataId");
-		zookeeperDataSourceProperties.setPath("/path");
-		zookeeperDataSourceProperties.setConverterClass("test.ConverterClass");
-		zookeeperDataSourceProperties.setRuleType(RuleType.AUTHORITY);
-
-		assertThat(zookeeperDataSourceProperties.getServerAddr())
-				.isEqualTo("localhost:2181");
-		assertThat(zookeeperDataSourceProperties.getGroupId()).isEqualTo("groupId");
-		assertThat(zookeeperDataSourceProperties.getDataId()).isEqualTo("dataId");
-		assertThat(zookeeperDataSourceProperties.getPath()).isEqualTo("/path");
-		assertThat(zookeeperDataSourceProperties.getFactoryBeanName())
-				.isEqualTo(ZookeeperDataSourceFactoryBean.class.getName());
-		assertThat(zookeeperDataSourceProperties.getConverterClass())
-				.isEqualTo("test.ConverterClass");
-		assertThat(zookeeperDataSourceProperties.getRuleType())
-				.isEqualTo(RuleType.AUTHORITY);
-	}
 
 	@Test
 	public void testFileDefaultValue() {

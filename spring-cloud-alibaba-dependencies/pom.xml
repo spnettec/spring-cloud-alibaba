@@ -21,7 +21,9 @@
         <revision>2025.0.0.1.B</revision>
         <sentinel.version>2.0.10.B</sentinel.version>
         <seata.version>2.6.0.B</seata.version>
-        <nacos.version>3.0.2.B</nacos.version>
+        <nacos.version>3.3.0.B</nacos.version>
+        <grpc.version>1.82.0</grpc.version>
+        <netty.version>4.2.15.Final</netty.version>
         <!-- Apache RocketMQ -->
         <rocketmq.version>5.3.2</rocketmq.version>
 
@@ -55,6 +57,20 @@
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>io.grpc</groupId>
+                <artifactId>grpc-bom</artifactId>
+                <version>${grpc.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-bom</artifactId>
+                <version>${netty.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
 
             <!--Nacos-->
             <dependency>

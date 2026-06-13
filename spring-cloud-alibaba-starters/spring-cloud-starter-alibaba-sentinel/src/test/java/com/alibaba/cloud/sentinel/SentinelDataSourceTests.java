@@ -76,9 +76,7 @@ public class SentinelDataSourceTests {
 	@Test
 	public void testDataSource() {
 		assertThat(sentinelProperties.getDatasource().size()).isEqualTo(5);
-		assertThat(sentinelProperties.getDatasource().get("ds1").getApollo()).isNull();
 		assertThat(sentinelProperties.getDatasource().get("ds1").getNacos()).isNull();
-		assertThat(sentinelProperties.getDatasource().get("ds1").getZk()).isNull();
 		assertThat(sentinelProperties.getDatasource().get("ds1").getFile()).isNotNull();
 
 		assertThat(sentinelProperties.getDatasource().get("ds1").getFile().getDataType())

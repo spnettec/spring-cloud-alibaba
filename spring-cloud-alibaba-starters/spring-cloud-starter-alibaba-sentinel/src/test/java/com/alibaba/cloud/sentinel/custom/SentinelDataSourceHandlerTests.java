@@ -19,7 +19,7 @@ package com.alibaba.cloud.sentinel.custom;
 import com.alibaba.cloud.sentinel.SentinelProperties;
 import com.alibaba.cloud.sentinel.datasource.RuleType;
 import com.alibaba.cloud.sentinel.datasource.config.AbstractDataSourceProperties;
-import com.alibaba.cloud.sentinel.datasource.config.ApolloDataSourceProperties;
+import com.alibaba.cloud.sentinel.datasource.config.FileDataSourceProperties;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -58,32 +58,24 @@ public class SentinelDataSourceHandlerTests {
 	/**
 	 * Test cases for {@link SentinelDataSourceHandler#parseBeanDefinition(AbstractDataSourceProperties, String)}.
 	 *
-	 * @see com.alibaba.cloud.sentinel.datasource.config.ApolloDataSourceProperties
-	 * @see com.alibaba.cloud.sentinel.datasource.factorybean.ApolloDataSourceFactoryBean
+	 * @see com.alibaba.cloud.sentinel.datasource.config.FileDataSourceProperties
+	 * @see com.alibaba.cloud.sentinel.datasource.factorybean.FileRefreshableDataSourceFactoryBean
 	 */
 	@Test
 	public void testParseBeanDefinition() {
-		ApolloDataSourceProperties dataSourceProperties = new ApolloDataSourceProperties();
-		dataSourceProperties.setNamespaceName("application");
-		dataSourceProperties.setFlowRulesKey("test-flow-rules");
-		dataSourceProperties.setDefaultFlowRuleValue("[]");
+		FileDataSourceProperties dataSourceProperties = new FileDataSourceProperties();
+		dataSourceProperties.setFile("classpath:flowrule.json");
 		dataSourceProperties.setDataType("json");
 		dataSourceProperties.setRuleType(RuleType.FLOW);
-		String dataSourceName = "ds1" + "-sentinel-" + "apollo" + "-datasource";
+		String dataSourceName = "ds1" + "-sentinel-" + "file" + "-datasource";
 
-		//init BeanDefinitionBuilder for ApolloDataSourceFactoryBean
 		BeanDefinitionBuilder builder = sentinelDataSourceHandler.parseBeanDefinition(dataSourceProperties, dataSourceName);
 		MutablePropertyValues propertyValues = builder.getBeanDefinition().getPropertyValues();
 
-		//ApolloDataSourceFactoryBean has four parameters, $jacocoData should not be included
-		assertThat(propertyValues.size()).isEqualTo(4);
+		assertThat(propertyValues.size()).isEqualTo(5);
 		assertThat(propertyValues).noneMatch(propertyValue -> "$jacocoData".equals(propertyValue.getName()));
-		assertThat(propertyValues).anyMatch(propertyValue -> "flowRulesKey".equals(propertyValue.getName())
-				&& dataSourceProperties.getFlowRulesKey().equals(propertyValue.getValue()));
-		assertThat(propertyValues).anyMatch(propertyValue -> "defaultFlowRuleValue".equals(propertyValue.getName())
-				&& dataSourceProperties.getDefaultFlowRuleValue().equals(propertyValue.getValue()));
-		assertThat(propertyValues).anyMatch(propertyValue -> "namespaceName".equals(propertyValue.getName())
-				&& dataSourceProperties.getNamespaceName().equals(propertyValue.getValue()));
+		assertThat(propertyValues).anyMatch(propertyValue -> "file".equals(propertyValue.getName())
+				&& dataSourceProperties.getFile().equals(propertyValue.getValue()));
 		assertThat(propertyValues).anyMatch(propertyValue -> "converter".equals(propertyValue.getName())
 				&& propertyValue.getValue() instanceof RuntimeBeanReference value
 				&& value.getBeanName().equals("sentinel-" + dataSourceProperties.getDataType() + "-" + dataSourceProperties.getRuleType().getName() + "-converter"));

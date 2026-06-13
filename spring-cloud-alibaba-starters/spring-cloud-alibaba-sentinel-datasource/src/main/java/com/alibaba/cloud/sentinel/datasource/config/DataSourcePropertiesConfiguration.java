@@ -31,11 +31,7 @@ import org.springframework.util.ObjectUtils;
  *
  * @author <a href="mailto:fangjian0423@gmail.com">Jim</a>
  * @see NacosDataSourceProperties
- * @see ApolloDataSourceProperties
- * @see ZookeeperDataSourceProperties
  * @see FileDataSourceProperties
- * @see RedisDataSourceProperties
- * @see ConsulDataSourceProperties
  */
 public class DataSourcePropertiesConfiguration {
 
@@ -43,27 +39,7 @@ public class DataSourcePropertiesConfiguration {
 
 	private @Nullable NacosDataSourceProperties nacos;
 
-	private @Nullable ZookeeperDataSourceProperties zk;
-
-	private @Nullable ApolloDataSourceProperties apollo;
-
-	private @Nullable RedisDataSourceProperties redis;
-
-	private @Nullable ConsulDataSourceProperties consul;
-
 	public DataSourcePropertiesConfiguration() {
-	}
-
-	public DataSourcePropertiesConfiguration(ConsulDataSourceProperties consul) {
-		this.consul = consul;
-	}
-
-	public @Nullable ConsulDataSourceProperties getConsul() {
-		return consul;
-	}
-
-	public void setConsul(@Nullable ConsulDataSourceProperties consul) {
-		this.consul = consul;
 	}
 
 	public DataSourcePropertiesConfiguration(FileDataSourceProperties file) {
@@ -72,18 +48,6 @@ public class DataSourcePropertiesConfiguration {
 
 	public DataSourcePropertiesConfiguration(NacosDataSourceProperties nacos) {
 		this.nacos = nacos;
-	}
-
-	public DataSourcePropertiesConfiguration(ZookeeperDataSourceProperties zk) {
-		this.zk = zk;
-	}
-
-	public DataSourcePropertiesConfiguration(ApolloDataSourceProperties apollo) {
-		this.apollo = apollo;
-	}
-
-	public DataSourcePropertiesConfiguration(RedisDataSourceProperties redis) {
-		this.redis = redis;
 	}
 
 	public @Nullable FileDataSourceProperties getFile() {
@@ -100,30 +64,6 @@ public class DataSourcePropertiesConfiguration {
 
 	public void setNacos(@Nullable NacosDataSourceProperties nacos) {
 		this.nacos = nacos;
-	}
-
-	public @Nullable ZookeeperDataSourceProperties getZk() {
-		return zk;
-	}
-
-	public void setZk(@Nullable ZookeeperDataSourceProperties zk) {
-		this.zk = zk;
-	}
-
-	public @Nullable ApolloDataSourceProperties getApollo() {
-		return apollo;
-	}
-
-	public void setApollo(@Nullable ApolloDataSourceProperties apollo) {
-		this.apollo = apollo;
-	}
-
-	public @Nullable RedisDataSourceProperties getRedis() {
-		return redis;
-	}
-
-	public void setRedis(@Nullable RedisDataSourceProperties redis) {
-		this.redis = redis;
 	}
 
 	@JsonIgnore

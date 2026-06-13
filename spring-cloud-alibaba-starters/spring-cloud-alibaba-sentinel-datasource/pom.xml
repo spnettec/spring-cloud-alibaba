@@ -46,6 +46,11 @@
         </dependency>
 
         <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>com.github.heyoulin.Sentinel</groupId>
             <artifactId>sentinel-datasource-extension</artifactId>
             <optional>true</optional>
@@ -66,30 +71,6 @@
         <dependency>
             <groupId>com.github.heyoulin.Sentinel</groupId>
             <artifactId>sentinel-datasource-nacos</artifactId>
-            <optional>true</optional>
-        </dependency>
-
-        <dependency>
-            <groupId>com.github.heyoulin.Sentinel</groupId>
-            <artifactId>sentinel-datasource-zookeeper</artifactId>
-            <optional>true</optional>
-        </dependency>
-
-        <dependency>
-            <groupId>com.github.heyoulin.Sentinel</groupId>
-            <artifactId>sentinel-datasource-apollo</artifactId>
-            <optional>true</optional>
-        </dependency>
-
-        <dependency>
-            <groupId>com.github.heyoulin.Sentinel</groupId>
-            <artifactId>sentinel-datasource-redis</artifactId>
-            <optional>true</optional>
-        </dependency>
-
-        <dependency>
-            <groupId>com.github.heyoulin.Sentinel</groupId>
-            <artifactId>sentinel-datasource-consul</artifactId>
             <optional>true</optional>
         </dependency>
 

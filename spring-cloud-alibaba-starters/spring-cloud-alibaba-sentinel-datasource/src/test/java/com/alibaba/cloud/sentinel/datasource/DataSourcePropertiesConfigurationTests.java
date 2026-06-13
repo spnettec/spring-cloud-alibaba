@@ -18,8 +18,8 @@ package com.alibaba.cloud.sentinel.datasource;
 
 import java.util.List;
 
-import com.alibaba.cloud.sentinel.datasource.config.ApolloDataSourceProperties;
 import com.alibaba.cloud.sentinel.datasource.config.DataSourcePropertiesConfiguration;
+import com.alibaba.cloud.sentinel.datasource.config.FileDataSourceProperties;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -39,13 +39,11 @@ public class DataSourcePropertiesConfigurationTests {
 	@Test
 	public void testGetValidField() {
 		DataSourcePropertiesConfiguration configuration = new DataSourcePropertiesConfiguration();
-		ApolloDataSourceProperties apollo = new ApolloDataSourceProperties();
-		apollo.setNamespaceName("application");
-		apollo.setFlowRulesKey("test-flow-rules");
-		apollo.setDefaultFlowRuleValue("[]");
-		apollo.setDataType("json");
-		apollo.setRuleType(RuleType.FLOW);
-		configuration.setApollo(apollo);
+		FileDataSourceProperties file = new FileDataSourceProperties();
+		file.setFile("classpath:flowrule.json");
+		file.setDataType("json");
+		file.setRuleType(RuleType.FLOW);
+		configuration.setFile(file);
 
 		//indicate which datasource active
 		List<String> validField = configuration.getValidField();
@@ -53,7 +51,7 @@ public class DataSourcePropertiesConfigurationTests {
 		//not allowed multi datasource active, $jacocoData should not be included
 		assertThat(validField.size()).isEqualTo(1);
 		assertThat(validField).doesNotContain("$jacocoData");
-		assertThat(validField).contains("apollo");
+		assertThat(validField).contains("file");
 	}
 
 }
