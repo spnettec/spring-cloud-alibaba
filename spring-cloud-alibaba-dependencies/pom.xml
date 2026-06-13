@@ -105,31 +105,7 @@
 
             <dependency>
                 <groupId>com.github.heyoulin.Sentinel</groupId>
-                <artifactId>sentinel-datasource-apollo</artifactId>
-                <version>${sentinel.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.github.heyoulin.Sentinel</groupId>
-                <artifactId>sentinel-datasource-zookeeper</artifactId>
-                <version>${sentinel.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.github.heyoulin.Sentinel</groupId>
                 <artifactId>sentinel-datasource-nacos</artifactId>
-                <version>${sentinel.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.github.heyoulin.Sentinel</groupId>
-                <artifactId>sentinel-datasource-redis</artifactId>
-                <version>${sentinel.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.github.heyoulin.Sentinel</groupId>
-                <artifactId>sentinel-datasource-consul</artifactId>
                 <version>${sentinel.version}</version>
             </dependency>
 
@@ -163,23 +139,6 @@
                 <version>${sentinel.version}</version>
             </dependency>
 
-            <dependency>
-                <groupId>com.github.heyoulin.Sentinel</groupId>
-                <artifactId>sentinel-cluster-server-default</artifactId>
-                <version>${sentinel.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.github.heyoulin.Sentinel</groupId>
-                <artifactId>sentinel-cluster-client-default</artifactId>
-                <version>${sentinel.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.github.heyoulin.Sentinel</groupId>
-                <artifactId>sentinel-spring-webflux-adapter</artifactId>
-                <version>${sentinel.version}</version>
-            </dependency>
             <dependency>
                 <groupId>com.github.heyoulin.Sentinel</groupId>
                 <artifactId>sentinel-api-gateway-adapter-common</artifactId>
