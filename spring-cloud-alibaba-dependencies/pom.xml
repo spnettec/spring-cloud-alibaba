@@ -18,9 +18,9 @@
     <description>Spring Cloud Alibaba Dependencies</description>
 
     <properties>
-        <revision>2025.0.0.1.B</revision>
+        <revision>2025.1.0.1.B</revision>
         <sentinel.version>2.0.10.B</sentinel.version>
-        <seata.version>2.6.0.B</seata.version>
+        <seata.version>2.8.0.B</seata.version>
         <nacos.version>3.3.0.B</nacos.version>
         <grpc.version>1.82.0</grpc.version>
         <netty.version>4.2.15.Final</netty.version>

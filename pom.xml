@@ -80,7 +80,7 @@
 
     <properties>
         <!-- Project revision -->
-        <revision>2025.0.0.1.B</revision>
+        <revision>2025.1.0.1.B</revision>
         <nacos.version>3.3.0.B</nacos.version>
         <grpc.version>1.82.0</grpc.version>
         <netty.version>4.2.15.Final</netty.version>
