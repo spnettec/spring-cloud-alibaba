@@ -48,4 +48,4 @@ sessionStore/
 
 # Maven ignore
 .flattened-pom.xml
-
+.codegraph/
