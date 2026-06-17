@@ -80,6 +80,18 @@
       "description": "Whether to enable import-check."
     },
     {
+      "name": "spring.nacos.config.import-retry-count",
+      "type": "java.lang.Integer",
+      "defaultValue": 0,
+      "description": "Retry count for importing Nacos config during Spring Boot ConfigData loading. 0 means fail fast, -1 means retry forever."
+    },
+    {
+      "name": "spring.nacos.config.import-retry-interval",
+      "type": "java.lang.Long",
+      "defaultValue": 1000,
+      "description": "Retry interval in milliseconds for importing Nacos config during Spring Boot ConfigData loading."
+    },
+    {
       "name": "spring.nacos.config.password",
       "type": "java.lang.String",
       "defaultValue": "${spring.nacos.password}",

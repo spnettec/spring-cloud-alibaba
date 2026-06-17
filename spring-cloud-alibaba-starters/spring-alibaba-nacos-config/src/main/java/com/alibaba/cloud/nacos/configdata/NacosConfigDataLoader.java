@@ -80,7 +80,6 @@ public class NacosConfigDataLoader implements ConfigDataLoader<NacosConfigDataRe
 			if (configManager == null) {
 				throw new IllegalStateException("NacosConfigManager not available");
 			}
-			ConfigService configService = configManager.getConfigService();
 			NacosConfigProperties properties = getBean(context,
 					NacosConfigProperties.class);
 			if (properties == null) {
@@ -88,19 +87,7 @@ public class NacosConfigDataLoader implements ConfigDataLoader<NacosConfigDataRe
 			}
 
 			NacosItemConfig config = resource.getConfig();
-			// pull config from nacos
-			List<PropertySource<?>> propertySources = pullConfig(configService,
-					config.getGroup(), config.getDataId(), config.getSuffix(),
-					properties.getTimeout(), properties.getNamespace());
-
-			NacosPropertySource propertySource = new NacosPropertySource(propertySources,
-					config.getGroup(), config.getDataId(), new Date(),
-					config.isRefreshEnabled());
-
-			NacosPropertySourceRepository.collectNacosPropertySource(propertySource);
-
-			return new ConfigData(Collections.singletonList(propertySource),
-					getOptions(context, resource));
+			return loadWithRetry(context, resource, configManager, properties, config);
 		}
 		catch (Exception e) {
 			log.error("Error getting properties from nacos: " + resource, e);
@@ -109,6 +96,67 @@ public class NacosConfigDataLoader implements ConfigDataLoader<NacosConfigDataRe
 			}
 		}
 		return null;
+	}
+
+	private ConfigData loadWithRetry(ConfigDataLoaderContext context,
+			NacosConfigDataResource resource, NacosConfigManager configManager,
+			NacosConfigProperties properties, NacosItemConfig config) throws Exception {
+		int retryCount = properties.getImportRetryCount();
+		long retryInterval = properties.getImportRetryInterval();
+		int retried = 0;
+		while (true) {
+			try {
+				ConfigService configService = configManager.getConfigService();
+				// pull config from nacos
+				List<PropertySource<?>> propertySources = pullConfig(configService,
+						config.getGroup(), config.getDataId(), config.getSuffix(),
+						properties.getTimeout(), properties.getNamespace());
+
+				NacosPropertySource propertySource = new NacosPropertySource(propertySources,
+						config.getGroup(), config.getDataId(), new Date(),
+						config.isRefreshEnabled());
+
+				NacosPropertySourceRepository.collectNacosPropertySource(propertySource);
+
+				return new ConfigData(Collections.singletonList(propertySource),
+						getOptions(context, resource));
+			}
+			catch (Exception e) {
+				if (!shouldRetry(retryCount, retried)) {
+					throw e;
+				}
+				retried++;
+				log.warn(String.format(
+						"Failed to import Nacos config %s, retrying (%s) after %d ms: %s",
+						resource, retryDescription(retried, retryCount), retryInterval,
+						e.getMessage()));
+				if (log.isDebugEnabled()) {
+					log.debug("Nacos config import retry cause", e);
+				}
+				sleepBeforeRetry(retryInterval, e);
+			}
+		}
+	}
+
+	private boolean shouldRetry(int retryCount, int retried) {
+		return retryCount < 0 || retried < retryCount;
+	}
+
+	private String retryDescription(int retried, int retryCount) {
+		return retryCount < 0 ? retried + "/infinite" : retried + "/" + retryCount;
+	}
+
+	private void sleepBeforeRetry(long retryInterval, Exception cause) throws Exception {
+		if (retryInterval <= 0) {
+			return;
+		}
+		try {
+			Thread.sleep(retryInterval);
+		}
+		catch (InterruptedException interruptedException) {
+			Thread.currentThread().interrupt();
+			throw cause;
+		}
 	}
 
 	private Option[] getOptions(ConfigDataLoaderContext context,

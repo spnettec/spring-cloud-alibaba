@@ -22,20 +22,24 @@ import com.alibaba.cloud.nacos.client.NacosPropertySource;
 import com.alibaba.cloud.nacos.configdata.NacosConfigDataResource.NacosItemConfig;
 import com.alibaba.cloud.nacos.refresh.NacosSnapshotConfigManager;
 import com.alibaba.nacos.api.config.ConfigService;
+import com.alibaba.nacos.api.exception.NacosException;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.boot.bootstrap.BootstrapRegistry;
 import org.springframework.boot.bootstrap.DefaultBootstrapContext;
 import org.springframework.boot.context.config.ConfigData;
 import org.springframework.boot.context.config.ConfigDataLoaderContext;
+import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
 import org.springframework.boot.context.config.Profiles;
 import org.springframework.boot.context.properties.bind.Binder;
 import org.springframework.boot.logging.DeferredLogs;
 import org.springframework.mock.env.MockEnvironment;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -95,13 +99,71 @@ class NacosConfigDataLoaderTest {
 		}
 	}
 
-	private ConfigData load(ConfigService configService) {
-		NacosConfigManager configManager = mock(NacosConfigManager.class);
-		when(configManager.getConfigService()).thenReturn(configService);
+	@Test
+	void loadWhenImportRetryCountIsZeroThenFailsFast() throws Exception {
+		ConfigService configService = mock(ConfigService.class);
+		when(configService.getConfig("test.properties", "DEFAULT_GROUP", 3000L))
+			.thenThrow(new NacosException(NacosException.SERVER_ERROR, "down"));
+
+		assertThatThrownBy(() -> load(configService))
+			.isInstanceOf(ConfigDataResourceNotFoundException.class);
+		verify(configService, times(1)).getConfig("test.properties", "DEFAULT_GROUP",
+				3000L);
+	}
+
+	@Test
+	void loadWhenImportRetryCountIsPositiveThenRetriesRemoteConfig() throws Exception {
+		ConfigService configService = mock(ConfigService.class);
+		when(configService.getConfig("test.properties", "DEFAULT_GROUP", 3000L))
+			.thenThrow(new NacosException(NacosException.SERVER_ERROR, "down"))
+			.thenReturn("name=remote");
 
 		NacosConfigProperties properties = new NacosConfigProperties();
 		properties.setTimeout(3000);
+		properties.setImportRetryCount(1);
+		properties.setImportRetryInterval(0);
 
+		ConfigData configData = load(configService, properties);
+
+		assertThat(configData).isNotNull();
+		assertThat(configData.getPropertySources().get(0).getProperty("name"))
+			.isEqualTo("remote");
+		verify(configService, times(2)).getConfig("test.properties", "DEFAULT_GROUP",
+				3000L);
+	}
+
+	@Test
+	void loadWhenConfigServiceCreationFailsThenRetries() {
+		ConfigService configService = mock(ConfigService.class);
+		NacosConfigManager configManager = mock(NacosConfigManager.class);
+		when(configManager.getConfigService()).thenThrow(new IllegalStateException("down"))
+			.thenReturn(configService);
+
+		NacosConfigProperties properties = new NacosConfigProperties();
+		properties.setTimeout(3000);
+		properties.setImportRetryCount(1);
+		properties.setImportRetryInterval(0);
+
+		ConfigData configData = load(configManager, properties);
+
+		assertThat(configData).isNotNull();
+		verify(configManager, times(2)).getConfigService();
+	}
+
+	private ConfigData load(ConfigService configService) {
+		NacosConfigProperties properties = new NacosConfigProperties();
+		properties.setTimeout(3000);
+		return load(configService, properties);
+	}
+
+	private ConfigData load(ConfigService configService, NacosConfigProperties properties) {
+		NacosConfigManager configManager = mock(NacosConfigManager.class);
+		when(configManager.getConfigService()).thenReturn(configService);
+		return load(configManager, properties);
+	}
+
+	private ConfigData load(NacosConfigManager configManager,
+			NacosConfigProperties properties) {
 		DefaultBootstrapContext bootstrapContext = new DefaultBootstrapContext();
 		bootstrapContext.register(Binder.class,
 				BootstrapRegistry.InstanceSupplier.of(Binder.get(new MockEnvironment())));

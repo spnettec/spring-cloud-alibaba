@@ -129,6 +129,16 @@ public class NacosConfigProperties {
 	 */
 	private int timeout = 3000;
 	/**
+	 * Retry count for importing Nacos config during Spring Boot ConfigData loading.
+	 * 0 means fail fast, -1 means retry forever.
+	 */
+	private int importRetryCount = 0;
+	/**
+	 * Retry interval in milliseconds for importing Nacos config during Spring Boot
+	 * ConfigData loading.
+	 */
+	private long importRetryInterval = 1000L;
+	/**
 	 * nacos maximum number of tolerable server reconnection errors.
 	 */
 	private @Nullable String maxRetry;
@@ -283,6 +293,22 @@ public class NacosConfigProperties {
 
 	public void setTimeout(int timeout) {
 		this.timeout = timeout;
+	}
+
+	public int getImportRetryCount() {
+		return importRetryCount;
+	}
+
+	public void setImportRetryCount(int importRetryCount) {
+		this.importRetryCount = importRetryCount;
+	}
+
+	public long getImportRetryInterval() {
+		return importRetryInterval;
+	}
+
+	public void setImportRetryInterval(long importRetryInterval) {
+		this.importRetryInterval = importRetryInterval;
 	}
 
 	public @Nullable String getMaxRetry() {
@@ -624,6 +650,8 @@ public class NacosConfigProperties {
 				+ ", prefix='" + prefix + '\''
 				+ ", fileExtension='" + fileExtension + '\''
 				+ ", timeout=" + timeout
+				+ ", importRetryCount=" + importRetryCount
+				+ ", importRetryInterval=" + importRetryInterval
 				+ ", maxRetry='" + maxRetry + '\''
 				+ ", configLongPollTimeout='" + configLongPollTimeout + '\''
 				+ ", configRetryTime='" + configRetryTime + '\''
