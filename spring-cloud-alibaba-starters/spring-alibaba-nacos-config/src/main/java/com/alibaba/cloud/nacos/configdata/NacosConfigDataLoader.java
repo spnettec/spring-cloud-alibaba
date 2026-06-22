@@ -208,6 +208,11 @@ public class NacosConfigDataLoader implements ConfigDataLoader<NacosConfigDataRe
 		if (config == null) {
 			config = configService.getConfig(dataId, group, timeout);
 		}
+		else {
+			log.debug(String.format(
+					"[Nacos Config] Load config from snapshot[dataId=%s, group=%s]",
+					dataId, group));
+		}
 		logLoadInfo(group, dataId, config);
 		// fixed issue: https://github.com/alibaba/spring-cloud-alibaba/issues/2906 .
 		String configName = group + "@" + dataId;
