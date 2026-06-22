@@ -17,6 +17,36 @@
     <name>Spring Cloud Alibaba Dependencies</name>
     <description>Spring Cloud Alibaba Dependencies</description>
 
+    <repositories>
+        <repository>
+            <id>yofc-maven-public</id>
+            <name>Yofc Public Repository Group</name>
+            <url>https://mesmaven.yofc.com/repository/yofc-public/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+        </repository>
+    </repositories>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>yofc-maven-snapshot</id>
+            <name>YOFC Snapshots Repository</name>
+            <url>https://mesmaven.yofc.com/repository/yofc-snapshot/</url>
+            <uniqueVersion>false</uniqueVersion>
+        </snapshotRepository>
+        <repository>
+            <id>yofc-maven-release</id>
+            <name>YOFC Releases Repository</name>
+            <url>https://mesmaven.yofc.com/repository/yofc-release/</url>
+            <uniqueVersion>false</uniqueVersion>
+        </repository>
+    </distributionManagement>
+
     <properties>
         <revision>2025.1.0.1.B</revision>
         <sentinel.version>2.0.10.1.B</sentinel.version>
@@ -396,15 +426,6 @@
                         </executions>
                     </plugin>
 
-                    <plugin>
-                        <groupId>org.sonatype.central</groupId>
-                        <artifactId>central-publishing-maven-plugin</artifactId>
-                        <version>${central.publishing.maven.version}</version>
-                        <extensions>true</extensions>
-                        <configuration>
-                            <publishingServerId>central</publishingServerId>
-                        </configuration>
-                    </plugin>
                 </plugins>
             </build>
         </profile>

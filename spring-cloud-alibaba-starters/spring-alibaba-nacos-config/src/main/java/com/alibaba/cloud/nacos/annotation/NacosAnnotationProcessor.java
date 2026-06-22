@@ -64,8 +64,9 @@ public class NacosAnnotationProcessor implements BeanPostProcessor, PriorityOrde
 
 	private @Nullable ApplicationContext applicationContext;
 
-	private final static Logger log = LoggerFactory
-			.getLogger(NacosAnnotationProcessor.class);
+	private static Logger log() {
+		return LoggerFactory.getLogger(NacosAnnotationProcessor.class);
+	}
 
 	@Override
 	public int getOrder() {
@@ -86,11 +87,11 @@ public class NacosAnnotationProcessor implements BeanPostProcessor, PriorityOrde
 				String content = getNacosConfigManager().getConfigService().getConfig(dataId, group, 5000);
 				groupKeyCache.put(cacheKey, new AtomicReference<>(content));
 				if (!refreshed) {
-					log.info("[Nacos Config] refreshed is set to false, not listening config for annotation: dataId={}, group={}", dataId,
+					log().info("[Nacos Config] refreshed is set to false, not listening config for annotation: dataId={}, group={}", dataId,
 							group);
 					return content;
 				}
-				log.info("[Nacos Config] Listening config for annotation: dataId={}, group={}", dataId,
+				log().info("[Nacos Config] Listening config for annotation: dataId={}, group={}", dataId,
 						group);
 				getNacosConfigManager().getConfigService().addListener(dataId, group, new AbstractListener() {
 					@Override
@@ -178,18 +179,18 @@ public class NacosAnnotationProcessor implements BeanPostProcessor, PriorityOrde
 
 			String refreshTargetKey = beanName + "#instance#";
 			if (!refreshed) {
-				log.info("[Nacos Config] refresh is set to false,do not register listener for {} to bean {} ", refreshTargetKey, bean);
+				log().info("[Nacos Config] refresh is set to false,do not register listener for {} to bean {} ", refreshTargetKey, bean);
 				return;
 			}
 			TargetRefreshable currentTarget = targetListenerMap.get(refreshTargetKey);
 			if (currentTarget != null) {
-				log.info("[Nacos Config] reset {} listener from  {} to {} ", refreshTargetKey,
+				log().info("[Nacos Config] reset {} listener from  {} to {} ", refreshTargetKey,
 						currentTarget.getTarget(), bean);
 				currentTarget.setTarget(bean);
 				return;
 			}
 
-			log.info("[Nacos Config] register {} listener on {} ", refreshTargetKey,
+			log().info("[Nacos Config] register {} listener on {} ", refreshTargetKey,
 					bean);
 			TargetRefreshable listener = null;
 			if (org.springframework.util.StringUtils.hasText(key)) {
@@ -271,13 +272,13 @@ public class NacosAnnotationProcessor implements BeanPostProcessor, PriorityOrde
 			String refreshTargetKey = beanName + "#method#" + methodSignature(method);
 			TargetRefreshable currentTarget = targetListenerMap.get(refreshTargetKey);
 			if (currentTarget != null) {
-				log.info("[Nacos Config] reset {} listener from  {} to {} ", refreshTargetKey,
+				log().info("[Nacos Config] reset {} listener from  {} to {} ", refreshTargetKey,
 						currentTarget.getTarget(), bean);
 				currentTarget.setTarget(bean);
 				return;
 			}
 
-			log.info("[Nacos Config] register {} listener on {} ", refreshTargetKey,
+			log().info("[Nacos Config] register {} listener on {} ", refreshTargetKey,
 					bean);
 			// annotation on string.
 			NacosPropertiesKeyListener nacosPropertiesKeyListener = new NacosPropertiesKeyListener(bean, wrapArrayToSet(annotation.interestedKeys()),
@@ -336,13 +337,13 @@ public class NacosAnnotationProcessor implements BeanPostProcessor, PriorityOrde
 			String refreshTargetKey = beanName + "#method#" + methodSignature(method);
 			TargetRefreshable currentTarget = targetListenerMap.get(refreshTargetKey);
 			if (currentTarget != null) {
-				log.info("[Nacos Config] reset {} listener from  {} to {} ", refreshTargetKey,
+				log().info("[Nacos Config] reset {} listener from  {} to {} ", refreshTargetKey,
 						currentTarget.getTarget(), bean);
 				currentTarget.setTarget(bean);
 				return;
 			}
 
-			log.info("[Nacos Config] register {} listener on {} ", refreshTargetKey,
+			log().info("[Nacos Config] register {} listener on {} ", refreshTargetKey,
 					bean);
 
 			TargetRefreshable listener = null;
@@ -412,14 +413,14 @@ public class NacosAnnotationProcessor implements BeanPostProcessor, PriorityOrde
 			targetListenerMap.put(refreshTargetKey, listener);
 			if (annotation.initNotify() && org.springframework.util.StringUtils.hasText(configInfo)) {
 				try {
-					log.info("[Nacos Config] init notify listener of {}  on {} start...", refreshTargetKey,
+					log().info("[Nacos Config] init notify listener of {}  on {} start...", refreshTargetKey,
 							bean);
 					listener.receiveConfigInfo(configInfo);
-					log.info("[Nacos Config] init notify listener of {}  on {} finished ", refreshTargetKey,
+					log().info("[Nacos Config] init notify listener of {}  on {} finished ", refreshTargetKey,
 							bean);
 				}
 				catch (Throwable throwable) {
-					log.warn("[Nacos Config] init notify listener error", throwable);
+					log().warn("[Nacos Config] init notify listener error", throwable);
 					throw throwable;
 				}
 			}
@@ -488,18 +489,18 @@ public class NacosAnnotationProcessor implements BeanPostProcessor, PriorityOrde
 			String refreshTargetKey = beanName + "#filed#" + field.getName();
 
 			if (!refreshed) {
-				log.info("[Nacos Config] refresh is set to false,do not register listener for {} to bean {} ", refreshTargetKey, bean);
+				log().info("[Nacos Config] refresh is set to false,do not register listener for {} to bean {} ", refreshTargetKey, bean);
 				return;
 			}
 			TargetRefreshable currentTarget = targetListenerMap.get(refreshTargetKey);
 			if (currentTarget != null) {
-				log.info("[Nacos Config] reset {} listener from  {} to {} ", refreshTargetKey,
+				log().info("[Nacos Config] reset {} listener from  {} to {} ", refreshTargetKey,
 						currentTarget.getTarget(), bean);
 				currentTarget.setTarget(bean);
 				return;
 			}
 
-			log.info("[Nacos Config] register {} listener on {} ", refreshTargetKey,
+			log().info("[Nacos Config] register {} listener on {} ", refreshTargetKey,
 					bean);
 			TargetRefreshable listener = null;
 			if (org.springframework.util.StringUtils.hasText(key)) {
@@ -574,19 +575,19 @@ public class NacosAnnotationProcessor implements BeanPostProcessor, PriorityOrde
 
 			String refreshTargetKey = beanName + "#filed#" + field.getName();
 			if (!refreshed) {
-				log.info("[Nacos Config] refresh is set to false,do not register listener for {} to bean {} ", refreshTargetKey, bean);
+				log().info("[Nacos Config] refresh is set to false,do not register listener for {} to bean {} ", refreshTargetKey, bean);
 				return true;
 			}
 
 			TargetRefreshable currentTarget = targetListenerMap.get(refreshTargetKey);
 			if (currentTarget != null) {
-				log.info("[Nacos Config] reset {} listener from  {} to {} ", refreshTargetKey,
+				log().info("[Nacos Config] reset {} listener from  {} to {} ", refreshTargetKey,
 						currentTarget.getTarget(), bean);
 				currentTarget.setTarget(bean);
 				return true;
 			}
 
-			log.info("[Nacos Config] register {} listener on {} ", refreshTargetKey,
+			log().info("[Nacos Config] register {} listener on {} ", refreshTargetKey,
 					bean);
 			TargetRefreshable listener = null;
 			if (org.springframework.util.StringUtils.hasText(key)) {

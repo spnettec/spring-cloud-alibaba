@@ -232,6 +232,17 @@ public class NacosDiscoveryProperties {
 	private boolean failFast = true;
 
 	/**
+	 * Retry times while waiting for the Nacos naming service to become connected.
+	 */
+	private int namingServiceReadyRetryTimes = 60;
+
+	/**
+	 * Retry interval while waiting for the Nacos naming service to become connected.
+	 * Time unit: millisecond.
+	 */
+	private long namingServiceReadyRetryInterval = 500L;
+
+	/**
 	 * graceful shutdown wait time. Time unit: millisecond.
 	 * default is 10s
 	 * When the Springboot shutdown hook is executed, remove the Nacos service, wait for 10 seconds, and then Tomcat rejects the request
@@ -364,6 +375,8 @@ public class NacosDiscoveryProperties {
 		nacosDiscoveryProperties.ephemeral = this.ephemeral;
 		nacosDiscoveryProperties.failureToleranceEnabled = this.failureToleranceEnabled;
 		nacosDiscoveryProperties.failFast = this.failFast;
+		nacosDiscoveryProperties.namingServiceReadyRetryTimes = this.namingServiceReadyRetryTimes;
+		nacosDiscoveryProperties.namingServiceReadyRetryInterval = this.namingServiceReadyRetryInterval;
 		nacosDiscoveryProperties.gracefulShutdownWaitTime = this.gracefulShutdownWaitTime;
 		nacosDiscoveryProperties.inetIPv6Utils = this.inetIPv6Utils;
 		nacosDiscoveryProperties.inetUtils = this.inetUtils;
@@ -610,6 +623,22 @@ public class NacosDiscoveryProperties {
 		this.failFast = failFast;
 	}
 
+	public int getNamingServiceReadyRetryTimes() {
+		return namingServiceReadyRetryTimes;
+	}
+
+	public void setNamingServiceReadyRetryTimes(int namingServiceReadyRetryTimes) {
+		this.namingServiceReadyRetryTimes = namingServiceReadyRetryTimes;
+	}
+
+	public long getNamingServiceReadyRetryInterval() {
+		return namingServiceReadyRetryInterval;
+	}
+
+	public void setNamingServiceReadyRetryInterval(long namingServiceReadyRetryInterval) {
+		this.namingServiceReadyRetryInterval = namingServiceReadyRetryInterval;
+	}
+
 	public Integer getGracefulShutdownWaitTime() {
 		return gracefulShutdownWaitTime;
 	}
@@ -649,6 +678,8 @@ public class NacosDiscoveryProperties {
 				&& Objects.equals(heartBeatInterval, that.heartBeatInterval)
 				&& Objects.equals(heartBeatTimeout, that.heartBeatTimeout)
 				&& Objects.equals(failFast, that.failFast)
+				&& namingServiceReadyRetryTimes == that.namingServiceReadyRetryTimes
+				&& namingServiceReadyRetryInterval == that.namingServiceReadyRetryInterval
 				&& Objects.equals(ipDeleteTimeout, that.ipDeleteTimeout);
 	}
 
@@ -659,7 +690,7 @@ public class NacosDiscoveryProperties {
 				namingLoadCacheAtStart, metadata, registerEnabled, ip, networkInterface,
 				port, secure, accessKey, secretKey, heartBeatInterval, heartBeatTimeout,
 				ipDeleteTimeout, instanceEnabled, ephemeral, failureToleranceEnabled,
-				failFast);
+				failFast, namingServiceReadyRetryTimes, namingServiceReadyRetryInterval);
 	}
 
 	@Override
@@ -678,7 +709,9 @@ public class NacosDiscoveryProperties {
 				+ heartBeatInterval + ", heartBeatTimeout=" + heartBeatTimeout
 				+ ", ipDeleteTimeout=" + ipDeleteTimeout + ", instanceEnabled="
 				+ instanceEnabled + ", ephemeral=" + ephemeral
-				+ ", failureToleranceEnabled=" + failureToleranceEnabled + '}'
+				+ ", failureToleranceEnabled=" + failureToleranceEnabled
+				+ ", namingServiceReadyRetryTimes=" + namingServiceReadyRetryTimes
+				+ ", namingServiceReadyRetryInterval=" + namingServiceReadyRetryInterval + '}'
 				+ ", ipDeleteTimeout=" + ipDeleteTimeout + ", failFast=" + failFast + '}';
 	}
 

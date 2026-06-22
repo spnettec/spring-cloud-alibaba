@@ -21,10 +21,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.alibaba.cloud.nacos.NacosDiscoveryProperties;
 import com.alibaba.cloud.nacos.NacosServiceManager;
+import com.alibaba.nacos.api.exception.NacosException;
 import com.alibaba.nacos.api.naming.NamingService;
 import com.alibaba.nacos.api.naming.listener.Event;
 import com.alibaba.nacos.api.naming.listener.EventListener;
@@ -45,6 +47,10 @@ import org.springframework.context.SmartLifecycle;
 public class NacosWatch implements SmartLifecycle, DisposableBean {
 
 	private static final Logger log = LoggerFactory.getLogger(NacosWatch.class);
+
+	private static final int NAMING_SERVICE_READY_RETRY_TIMES = 10;
+
+	private static final long NAMING_SERVICE_READY_RETRY_INTERVAL = 500L;
 
 	private final Map<String, EventListener> listenerMap = new ConcurrentHashMap<>(16);
 
@@ -90,13 +96,7 @@ public class NacosWatch implements SmartLifecycle, DisposableBean {
 					});
 
 			NamingService namingService = nacosServiceManager.getNamingService();
-			try {
-				namingService.subscribe(properties.getService(), properties.getGroup(),
-						Arrays.asList(properties.getClusterName()), eventListener);
-			}
-			catch (Exception e) {
-				log.error("namingService subscribe failed, properties:{}", properties, e);
-			}
+			subscribeWhenNamingServiceReady(namingService, eventListener);
 
 		}
 	}
@@ -127,10 +127,12 @@ public class NacosWatch implements SmartLifecycle, DisposableBean {
 		if (this.running.compareAndSet(true, false)) {
 
 			EventListener eventListener = listenerMap.get(buildKey());
+			if (eventListener == null) {
+				return;
+			}
 			try {
 				NamingService namingService = nacosServiceManager.getNamingService();
-				namingService.unsubscribe(properties.getService(), properties.getGroup(),
-						Arrays.asList(properties.getClusterName()), eventListener);
+				unsubscribeWhenNamingServiceReady(namingService, eventListener);
 			}
 			catch (Exception e) {
 				log.error("namingService unsubscribe failed, properties:{}", properties,
@@ -152,5 +154,69 @@ public class NacosWatch implements SmartLifecycle, DisposableBean {
 	@Override
 	public void destroy() {
 		this.stop();
+	}
+
+	private void subscribeWhenNamingServiceReady(NamingService namingService,
+			EventListener eventListener) {
+		try {
+			executeWhenNamingServiceReady(
+					() -> namingService.subscribe(properties.getService(),
+							properties.getGroup(),
+							Arrays.asList(properties.getClusterName()), eventListener));
+		}
+		catch (Exception e) {
+			this.running.set(false);
+			log.error("namingService subscribe failed, properties:{}", properties, e);
+		}
+	}
+
+	private void unsubscribeWhenNamingServiceReady(NamingService namingService,
+			EventListener eventListener) throws NacosException {
+		executeWhenNamingServiceReady(
+				() -> namingService.unsubscribe(properties.getService(),
+						properties.getGroup(), Arrays.asList(properties.getClusterName()),
+						eventListener));
+	}
+
+	private void executeWhenNamingServiceReady(NacosNamingOperation operation)
+			throws NacosException {
+		for (int i = 1; i <= NAMING_SERVICE_READY_RETRY_TIMES; i++) {
+			try {
+				operation.execute();
+				return;
+			}
+			catch (NacosException e) {
+				if (i >= NAMING_SERVICE_READY_RETRY_TIMES || !isNamingServiceStarting(e)) {
+					throw e;
+				}
+				log.warn("Nacos naming service is not connected yet, retrying watch {}/{}",
+						i, NAMING_SERVICE_READY_RETRY_TIMES);
+				sleepBeforeRetry(e);
+			}
+		}
+	}
+
+	private boolean isNamingServiceStarting(NacosException exception) {
+		String message = exception.getMessage();
+		return message != null && (message.contains("Client not connected")
+				|| message.contains("current status:STARTING"));
+	}
+
+	private void sleepBeforeRetry(NacosException exception) throws NacosException {
+		try {
+			TimeUnit.MILLISECONDS.sleep(NAMING_SERVICE_READY_RETRY_INTERVAL);
+		}
+		catch (InterruptedException interruptedException) {
+			Thread.currentThread().interrupt();
+			exception.addSuppressed(interruptedException);
+			throw exception;
+		}
+	}
+
+	@FunctionalInterface
+	private interface NacosNamingOperation {
+
+		void execute() throws NacosException;
+
 	}
 }

@@ -16,7 +16,14 @@
 
 package com.alibaba.cloud.nacos;
 
+import java.lang.reflect.Proxy;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Future;
 
 import com.alibaba.cloud.nacos.diagnostics.analyzer.NacosConnectionFailureException;
 import com.alibaba.nacos.api.NacosFactory;
@@ -30,6 +37,8 @@ import org.slf4j.LoggerFactory;
  * @author zkzlx
  */
 public class NacosConfigManager {
+
+	private static final String AOT_PROCESSING_PROPERTY = "spring.cloud.alibaba.aot-processing";
 
 	private static final Logger log = LoggerFactory.getLogger(NacosConfigManager.class);
 
@@ -67,8 +76,14 @@ public class NacosConfigManager {
 			NacosConfigProperties nacosConfigProperties) {
 		try {
 			if (Objects.isNull(service)) {
-				service = NacosFactory.createConfigService(
-						nacosConfigProperties.assembleConfigServiceProperties());
+				if (Boolean.getBoolean(AOT_PROCESSING_PROPERTY)) {
+					log.debug("Using no-op Nacos ConfigService during Spring AOT processing");
+					service = createAotNoopConfigService();
+				}
+				else {
+					service = NacosFactory.createConfigService(
+							nacosConfigProperties.assembleConfigServiceProperties());
+				}
 			}
 		}
 		catch (NacosException e) {
@@ -79,6 +94,48 @@ public class NacosConfigManager {
 					serverAddr != null ? serverAddr : "", message != null ? message : "", e);
 		}
 		return service;
+	}
+
+	private ConfigService createAotNoopConfigService() {
+		return (ConfigService) Proxy.newProxyInstance(ConfigService.class.getClassLoader(),
+				new Class<?>[] { ConfigService.class }, (proxy, method, args) -> {
+					String methodName = method.getName();
+					if ("toString".equals(methodName)) {
+						return "AotNoopNacosConfigService";
+					}
+					if ("hashCode".equals(methodName)) {
+						return System.identityHashCode(proxy);
+					}
+					if ("equals".equals(methodName)) {
+						return proxy == args[0];
+					}
+					if ("getServerStatus".equals(methodName)) {
+						return "UP";
+					}
+					if ("getConfig".equals(methodName) || "getConfigAndSignListener".equals(methodName)) {
+						return "";
+					}
+					Class<?> returnType = method.getReturnType();
+					if (Void.TYPE == returnType) {
+						return null;
+					}
+					if (Boolean.TYPE == returnType) {
+						return false;
+					}
+					if (Future.class.isAssignableFrom(returnType)) {
+						return CompletableFuture.completedFuture(Collections.emptySet());
+					}
+					if (List.class.isAssignableFrom(returnType)) {
+						return Collections.emptyList();
+					}
+					if (Set.class.isAssignableFrom(returnType)) {
+						return Collections.emptySet();
+					}
+					if (Map.class.isAssignableFrom(returnType)) {
+						return Collections.emptyMap();
+					}
+					return null;
+				});
 	}
 
 	public ConfigService getConfigService() {

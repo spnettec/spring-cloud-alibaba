@@ -17,6 +17,7 @@
 package com.alibaba.cloud.nacos.registry;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import com.alibaba.cloud.commons.lang.StringUtils;
 import com.alibaba.cloud.nacos.NacosDiscoveryProperties;
@@ -76,7 +77,8 @@ public class NacosServiceRegistry implements ServiceRegistry<Registration> {
 		Instance instance = getNacosInstanceFromRegistration(registration);
 
 		try {
-			namingService.registerInstance(serviceId, group, instance);
+			executeWhenNamingServiceReady(() -> namingService.registerInstance(serviceId,
+					group, instance));
 			log.info("nacos registry, {} {} {}:{} register finished", group, serviceId,
 					instance.getIp(), instance.getPort());
 		}
@@ -112,8 +114,10 @@ public class NacosServiceRegistry implements ServiceRegistry<Registration> {
 		String group = nacosDiscoveryProperties.getGroup();
 
 		try {
-			namingService.deregisterInstance(serviceId, group, registration.getHost(),
-					registration.getPort(), nacosDiscoveryProperties.getClusterName());
+			executeWhenNamingServiceReady(
+					() -> namingService.deregisterInstance(serviceId, group,
+							registration.getHost(), registration.getPort(),
+							nacosDiscoveryProperties.getClusterName()));
 		}
 		catch (Exception e) {
 			log.error("ERR_NACOS_DEREGISTER, de-register failed...{},",
@@ -193,6 +197,50 @@ public class NacosServiceRegistry implements ServiceRegistry<Registration> {
 
 	private NamingService namingService() {
 		return nacosServiceManager.getNamingService();
+	}
+
+	private void executeWhenNamingServiceReady(NacosNamingOperation operation)
+			throws NacosException {
+		int retryTimes = Math.max(1,
+				nacosDiscoveryProperties.getNamingServiceReadyRetryTimes());
+		for (int i = 1; i <= retryTimes; i++) {
+			try {
+				operation.execute();
+				return;
+			}
+			catch (NacosException e) {
+				if (i >= retryTimes || !isNamingServiceStarting(e)) {
+					throw e;
+				}
+				log.warn("Nacos naming service is not connected yet, retrying operation {}/{}",
+						i, retryTimes);
+				sleepBeforeRetry(e, nacosDiscoveryProperties.getNamingServiceReadyRetryInterval());
+			}
+		}
+	}
+
+	private boolean isNamingServiceStarting(NacosException exception) {
+		String message = exception.getMessage();
+		return message != null && (message.contains("Client not connected")
+				|| message.contains("current status:STARTING"));
+	}
+
+	private void sleepBeforeRetry(NacosException exception, long retryInterval) throws NacosException {
+		try {
+			TimeUnit.MILLISECONDS.sleep(Math.max(0L, retryInterval));
+		}
+		catch (InterruptedException interruptedException) {
+			Thread.currentThread().interrupt();
+			exception.addSuppressed(interruptedException);
+			throw exception;
+		}
+	}
+
+	@FunctionalInterface
+	private interface NacosNamingOperation {
+
+		void execute() throws NacosException;
+
 	}
 
 }

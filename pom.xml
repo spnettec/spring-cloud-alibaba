@@ -197,10 +197,6 @@
     </dependencyManagement>
     <repositories>
         <repository>
-            <id>jitpack.io</id>
-            <url>https://jitpack.io</url>
-        </repository>
-        <repository>
             <id>central-repos1</id>
             <name>Central Repository 2</name>
             <url>https://repo1.maven.org/maven2/</url>
@@ -217,7 +213,33 @@
                 <enabled>false</enabled>
             </snapshots>
         </repository>
+        <repository>
+            <id>yofc-maven-public</id>
+            <name>Yofc Public Repository Group</name>
+            <url>https://mesmaven.yofc.com/repository/yofc-public/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+            </snapshots>
+        </repository>
     </repositories>
+    <distributionManagement>
+        <snapshotRepository>
+            <id>yofc-maven-snapshot</id>
+            <name>YOFC Snapshots Repository</name>
+            <url>https://mesmaven.yofc.com/repository/yofc-snapshot/</url>
+            <uniqueVersion>false</uniqueVersion>
+        </snapshotRepository>
+        <repository>
+            <id>yofc-maven-release</id>
+            <name>YOFC Releases Repository</name>
+            <url>https://mesmaven.yofc.com/repository/yofc-release/</url>
+            <uniqueVersion>false</uniqueVersion>
+        </repository>
+    </distributionManagement>
     <build>
         <pluginManagement>
             <plugins>
@@ -242,11 +264,6 @@
                     </executions>
                 </plugin>
 
-                <plugin>
-                    <groupId>org.sonatype.central</groupId>
-                    <artifactId>central-publishing-maven-plugin</artifactId>
-                    <version>${central.publishing.maven.version}</version>
-                </plugin>
                 <plugin>
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-maven-plugin</artifactId>
@@ -425,16 +442,7 @@
             </plugin>
         </plugins>
     </reporting>
-
-	<!-- Override org.springframework.cloud:spring-cloud-build distributionManagement -->
-	<distributionManagement>
-		<snapshotRepository>
-			<id>github</id>
-			<url>https://maven.pkg.github.com/alibaba/spring-cloud-alibaba</url>
-		</snapshotRepository>
-	</distributionManagement>
-
-    <profiles>
+<profiles>
         <profile>
             <id>release</id>
             <build>

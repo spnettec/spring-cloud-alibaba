@@ -16,8 +16,13 @@
 
 package com.alibaba.cloud.nacos;
 
+import java.lang.reflect.Proxy;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Properties;
+import java.util.Set;
 
 import com.alibaba.nacos.api.exception.NacosException;
 import com.alibaba.nacos.api.naming.NamingMaintainService;
@@ -33,6 +38,8 @@ import static com.alibaba.nacos.api.NacosFactory.createNamingService;
  * @author yuhuangbin
  */
 public class NacosServiceManager {
+
+	private static final String AOT_PROCESSING_PROPERTY = "spring.cloud.alibaba.aot-processing";
 
 	private static final Logger log = LoggerFactory.getLogger(NacosServiceManager.class);
 
@@ -109,12 +116,59 @@ public class NacosServiceManager {
 	}
 
 	private NamingService createNewNamingService(Properties properties) {
+		if (Boolean.getBoolean(AOT_PROCESSING_PROPERTY)) {
+			log.debug("Using no-op Nacos NamingService during Spring AOT processing");
+			return createAotNoopNamingService();
+		}
 		try {
 			return createNamingService(properties);
 		}
 		catch (NacosException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	private NamingService createAotNoopNamingService() {
+		return (NamingService) Proxy.newProxyInstance(NamingService.class.getClassLoader(),
+				new Class<?>[] { NamingService.class }, (proxy, method, args) -> {
+					String methodName = method.getName();
+					if ("toString".equals(methodName)) {
+						return "AotNoopNacosNamingService";
+					}
+					if ("hashCode".equals(methodName)) {
+						return System.identityHashCode(proxy);
+					}
+					if ("equals".equals(methodName)) {
+						return proxy == args[0];
+					}
+					if ("getServerStatus".equals(methodName)) {
+						return "UP";
+					}
+					Class<?> returnType = method.getReturnType();
+					if (Void.TYPE == returnType) {
+						return null;
+					}
+					if (Boolean.TYPE == returnType) {
+						return false;
+					}
+					if (Integer.TYPE == returnType || Long.TYPE == returnType || Short.TYPE == returnType
+							|| Byte.TYPE == returnType) {
+						return 0;
+					}
+					if (Float.TYPE == returnType || Double.TYPE == returnType) {
+						return 0.0;
+					}
+					if (List.class.isAssignableFrom(returnType)) {
+						return Collections.emptyList();
+					}
+					if (Set.class.isAssignableFrom(returnType)) {
+						return Collections.emptySet();
+					}
+					if (Map.class.isAssignableFrom(returnType)) {
+						return Collections.emptyMap();
+					}
+					return null;
+				});
 	}
 
 	private NamingMaintainService createNamingMaintainService(Properties properties) {
