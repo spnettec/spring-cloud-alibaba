@@ -133,8 +133,43 @@ class NacosConfigDataLoaderTest {
 	}
 
 	@Test
-	void loadWhenConfigServiceCreationFailsThenRetries() {
+	void loadWhenRequiredRemoteConfigIsUnavailableThenFailsFast() throws Exception {
 		ConfigService configService = mock(ConfigService.class);
+		when(configService.getConfig("test.properties", "DEFAULT_GROUP", 3000L))
+			.thenReturn(null);
+
+		assertThatThrownBy(() -> load(configService))
+			.isInstanceOf(ConfigDataResourceNotFoundException.class);
+		verify(configService, times(1)).getConfig("test.properties", "DEFAULT_GROUP",
+				3000L);
+	}
+
+	@Test
+	void loadWhenRequiredRemoteConfigBecomesAvailableThenRetries() throws Exception {
+		ConfigService configService = mock(ConfigService.class);
+		when(configService.getConfig("test.properties", "DEFAULT_GROUP", 3000L))
+			.thenReturn(null)
+			.thenReturn("name=remote");
+
+		NacosConfigProperties properties = new NacosConfigProperties();
+		properties.setTimeout(3000);
+		properties.setImportRetryCount(1);
+		properties.setImportRetryInterval(0);
+
+		ConfigData configData = load(configService, properties);
+
+		assertThat(configData).isNotNull();
+		assertThat(configData.getPropertySources().get(0).getProperty("name"))
+			.isEqualTo("remote");
+		verify(configService, times(2)).getConfig("test.properties", "DEFAULT_GROUP",
+				3000L);
+	}
+
+	@Test
+	void loadWhenConfigServiceCreationFailsThenRetries() throws Exception {
+		ConfigService configService = mock(ConfigService.class);
+		when(configService.getConfig("test.properties", "DEFAULT_GROUP", 3000L))
+			.thenReturn("name=remote");
 		NacosConfigManager configManager = mock(NacosConfigManager.class);
 		when(configManager.getConfigService()).thenThrow(new IllegalStateException("down"))
 			.thenReturn(configService);

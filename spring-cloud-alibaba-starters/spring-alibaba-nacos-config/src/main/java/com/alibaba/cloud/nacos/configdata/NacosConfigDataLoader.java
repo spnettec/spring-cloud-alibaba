@@ -110,7 +110,8 @@ public class NacosConfigDataLoader implements ConfigDataLoader<NacosConfigDataRe
 				// pull config from nacos
 				List<PropertySource<?>> propertySources = pullConfig(configService,
 						config.getGroup(), config.getDataId(), config.getSuffix(),
-						properties.getTimeout(), properties.getNamespace());
+						properties.getTimeout(), properties.getNamespace(),
+						resource.isOptional());
 
 				NacosPropertySource propertySource = new NacosPropertySource(propertySources,
 						config.getGroup(), config.getDataId(), new Date(),
@@ -126,10 +127,13 @@ public class NacosConfigDataLoader implements ConfigDataLoader<NacosConfigDataRe
 					throw e;
 				}
 				retried++;
-				log.warn(String.format(
-						"Failed to import Nacos config %s, retrying (%s) after %d ms: %s",
-						resource, retryDescription(retried, retryCount), retryInterval,
-						e.getMessage()));
+				String retryMessage = String.format(
+						"Failed to import Nacos config dataId=%s, group=%s, retrying (%s) after %d ms: %s",
+						config.getDataId(), config.getGroup(),
+						retryDescription(retried, retryCount), retryInterval, e.getMessage());
+				// ConfigData runs before deferred logging is replayed and may wait forever.
+				System.err.println("[Nacos Config] " + retryMessage);
+				System.err.flush();
 				if (log.isDebugEnabled()) {
 					log.debug("Nacos config import retry cause", e);
 				}
@@ -201,12 +205,18 @@ public class NacosConfigDataLoader implements ConfigDataLoader<NacosConfigDataRe
 	}
 
 	private List<PropertySource<?>> pullConfig(ConfigService configService, String group,
-			String dataId, String suffix, long timeout, @Nullable String namespace)
+			String dataId, String suffix, long timeout, @Nullable String namespace,
+			boolean optional)
 			throws NacosException, IOException {
 		String config = NacosSnapshotConfigManager.getAndRemoveConfigSnapshot(namespace,
 				dataId, group);
 		if (config == null) {
 			config = configService.getConfig(dataId, group, timeout);
+			if (config == null && !optional) {
+				throw new NacosException(NacosException.SERVER_ERROR,
+						String.format("Required Nacos config is unavailable: dataId=%s, group=%s",
+								dataId, group));
+			}
 		}
 		else {
 			log.debug(String.format(
