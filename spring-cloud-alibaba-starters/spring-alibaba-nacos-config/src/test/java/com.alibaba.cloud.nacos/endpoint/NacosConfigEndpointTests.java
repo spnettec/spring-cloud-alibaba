@@ -46,7 +46,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 		"spring.application.name=test-name",
 		"spring.nacos.config.server-addr=127.0.0.1:8848",
 		"spring.nacos.config.file-extension=properties",
-		"spring.config.import[0]=nacos:test-name.properties?refreshEnabled=true"})
+		"spring.config.import[0]=optional:nacos:test-name.properties?refreshEnabled=true"})
 public class NacosConfigEndpointTests {
 
 	@Autowired
