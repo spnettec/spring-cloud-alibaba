@@ -5,6 +5,12 @@ on:
       - 2023.x
       - 2025.0.x
       - 2025.1.x
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
   release:
     name: Release
@@ -19,6 +25,9 @@ jobs:
         with:
           java-version: '21'
           distribution: 'adopt'
+          # https://github.com/actions/setup-java/releases/tag/v5.5.0 MAVEN_ARGS
+          # https://github.com/actions/setup-java/pull/1053
+          show-download-progress: true
       - name: Dependencies Cache
         uses: actions/cache@v5
         with:
