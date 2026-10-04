@@ -119,6 +119,21 @@ class NacosConfigDataLoaderTest {
 			.thenThrow(new NacosException(NacosException.SERVER_ERROR, "down"))
 			.thenReturn("name=remote");
 
+		NacosConfigProperties properties = new NacosConfigProperties();
+		properties.setTimeout(3000);
+		properties.setImportRetryCount(1);
+		properties.setImportRetryInterval(0);
+
+		ConfigData configData = load(configService, properties);
+
+		assertThat(configData).isNotNull();
+		assertThat(configData.getPropertySources().get(0).getProperty("name"))
+			.isEqualTo("remote");
+		verify(configService, times(2)).getConfig("test.properties", "DEFAULT_GROUP",
+				3000L);
+	}
+
+	@Test
 	void loadWhenContentUnparseableThenThrowsParseExceptionInsteadOfNotFound() throws Exception {
 		ConfigService configService = mock(ConfigService.class);
 		// duplicate YAML key: the content is fetched fine, but SnakeYAML rejects it
@@ -144,22 +159,34 @@ class NacosConfigDataLoaderTest {
 				resource("test.properties", "properties", false));
 	}
 
+	private ConfigData load(ConfigService configService, NacosConfigProperties properties) {
+		return new NacosConfigDataLoader(new DeferredLogs()).load(context(configService, properties),
+				resource("test.properties", "properties", false));
+	}
+
+	private ConfigDataLoaderContext context(ConfigService configService,
+			NacosConfigProperties properties) {
+		NacosConfigManager configManager = mock(NacosConfigManager.class);
+		when(configManager.getConfigService()).thenReturn(configService);
+		return context(configManager, properties);
+	}
+
 	private ConfigDataLoaderContext context(ConfigService configService) {
 		NacosConfigManager configManager = mock(NacosConfigManager.class);
 		when(configManager.getConfigService()).thenReturn(configService);
+		return context(configManager, new NacosConfigProperties());
+	}
 
-		NacosConfigProperties properties = new NacosConfigProperties();
-		properties.setTimeout(3000);
-		properties.setImportRetryCount(1);
-		properties.setImportRetryInterval(0);
-
-		ConfigData configData = load(configService, properties);
-
-		assertThat(configData).isNotNull();
-		assertThat(configData.getPropertySources().get(0).getProperty("name"))
-			.isEqualTo("remote");
-		verify(configService, times(2)).getConfig("test.properties", "DEFAULT_GROUP",
-				3000L);
+	private ConfigDataLoaderContext context(NacosConfigManager configManager,
+			NacosConfigProperties properties) {
+		DefaultBootstrapContext bootstrapContext = new DefaultBootstrapContext();
+		bootstrapContext.register(Binder.class,
+				BootstrapRegistry.InstanceSupplier.of(Binder.get(new MockEnvironment())));
+		bootstrapContext.register(NacosConfigManager.class,
+				BootstrapRegistry.InstanceSupplier.of(configManager));
+		bootstrapContext.register(NacosConfigProperties.class,
+				BootstrapRegistry.InstanceSupplier.of(properties));
+		return () -> bootstrapContext;
 	}
 
 	@Test
@@ -215,18 +242,6 @@ class NacosConfigDataLoaderTest {
 		verify(configManager, times(2)).getConfigService();
 	}
 
-	private ConfigData load(ConfigService configService) {
-		NacosConfigProperties properties = new NacosConfigProperties();
-		properties.setTimeout(3000);
-		return load(configService, properties);
-	}
-
-	private ConfigData load(ConfigService configService, NacosConfigProperties properties) {
-		NacosConfigManager configManager = mock(NacosConfigManager.class);
-		when(configManager.getConfigService()).thenReturn(configService);
-		return load(configManager, properties);
-	}
-
 	private ConfigData load(NacosConfigManager configManager,
 			NacosConfigProperties properties) {
 		DefaultBootstrapContext bootstrapContext = new DefaultBootstrapContext();
@@ -237,7 +252,12 @@ class NacosConfigDataLoaderTest {
 		bootstrapContext.register(NacosConfigProperties.class,
 				BootstrapRegistry.InstanceSupplier.of(properties));
 
-		return () -> bootstrapContext;
+		ConfigDataLoaderContext context = () -> bootstrapContext;
+		NacosConfigDataResource resource = new NacosConfigDataResource(properties, false,
+				mock(Profiles.class), new DeferredLogs().getLog(getClass()),
+				new NacosItemConfig("DEFAULT_GROUP", "test.properties", "properties", true, ""));
+
+		return new NacosConfigDataLoader(new DeferredLogs()).load(context, resource);
 	}
 
 	private NacosConfigDataResource resource(String dataId, String suffix,
