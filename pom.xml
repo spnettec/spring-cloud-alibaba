@@ -82,13 +82,13 @@
         <!-- Project revision -->
         <revision>2025.1.0.1.B</revision>
         <nacos.version>3.3.0.B</nacos.version>
-        <grpc.version>1.82.0</grpc.version>
-        <netty.version>4.2.15.Final</netty.version>
+        <grpc.version>1.84.0</grpc.version>
+        <netty.version>4.2.18.Final</netty.version>
         <!-- Spring Cloud -->
         <spring.cloud.version>2025.1.2</spring.cloud.version>
 
         <!-- Spring Boot -->
-        <spring-boot.version>4.1.0</spring-boot.version>
+        <spring-boot.version>4.1.1</spring-boot.version>
 
         <java.version>17</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
